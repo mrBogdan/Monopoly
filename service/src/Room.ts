@@ -1,20 +1,17 @@
 import { Player } from './Player';
-import { GameEventBus } from './GameEventBus';
 import { NoPermissionError } from './NoPermissionError';
 import { NotAllowedJoiningError } from './NotAllowedJoiningError';
 
-export enum RoomEvents {
-  USER_JOINED = 'RoomEvents:USER_JOINED',
-}
-
 export class Room {
-  private players: Player[] = [];
-  private id: string;
-  private roomOwner: string;
-  private isPrivate: boolean;
   private banList: Player[];
 
-  public constructor(private gameEventBus: GameEventBus) {}
+  public constructor(
+    private id: string,
+    private players: Player[],
+    private requiredPlayersAmount: number,
+    private roomOwner: string,
+    private isPrivate: boolean,
+  ) {}
 
   public join(player: Player) {
     if (!this.isAllowed(player)) {
@@ -22,15 +19,14 @@ export class Room {
     }
 
     this.players.push(player);
-
-    this.gameEventBus.emit(RoomEvents.USER_JOINED, {
-      playerId: player.getId(),
-      roomId: this.id
-    });
   }
 
   public disconnect(player: Player) {
     this.players.splice(this.players.indexOf(player), 1);
+  }
+
+  public getPlayers(): Player[] {
+    return this.players;
   }
 
   public kickPlayer(roomOwner: Player, player: Player) {
@@ -47,10 +43,11 @@ export class Room {
     this.banList.push(player);
   }
 
-  public start() {}
+  public start() {
+  }
 
-  public isVisible(): boolean {
-
+  public isVisible(player: Player): boolean {
+    return !this.banList.includes(player);
   }
 
   public isAllowed(player: Player): boolean {
