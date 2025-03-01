@@ -1,4 +1,7 @@
 import { Player } from './Player';
+import { Room } from './Room';
+import { Bank } from './Bank';
+import { BankAccount } from './BankAccount';
 
 export enum GameType {
   USUAL = 'usual',
@@ -12,10 +15,17 @@ interface GameConfig {
 }
 
 export class Game {
-  constructor(private gameConfig: GameConfig) {
+  private bank: Bank;
+
+  constructor(private room: Room) {
+
+    const bankAccount = BankAccount.of();
+    this.bank = new Bank([...room.getPlayers()]);
   }
 
-  start() {}
+  start() {
+
+  }
 
   finish() {}
 }
