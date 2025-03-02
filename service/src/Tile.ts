@@ -1,18 +1,12 @@
-import { Action } from './Action';
-import { Reward } from './Reward';
+import { TileAction } from './TileAction';
 
 export interface Tile {
-  rewards: Reward[];
   id: string;
   order: number;
-  group: string;
-  getReward()
-  getId(): string;
-  getOrder(): number;
-  getPrice(): number;
-  getName(): string;
-  getIcon(): string;
-  getBaseAction(): Action;
-  isPersonal(): boolean;
+  monopolyGroup: string | undefined;
+  name: string;
+  icon: string;
+  action: TileAction;
+  isPurchasable(): boolean;
   isUpgradable(): boolean;
 }

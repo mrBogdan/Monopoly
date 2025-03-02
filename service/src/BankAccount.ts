@@ -5,12 +5,6 @@ export class BankAccount {
   constructor(private id: string, private player: Player, private balance: number) {
   }
 
-  static findById(id: string) {
-    return (account: BankAccount): boolean => {
-      return account.id === id;
-    }
-  }
-
   static of(player: Player, initialBalance: number = 0): BankAccount {
     return new BankAccount(player.getId(), player, initialBalance);
   }
