@@ -1,7 +1,9 @@
 # Goals
 
 To create Ukrainian monopoly, add educational component
-about investment and basic money rules for society
+about investment and basic money rules for society.
+
+Want to support army and other society important parts  
 
 # Values
 * Open-minded
