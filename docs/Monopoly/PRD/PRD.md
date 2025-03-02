@@ -38,6 +38,7 @@ for people about investment and basic money rules
 25. Stocks (in game) - advanced feature in specific mode for educational purposes
 26. Microloans (in game) - advanced feature in specific mode for educational purposes
 27. Restrictions
+28. School - Mono School - create a place where you can find courses, mentors and even opportunities to find a job 
 
 ## Entities
 * Player - user in game
