@@ -90,4 +90,5 @@ Basic mode rules
 * Player can get a credit
 * Player can exchange with other, but there is limitation for "anti-cheat" reasons, so player cannot give money without exchange, sum of exchange should not be more than x2 for example Tile price is 1000 maximum user can give 2k, and minimum 500
 * Player can give up
-* The game is ended when everyone except one went bankrupt or gave up 
+* The game is ended when everyone except one went bankrupt or gave up
+* We are using only integer number in a game. All math actions should be rounded 
