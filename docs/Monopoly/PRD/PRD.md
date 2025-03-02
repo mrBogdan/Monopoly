@@ -90,7 +90,7 @@ Basic mode rules (POS)
 * On equal number on rolling user should go one more step, it can be repeated three times
 * In game exists few types of Tiles. MonopolyTile, GameTile (Chance, Tax), CornerTile (Start, Jail/Parking, Portal/Jackpot, Go to jail)
 * On chane user should get a card from predefined stack of cards, after card applying it should come to the end of deck
-* Player can get a credit. Its constantly give a player 5000 UAH and Player should return in 10 rounds with 15% fee it's 5750
+* Player can get a credit. Bank constantly gives a player 5000 UAH and Player should return in 10 rounds with 15% fee it's 5750
 * Round is one rolling for user and all required actions like pay rent or pay for bank, if user gets something it is writing in kind of Logs window in the center of game 
 * Player can exchange with other, but there is limitation for "anti-cheat" reasons, so player cannot give money without exchange, sum of exchange should not be more than x2 for example Tile price is 1000 maximum user can give 2k, and minimum 500
 * Player can give up
