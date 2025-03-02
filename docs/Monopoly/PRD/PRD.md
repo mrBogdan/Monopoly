@@ -3,34 +3,40 @@
 To create Ukrainian monopoly, add educational component
 for people about investment and basic money rules
 
+# Values
+* Open-minded
+* Fairness
+* Truth
+* Quality
+
 ## Features
 
 1. User profile
 2. Login
 3. Sign up
-4. Inventory
-5. Game
+4. Inventory - user items from boxes and prizes
+5. Game - Main feature of the project, Monopoly game with different modes and features
 6. Achievements
 7. Friends
 8. Game streams
-9. Store - game items store
-10. Conversations
-11. Trades
-12. NFTs / Blockchain
-13. Tasks
-14. Global chat / Forum as nostalgia and interaction for people
+9. Market - game items market where users can sell items from gained item or opened boxes
+10. Conversations - user can send messages to his friend
+11. Trades - P2P. User can exchange items
+12. NFTs / Blockchain - make game as opportunity to earn money and develop our society with new one job
+13. Tasks - daily tasks, weekly, monthly and annual tasks
+14. Global chat / Forum - as nostalgia and interaction for people
 15. Subscription - Probably few different type of subscription. Monetization aspect
-16. Boxes
-17. Levels
-18. Ranked Mode
-19. BI/BA
-20. Wallet - User can deposit and withdraw money
-21. Referrals
-22. Promo 
-23. Credit (in game)
-24. Deposit (in game)
-25. Stocks (in game)
-26. Microloans (in game)
+16. Boxes and Keys - the second monetization aspect
+17. Levels - user engagement about their progression and rewards
+18. Ranked Mode - separate mode for experienced users
+19. BI/BA - data for analyzing
+20. Wallet - User can deposit and withdraw real money
+21. Referrals - a way to invite new people with win to win strategy for users
+22. Promo - promotion and engaging
+23. Credit (in game) - basic functionality in the game for boosting its economic
+24. Deposit (in game) - advanced feature in specific mode for educational purposes
+25. Stocks (in game) - advanced feature in specific mode for educational purposes
+26. Microloans (in game) - advanced feature in specific mode for educational purposes
 
 ## Entities
 * Player - user in game
