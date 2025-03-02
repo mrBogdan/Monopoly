@@ -40,6 +40,8 @@ about investment and basic money rules for society
 27. Restrictions
 28. School - Mono School - create a place where you can find courses, mentors and even opportunities to find a job
 29. Journey, Game triggers - service which is responsible to reward a user with items and boxes on some event
+30. Language support - MVP-1 Ua, Next En, etc
+31. Currency support - MVP-1 UAH, Next USD, Next cryptocurrencies 
 
 ## Entities
 * User - a real person that are registered in the system
