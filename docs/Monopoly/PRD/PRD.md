@@ -37,6 +37,7 @@ for people about investment and basic money rules
 24. Deposit (in game) - advanced feature in specific mode for educational purposes
 25. Stocks (in game) - advanced feature in specific mode for educational purposes
 26. Microloans (in game) - advanced feature in specific mode for educational purposes
+27. Restrictions
 
 ## Entities
 * Player - user in game
