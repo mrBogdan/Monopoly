@@ -38,7 +38,8 @@ about investment and basic money rules for society
 25. Stocks (in game) - advanced feature in specific mode for educational purposes
 26. Microloans (in game) - advanced feature in specific mode for educational purposes
 27. Restrictions
-28. School - Mono School - create a place where you can find courses, mentors and even opportunities to find a job 
+28. School - Mono School - create a place where you can find courses, mentors and even opportunities to find a job
+29. Journey, Game triggers - service which is responsible to reward a user with items and boxes on some event
 
 ## Entities
 * User - a real person that are registered in the system
