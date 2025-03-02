@@ -13,24 +13,24 @@ for people about investment and basic money rules
 6. Achievements
 7. Friends
 8. Game streams
-9. Store
+9. Store - game items store
 10. Conversations
 11. Trades
 12. NFTs / Blockchain
 13. Tasks
-14. Global chat
-15. Subscription
+14. Global chat / Forum as nostalgia and interaction for people
+15. Subscription - Probably few different type of subscription. Monetization aspect
 16. Boxes
 17. Levels
 18. Ranked Mode
 19. BI/BA
-20. Wallet
+20. Wallet - User can deposit and withdraw money
 21. Referrals
 22. Promo 
-23. Credit
-24. Deposit
-25. Stocks
-26. Microloans
+23. Credit (in game)
+24. Deposit (in game)
+25. Stocks (in game)
+26. Microloans (in game)
 
 ## Entities
 * Player - user in game
