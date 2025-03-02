@@ -1,23 +1,33 @@
 import { Player } from './Player';
 import { BankAccount } from './BankAccount';
 import { UnknownAccountError } from './UnknownAccountError';
+import { Credit } from './Credit';
 
 export class Bank {
-  private accounts: BankAccount[];
+  private readonly accounts: Map<string, BankAccount> = new Map();
+  private readonly bankPlayer: Player = Player.of('bank', 'Bank');
+  private readonly credits: Map<string, Credit> = new Map();
 
-  constructor(players: Player[]) {
-    this.accounts = players.map(BankAccount.of);
+  constructor(players: Player[], initialBackBalance = 100000) {
+    const bankAccount = BankAccount.of(this.bankPlayer, initialBackBalance);
+    const accounts = [bankAccount, ...players.map(BankAccount.of)];
+
+    accounts.forEach(account => {
+      this.accounts.set(account.getId(), account);
+    });
+
   }
 
-  getAccount(id: string): BankAccount {
-    return this.accounts.find(BankAccount.findById(id));
+  getAccount(id: string): BankAccount | undefined {
+    return this.accounts.get(id);
   }
 
   addAccount(account: BankAccount) {
-    this.accounts.push(account);
+    this.accounts.set(account.getId(), account);
   }
 
-  takeCredit(account: BankAccount) {}
+  takeCredit(account: BankAccount) {
+  }
 
   transfer(from: string, to: string, amount: number) {
     const fromAccount = this.getAccount(from);
@@ -31,7 +41,10 @@ export class Bank {
       throw new UnknownAccountError(toAccount);
     }
 
-    fromAccount.decreaseBalance(amount);
     toAccount.increaseBalance(amount);
+  }
+
+  charge(from: string, amount: number) {
+    this.transfer(from);
   }
 }
