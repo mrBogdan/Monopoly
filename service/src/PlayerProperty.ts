@@ -1,6 +1,6 @@
 import { Tile } from './Tile';
 import { Player } from './Player';
 
-export class UserProperty {
+export class PlayerProperty {
   constructor(private tile: Tile, private player: Player[]) {}
 }
