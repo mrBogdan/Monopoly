@@ -61,4 +61,7 @@ for people about investment and basic money rules
   * Monopoly has map with different type of businesses kind of technologies, foods, drinks, etc
   * Player rolls a dice and go over tiles
   * Game has 40 tiles, among them Game tiles, Monopoly tiles, Special tiles and Corner tiles like Start, Jail, Parking etc
+* User registration and login
+* Creating a room with basic game mode
+* To play
 
