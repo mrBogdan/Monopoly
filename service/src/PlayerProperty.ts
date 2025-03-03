@@ -1,4 +1,4 @@
-import { Tile } from './Tile';
+import { Tile } from './tile/Tile';
 import { Player } from './Player';
 
 export class PlayerProperty {

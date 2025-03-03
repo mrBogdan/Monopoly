@@ -1,7 +1,7 @@
-import { Player } from './Player';
+import { Player } from '../Player';
 import { BankAccount } from './BankAccount';
-import { UnknownAccountError } from './UnknownAccountError';
-import { Credit } from './Credit';
+import { UnknownAccountError } from '../UnknownAccountError';
+import { Credit } from '../Credit';
 
 export class Bank {
   private readonly accounts: Map<string, BankAccount> = new Map();
