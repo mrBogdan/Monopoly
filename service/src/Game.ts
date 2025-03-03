@@ -2,7 +2,7 @@ import {randomUUID} from 'node:crypto'
 
 import { Player } from './Player';
 import { Room } from './Room';
-import { Bank } from './Bank';
+import { Bank } from './bank/Bank';
 
 
 export enum GameType {
