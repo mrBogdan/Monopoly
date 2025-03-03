@@ -3,7 +3,12 @@
 To create Ukrainian monopoly, add educational component
 about investment and basic money rules for society.
 
-Want to support army and other society important parts  
+* Use our skills to create a project that can accumulate finance around it
+* Project that brings happiness
+* Support army and Ukraine
+* Develop our culture and share it with the rest of the world
+* Become stronger and independence
+* Make people smarter
 
 # Values
 * Open-minded
