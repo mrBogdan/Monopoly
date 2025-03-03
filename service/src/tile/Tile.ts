@@ -3,7 +3,7 @@ import { TileAction } from './TileAction';
 export interface Tile {
   id: string;
   order: number;
-  monopolyGroup: string | undefined;
+  group: string;
   name: string;
   icon: string;
   action: TileAction;

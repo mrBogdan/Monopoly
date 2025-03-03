@@ -1,5 +1,5 @@
-import { NotEnoughBalanceError } from './NotEnoughBalanceError';
-import { Player } from './Player';
+import { NotEnoughBalanceError } from '../NotEnoughBalanceError';
+import { Player } from '../Player';
 
 export class BankAccount {
   constructor(private id: string, private player: Player, private balance: number) {
