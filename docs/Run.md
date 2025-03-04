@@ -1,6 +1,7 @@
 ## Prerequisites
 * Docker
 * nvm (node-version-manager)
+* node 20 +
 
 ## To run whole app
 
