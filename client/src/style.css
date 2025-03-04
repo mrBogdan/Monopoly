@@ -4,15 +4,8 @@ body {
 
 :root {
     --size: 660px;
+    --tilesAmount: 11;
 }
 
-.monopoly-map {
-    display: grid;
-    border: 1px solid black;
-    width: var(--size);
-    height: var(--size);
-}
 
-.tile {
-    border: 1px solid orange;
-}
+
