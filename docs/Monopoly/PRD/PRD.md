@@ -15,6 +15,7 @@ about investment and basic money rules for society.
 * Fairness
 * Truth
 * Quality
+* We are respect freedom but you need to defends your ideas
 
 ## Features
 
