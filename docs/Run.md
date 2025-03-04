@@ -2,7 +2,7 @@
 * Docker
 * nvm (node-version-manager)
 
-## To run
+## To run whole app
 
 docker-compose up
 
@@ -12,7 +12,7 @@ docker-compose up
 
 ```shell
 cd ./service
-docker-compose
+docker-compose up
 ```
 
 ### non docker env
