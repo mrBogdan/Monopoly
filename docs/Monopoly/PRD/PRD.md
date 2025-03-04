@@ -132,6 +132,7 @@ about investment and basic money rules for society.
 * We are using only integer number in a game. All math actions should be rounded
 * Make a bank in the game as Monobank :D
 * Room should be deleted if all users left, or it's not active more than 20 minutes
+* Every player see animation of other players rolling dices
 
 ### Fast game mode
 
