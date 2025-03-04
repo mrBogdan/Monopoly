@@ -1,54 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Monopoly playground</title>
-    <link href="style.css" rel="stylesheet" />
-    <script src="index.js"></script>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            grid-template-rows: repeat(11, 1fr);
+            width: 500px;
+            height: 500px;
+            position: relative;
+        }
+
+        .corner {
+            background: red;
+        }
+
+        .property {
+            background: lightblue;
+        }
+
+        .logo {
+            grid-area: 5 / 5 / 8 / 8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+        }
+    </style>
 </head>
 <body>
-        <div class="monopoly-map">
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-            <div class="tile"></div>
-        </div>
+<div class="board">
+    <!-- Верхній ряд -->
+    <div class="corner" style="grid-area: 1 / 1;">GO</div>
+    <div class="property" style="grid-area: 1 / 2;">Mediterranean Ave</div>
+    <div class="property" style="grid-area: 1 / 3;">Community Chest</div>
+    <div class="property" style="grid-area: 1 / 4;">Baltic Ave</div>
+    <div class="property" style="grid-area: 1 / 5;">Income Tax</div>
+    <div class="property" style="grid-area: 1 / 6;">Reading Railroad</div>
+    <div class="property" style="grid-area: 1 / 7;">Oriental Ave</div>
+    <div class="property" style="grid-area: 1 / 8;">Chance</div>
+    <div class="property" style="grid-area: 1 / 9;">Vermont Ave</div>
+    <div class="property" style="grid-area: 1 / 10;">Connecticut Ave</div>
+    <div class="corner" style="grid-area: 1 / 11;">Jail</div>
 
+    <!-- Лівий і правий ряд -->
+    <div class="property" style="grid-area: 2 / 1;">St. Charles Place</div>
+    <div class="property" style="grid-area: 2 / 11;">St. James Place</div>
+    <div class="property" style="grid-area: 3 / 1;">Electric Company</div>
+    <div class="property" style="grid-area: 3 / 11;">Tennessee Ave</div>
+    <div class="property" style="grid-area: 4 / 11;">34</div>
+    <div class="property" style="grid-area: 4 / 1;">35</div>
+    <div class="property" style="grid-area: 5 / 11;">36</div>
+    <div class="property" style="grid-area: 5 / 1;">37</div>
+    <div class="property" style="grid-area: 6 / 11;">38</div>
+    <div class="property" style="grid-area: 6 / 1;">39</div>
+    <!-- (Продовжити інші клітинки аналогічно) -->
+
+    <!-- Нижній ряд -->
+    <div class="corner" style="grid-area: 11 / 1;">Free Parking</div>
+    <div class="property" style="grid-area: 11 / 2;">Kentucky Ave</div>
+    <div class="property" style="grid-area: 11 / 3;">Chance</div>
+    <div class="property" style="grid-area: 11 / 4;">Indiana Ave</div>
+    <div class="property" style="grid-area: 11 / 5;">Illinois Ave</div>
+    <div class="property" style="grid-area: 11 / 6;">B&O Railroad</div>
+    <div class="property" style="grid-area: 11 / 7;">Atlantic Ave</div>
+    <div class="property" style="grid-area: 11 / 8;">Ventnor Ave</div>
+    <div class="property" style="grid-area: 11 / 9;">Water Works</div>
+    <div class="property" style="grid-area: 11 / 10;">Marvin Gardens</div>
+    <div class="corner" style="grid-area: 11 / 11;">Go To Jail</div>
+
+    <!-- Центр - логотип -->
+    <div class="logo">MONOPOLY</div>
+</div>
 </body>
 </html>
