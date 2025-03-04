@@ -4,7 +4,10 @@
 
 ## To run whole app
 
+```shell
 docker-compose up
+```
+
 
 ## To run backend
 
