@@ -11,11 +11,12 @@ about investment and basic money rules for society.
 * Make people smarter
 
 # Values
+
 * Open-minded
 * Fairness
 * Truth
 * Quality
-* We are respect freedom but you need to defends your ideas
+* We are respect freedom, but you need to defend your ideas
 
 ## Features
 
@@ -50,20 +51,34 @@ about investment and basic money rules for society.
 29. Journey, Game triggers - service which is responsible to reward a user with items and boxes on some event
 30. Language support - MVP-1 Ua, Next En, etc
 31. Currency support - MVP-1 UAH, Next USD or EUR looking at Trump :D, Next cryptocurrencies
-32. To find solutions for different tasks, like math, programming, or simple business and optimization process tasks for increasing rent prize of your monopoly and you can do it when other players are doing their steps
+32. To find solutions for different tasks, like math, programming, or simple business and optimization process tasks for
+    increasing rent prize of your monopoly, and you can do it when other players are doing their steps
 
 ## Entities
+
 * User - a real person that are registered in the system
 * Player - user in game
 * Room - special place where user waiting other players to start a game
 * Dice - random roller to go over the tiles
 * Tile - a cell on monopoly map
 * Bank - game entity that responsible to give user money, give loans etc
-* User Property - purchased by user tiles, it can be single business or monopoly
+* Player Property - purchased by player tiles, it can be single business or monopoly
+* Inventory - user items from boxes and prizes
+* Monopoly - a set of tiles of the same type
+* Box - gacha box with random items
+* Key - a key to open a box
 * Star/House - upgrade monopoly tiles, possible to have 4 small stars
-* Big  start / Hotel - The fifth and last upgrade for monopoly tile
+* Big start / Hotel - The fifth and last upgrade for monopoly tile
+
+### Dices
+
+* Single dice 1 - 6 - used in jackpot tile
+* Double dice 1 - 6 x 1 - 6 - basic mode, equal values give you chance to go once more, but it can be only 3 times
+* Triple dice 1 - 6 x 1 - 6 x 1 - 6 - drops randomly in fast game mode, equal numbers on tree dices give you chance to go on any tile
+* Bus dice - Is special dice that can be used in fast mode for choosing where to go it drops randomly in fast game mode
 
 ## Game modes
+
 * Regular mode - basic monopoly game. User goes, buys, upgrades and trades with other players
 * Fast mode - monopoly with additional dice and even dice types like a bus,
 * Special mode - additional features like deposits, stocks
@@ -73,9 +88,10 @@ about investment and basic money rules for society.
 ## MVP 1 features
 
 * Basic game flow
-  * Monopoly has map with different type of businesses kind of technologies, foods, drinks, etc
-  * Player rolls a dice and go over tiles
-  * Game has 40 tiles, among them Game tiles, Monopoly tiles, Special tiles and Corner tiles like Start, Jail, Parking etc
+    * Monopoly has map with different type of businesses kind of technologies, foods, drinks, etc
+    * Player rolls a dice and go over tiles
+    * Game has 40 tiles, among them Game tiles, Monopoly tiles, Special tiles and Corner tiles like Start, Jail, Parking
+      etc
 * User registration and login
 * Creating a room with basic game mode
 * To play
@@ -84,28 +100,40 @@ about investment and basic money rules for society.
 
 > Note all numbers are discussable
 
-Basic mode rules (POS)
+### Basic mode rules (POS)
 
 * User create a room where he choose amount of players
 * Amount of players can be between 2 and 5
 * Also he can choose if the room automatically start the game
 * Next when all required players are joined, game starts
-* On the game beginning we need to initialize users with start money 15000 UAH (In game we will add k what means more money to achieve realistic money amount)
+* On the game beginning we need to initialize users with start money 15000 UAH (In game we will add k what means more
+  money to achieve realistic money amount)
 * All the players should appear on the first Tile which is called start
 * All the players will have different colors due to separate their purchases
 * Next player press button "Roll" and two dices rolling the number with amount of steps
 * We will see animation as "Player" is going for rolled amount of steps
 * According to last step user should do action of its "Tile"
 * After, next player do his rolling
-* "Player" can buy a empty tile, should pay rent if he hits another player tile. Price of rent depends on type of Tile and amount of "stars" of Monopoly 
+* "Player" can buy a empty tile, should pay rent if he hits another player tile. Price of rent depends on type of Tile
+  and amount of "stars" of Monopoly
 * On equal number on rolling user should go one more step, it can be repeated three times
-* In game exists few types of Tiles. MonopolyTile, GameTile (Chance, Tax), CornerTile (Start, Jail/Parking, Portal/Jackpot, Go to jail)
+* In game exists few types of Tiles. MonopolyTile, GameTile (Chance, Tax), CornerTile (Start, Jail/Parking,
+  Portal/Jackpot, Go to jail)
 * On chane user should get a card from predefined stack of cards, after card applying it should come to the end of deck
-* Player can get a credit. Bank constantly gives a player 5000 UAH and Player should return in 10 rounds with 15% fee it's 5750
-* Round is one rolling for user and all required actions like pay rent or pay for bank, if user gets something it is writing in kind of Logs window in the center of game 
-* Player can exchange with other, but there is limitation for "anti-cheat" reasons, so player cannot give money without exchange, sum of exchange should not be more than x2 for example Tile price is 1000 maximum user can give 2k, and minimum 500
+* Player can get a credit. Bank constantly gives a player 5000 UAH and Player should return in 10 rounds with 15% fee
+  it's 5750
+* Round is one rolling for user and all required actions like pay rent or pay for bank, if user gets something it is
+  writing in kind of Logs window in the center of game
+* Player can exchange with other, but there is limitation for "anti-cheat" reasons, so player cannot give money without
+  exchange, sum of exchange should not be more than x2 for example Tile price is 1000 maximum user can give 2k, and
+  minimum 500
 * Player can give up
 * The game is ended when everyone except one went bankrupt or gave up
 * We are using only integer number in a game. All math actions should be rounded
 * Make a bank in the game as Monobank :D
-* Room should be deleted if all users left or it's not active more than 20 minutes
+* Room should be deleted if all users left, or it's not active more than 20 minutes
+
+### Fast game mode
+
+* Starts after 10 rounds basic mode
+* Can give user random set of dices like Triple dice, Double dice + Bus
