@@ -1,80 +1,340 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
         .board {
             display: grid;
             grid-template-columns: repeat(11, 1fr);
             grid-template-rows: repeat(11, 1fr);
-            width: 500px;
-            height: 500px;
-            position: relative;
+            width: 95vmin;
+            height: 95vmin;
+            max-width: 1000px;
+            max-height: 1000px;
+            margin: 0 auto;
+            background-color: #e0f0e0;
+            gap: 2px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
-
-        .corner {
-            background: red;
-        }
-
-        .property {
-            background: lightblue;
-        }
-
-        .logo {
-            grid-area: 5 / 5 / 8 / 8;
+        
+        /* basic styles for tile */
+        .tile {
+            background-color: white;
+            border: 1px solid #999;
             display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            transform: rotate(45deg);
+            text-align: center;
+            padding: 5px;
+            font-size: 12px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* different tile types */
+        .corner {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 10px;
+            min-width: 100px;
+            min-height: 100px;
+        }
+        
+        .property-tile {
+            padding-top: 15px;
+        }
+        
+        .color-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+        }
+        
+        .tile-name {
+            font-weight: bold;
+            margin: 5px 0;
+            font-size: 11px;
+        }
+        
+        .tile-price {
+            font-size: 10px;
+            margin-top: auto;
+        }
+        
+        .logo {
+            max-width: 60%;
+            max-height: 40%;
+            margin: 5px 0;
+        }
+        
+        /* center tile */
+        .center {
+            grid-column: 2 / 11;
+            grid-row: 2 / 11;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transform: rotate(-45deg);
+        }
+        
+        /* corner tiles positioning */
+        #jackpot { grid-column: 11; grid-row: 11; }
+        #go-to-jail { grid-column: 1; grid-row: 11; }
+        #start { grid-column: 1; grid-row: 1; }
+        #jail-visiting { grid-column: 11; grid-row: 1; }
+        
+        /* bottom side positioning */
+        #t1 { grid-column: 10; grid-row: 11; }
+        #t2 { grid-column: 9; grid-row: 11; }
+        #t3 { grid-column: 8; grid-row: 11; }
+        #t4 { grid-column: 7; grid-row: 11; }
+        #t5 { grid-column: 6; grid-row: 11; }
+        #t6 { grid-column: 5; grid-row: 11; }
+        #t7 { grid-column: 4; grid-row: 11; }
+        #t8 { grid-column: 3; grid-row: 11; }
+        #t9 { grid-column: 2; grid-row: 11; }
+        
+        /* left side positioning */
+        #t10 { grid-column: 1; grid-row: 10; }
+        #t11 { grid-column: 1; grid-row: 9; }
+        #t12 { grid-column: 1; grid-row: 8; }
+        #t13 { grid-column: 1; grid-row: 7; }
+        #t14 { grid-column: 1; grid-row: 6; }
+        #t15 { grid-column: 1; grid-row: 5; }
+        #t16 { grid-column: 1; grid-row: 4; }
+        #t17 { grid-column: 1; grid-row: 3; }
+        #t18 { grid-column: 1; grid-row: 2; }
+        
+        /* top side positioning */
+        #t19 { grid-column: 2; grid-row: 1; }
+        #t20 { grid-column: 3; grid-row: 1; }
+        #t21 { grid-column: 4; grid-row: 1; }
+        #t22 { grid-column: 5; grid-row: 1; }
+        #t23 { grid-column: 6; grid-row: 1; }
+        #t24 { grid-column: 7; grid-row: 1; }
+        #t25 { grid-column: 8; grid-row: 1; }
+        #t26 { grid-column: 9; grid-row: 1; }
+        #t27 { grid-column: 10; grid-row: 1; }
+        
+        /* right side positioning */
+        #t28 { grid-column: 11; grid-row: 2; }
+        #t29 { grid-column: 11; grid-row: 3; }
+        #t30 { grid-column: 11; grid-row: 4; }
+        #t31 { grid-column: 11; grid-row: 5; }
+        #t32 { grid-column: 11; grid-row: 6; }
+        #t33 { grid-column: 11; grid-row: 7; }
+        #t34 { grid-column: 11; grid-row: 8; }
+        #t35 { grid-column: 11; grid-row: 9; }
+        #t36 { grid-column: 11; grid-row: 10; }
     </style>
 </head>
 <body>
-<div class="board">
-    <!-- Верхній ряд -->
-    <div class="corner" style="grid-area: 1 / 1;">GO</div>
-    <div class="property" style="grid-area: 1 / 2;">Mediterranean Ave</div>
-    <div class="property" style="grid-area: 1 / 3;">Community Chest</div>
-    <div class="property" style="grid-area: 1 / 4;">Baltic Ave</div>
-    <div class="property" style="grid-area: 1 / 5;">Income Tax</div>
-    <div class="property" style="grid-area: 1 / 6;">Reading Railroad</div>
-    <div class="property" style="grid-area: 1 / 7;">Oriental Ave</div>
-    <div class="property" style="grid-area: 1 / 8;">Chance</div>
-    <div class="property" style="grid-area: 1 / 9;">Vermont Ave</div>
-    <div class="property" style="grid-area: 1 / 10;">Connecticut Ave</div>
-    <div class="corner" style="grid-area: 1 / 11;">Jail</div>
-
-    <!-- Лівий і правий ряд -->
-    <div class="property" style="grid-area: 2 / 1;">St. Charles Place</div>
-    <div class="property" style="grid-area: 2 / 11;">St. James Place</div>
-    <div class="property" style="grid-area: 3 / 1;">Electric Company</div>
-    <div class="property" style="grid-area: 3 / 11;">Tennessee Ave</div>
-    <div class="property" style="grid-area: 4 / 11;">34</div>
-    <div class="property" style="grid-area: 4 / 1;">35</div>
-    <div class="property" style="grid-area: 5 / 11;">36</div>
-    <div class="property" style="grid-area: 5 / 1;">37</div>
-    <div class="property" style="grid-area: 6 / 11;">38</div>
-    <div class="property" style="grid-area: 6 / 1;">39</div>
-    <!-- (Продовжити інші клітинки аналогічно) -->
-
-    <!-- Нижній ряд -->
-    <div class="corner" style="grid-area: 11 / 1;">Free Parking</div>
-    <div class="property" style="grid-area: 11 / 2;">Kentucky Ave</div>
-    <div class="property" style="grid-area: 11 / 3;">Chance</div>
-    <div class="property" style="grid-area: 11 / 4;">Indiana Ave</div>
-    <div class="property" style="grid-area: 11 / 5;">Illinois Ave</div>
-    <div class="property" style="grid-area: 11 / 6;">B&O Railroad</div>
-    <div class="property" style="grid-area: 11 / 7;">Atlantic Ave</div>
-    <div class="property" style="grid-area: 11 / 8;">Ventnor Ave</div>
-    <div class="property" style="grid-area: 11 / 9;">Water Works</div>
-    <div class="property" style="grid-area: 11 / 10;">Marvin Gardens</div>
-    <div class="corner" style="grid-area: 11 / 11;">Go To Jail</div>
-
-    <!-- Центр - логотип -->
-    <div class="logo">MONOPOLY</div>
-</div>
+    <div class="board">
+        <!-- bottom side -->
+        <div class="tile corner" id="jackpot">JACKPOT</div>
+        
+        <div class="tile property-tile" id="t9">
+            <div class="tile-name">KFC</div>
+            <div class="tile-price">$60</div>
+        </div>
+        
+        <div class="tile" id="t8">
+            <div class="tile-name">ROVIO</div>
+            <div class="tile-price">$100</div>
+        </div>
+        
+        <div class="tile property-tile" id="t7">
+            <div class="tile-name">BURGER KING</div>
+            <div class="tile-price">$60</div>
+        </div>
+        
+        <div class="tile property-tile" id="t6">
+            <div class="tile-name">McDonald's</div>
+            <div class="tile-price">Pay $200</div>
+        </div>
+        
+        <div class="tile" id="t5">
+            <div class="tile-name">FORD</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <div class="tile property-tile" id="t4">
+            <div class="tile-name">British Airways</div>
+            <div class="tile-price">$100</div>
+        </div>
+        
+        <div class="tile property-tile" id="t3">
+            <div class="tile-name">Lufthansa</div>
+            <div class="tile-price">$100</div>
+        </div>
+        
+        <div class="tile" id="t2">
+            <div class="tile-name">?</div>
+        </div>
+        
+        <div class="tile property-tile" id="t1">
+            <div class="tile-name">American Airlines</div>
+            <div class="tile-price">$120</div>
+        </div>
+        
+        <div class="tile corner" id="go-to-jail">GO TO JAIL</div>
+        
+        <!-- left side -->
+        <div class="tile property-tile" id="t10">
+            <div class="tile-name">Holiday Inn</div>
+            <div class="tile-price">$140</div>
+        </div>
+        
+        <div class="tile property-tile" id="t11">
+            <div class="tile-name">Radisson BLU</div>
+            <div class="tile-price">$150</div>
+        </div>
+        
+        <div class="tile" id="t12">
+            <div class="tile-name">?</div>
+        </div>
+        
+        <div class="tile property-tile" id="t13">
+            <div class="tile-name">Novotel</div>
+            <div class="tile-price">$160</div>
+        </div>
+        
+        <div class="tile" id="t14">
+            <div class="tile-name">LAND ROVER</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <div class="tile" id="t15">
+            <div class="tile-name">💎</div>
+        </div>
+        
+        <div class="tile property-tile" id="t16">
+            <div class="tile-name">Apple</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <div class="tile" id="t17">
+            <div class="tile-name">?</div>
+        </div>
+        
+        <div class="tile property-tile" id="t18">
+            <div class="tile-name">Nokia</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <!-- top side -->
+        <div class="tile corner" id="start">START<br> collect $200</div>
+        
+        <div class="tile property-tile" id="t19">
+            <div class="tile-name">Chanel</div>
+            <div class="tile-price">$220</div>
+        </div>
+        
+        <div class="tile" id="t20">
+            <div class="tile-name">?</div>
+        </div>
+        
+        <div class="tile property-tile" id="t21">
+            <div class="tile-name">Hugo Boss</div>
+            <div class="tile-price">$220</div>
+        </div>
+        
+        <div class="tile" id="t22">
+            <div class="tile-name">💵</div>
+        </div>
+        
+        <div class="tile" id="t23">
+            <div class="tile-name">MERSEDES BENZ</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <div class="tile property-tile" id="t24">
+            <div class="tile-name">Adidas</div>
+            <div class="tile-price">$260</div>
+        </div>
+        
+        <div class="tile" id="t25">
+            <div class="tile-name">?</div>
+        </div>
+        
+        <div class="tile" id="t26">
+            <div class="tile-name">Puma</div>
+            <div class="tile-price">$150</div>
+        </div>
+        
+        <div class="tile property-tile" id="t27">
+            <div class="tile-name">Lacoste</div>
+            <div class="tile-price">$280</div>
+        </div>
+        
+        <div class="tile corner" id="jail-visiting">JAIL || VISITING</div>
+        
+        <!-- right side -->
+        <div class="tile property-tile" id="t28">
+            <div class="tile-name">YouTube</div>
+            <div class="tile-price">$300</div>
+        </div>
+        
+        <div class="tile" id="t29">
+            <div class="tile-name">Rockstar Games</div>
+            <div class="tile-price">$300</div>
+        </div>
+        
+        <div class="tile property-tile" id="t30">
+            <div class="tile-name">Facebook</div>
+            <div class="tile-price">$300</div>
+        </div>
+        
+        <div class="tile property-tile" id="t31">
+            <div class="tile-name">Twitter | X</div>
+            <div class="tile-price">$320</div>
+        </div>
+        
+        <div class="tile" id="t32">
+            <div class="tile-name">AUDI</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <div class="tile property-tile" id="t33">
+            <div class="tile-name">CocaCola</div>
+            <div class="tile-price">$200</div>
+        </div>
+        
+        <div class="tile" id="t34">
+            <div class="tile-name">?</div>
+        </div>
+        
+        <div class="tile property-tile" id="t35">
+            <div class="tile-name">Pepsi</div>
+            <div class="tile-price">Pay $100</div>
+        </div>
+        
+        <div class="tile property-tile" id="t36">
+            <div class="tile-name">Fanta</div>
+            <div class="tile-price">$400</div>
+        </div>
 </body>
-</html>
