@@ -14,7 +14,3 @@ docker-compose up
 cd ./service
 docker-compose up
 ```
-
-### non docker env
-
-
