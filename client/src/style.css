@@ -1,11 +1,148 @@
-body {
-    min-height: 100vh;
-}
-
 :root {
     --size: 660px;
     --tilesAmount: 11;
 }
 
+body {
+    font-family: 'Figtree', sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
 
+.board {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(11, 1fr);
+    width: 95vmin;
+    height: 95vmin;
+    max-width: 1000px;
+    max-height: 1000px;
+    margin: 0 auto;
+    background-color: #e0f0e0;
+    gap: 2px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+/* basic styles for tile */
+.tile {
+    background-color: white;
+    border: 1px solid #999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    font-size: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* different tile types */
+.corner {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px;
+    min-width: 100px;
+    min-height: 100px;
+}
+
+.property-tile {
+    padding-top: 15px;
+}
+
+.color-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 15px;
+}
+
+.tile-name {
+    font-weight: bold;
+    margin: 5px 0;
+    font-size: 11px;
+}
+
+.tile-price {
+    font-size: 10px;
+    margin-top: auto;
+}
+
+.logo {
+    max-width: 60%;
+    max-height: 40%;
+    margin: 5px 0;
+}
+
+/* center tile */
+.center {
+    grid-column: 2 / 11;
+    grid-row: 2 / 11;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transform: rotate(-45deg);
+}
+
+/* corner tiles positioning */
+#jackpot { grid-column: 11; grid-row: 11; }
+#go-to-jail { grid-column: 1; grid-row: 11; }
+#start { grid-column: 1; grid-row: 1; }
+#jail-visiting { grid-column: 11; grid-row: 1; }
+
+/* bottom side positioning */
+#t1 { grid-column: 10; grid-row: 11; }
+#t2 { grid-column: 9; grid-row: 11; }
+#t3 { grid-column: 8; grid-row: 11; }
+#t4 { grid-column: 7; grid-row: 11; }
+#t5 { grid-column: 6; grid-row: 11; }
+#t6 { grid-column: 5; grid-row: 11; }
+#t7 { grid-column: 4; grid-row: 11; }
+#t8 { grid-column: 3; grid-row: 11; }
+#t9 { grid-column: 2; grid-row: 11; }
+
+/* left side positioning */
+#t10 { grid-column: 1; grid-row: 10; }
+#t11 { grid-column: 1; grid-row: 9; }
+#t12 { grid-column: 1; grid-row: 8; }
+#t13 { grid-column: 1; grid-row: 7; }
+#t14 { grid-column: 1; grid-row: 6; }
+#t15 { grid-column: 1; grid-row: 5; }
+#t16 { grid-column: 1; grid-row: 4; }
+#t17 { grid-column: 1; grid-row: 3; }
+#t18 { grid-column: 1; grid-row: 2; }
+
+/* top side positioning */
+#t19 { grid-column: 2; grid-row: 1; }
+#t20 { grid-column: 3; grid-row: 1; }
+#t21 { grid-column: 4; grid-row: 1; }
+#t22 { grid-column: 5; grid-row: 1; }
+#t23 { grid-column: 6; grid-row: 1; }
+#t24 { grid-column: 7; grid-row: 1; }
+#t25 { grid-column: 8; grid-row: 1; }
+#t26 { grid-column: 9; grid-row: 1; }
+#t27 { grid-column: 10; grid-row: 1; }
+
+/* right side positioning */
+#t28 { grid-column: 11; grid-row: 2; }
+#t29 { grid-column: 11; grid-row: 3; }
+#t30 { grid-column: 11; grid-row: 4; }
+#t31 { grid-column: 11; grid-row: 5; }
+#t32 { grid-column: 11; grid-row: 6; }
+#t33 { grid-column: 11; grid-row: 7; }
+#t34 { grid-column: 11; grid-row: 8; }
+#t35 { grid-column: 11; grid-row: 9; }
+#t36 { grid-column: 11; grid-row: 10; }
 
