@@ -49,10 +49,14 @@ about investment and basic money rules for society.
 27. Restrictions
 28. School - Mono School - create a place where you can find courses, mentors and even opportunities to find a job
 29. Journey, Game triggers - service which is responsible to reward a user with items and boxes on some event
-30. Language support - MVP-1 Ua, Next En, etc
-31. Currency support - MVP-1 UAH, Next USD or EUR looking at Trump :D, Next cryptocurrencies
-32. To find solutions for different tasks, like math, programming, or simple business and optimization process tasks for
+30. Personal offers
+31. Language support - MVP-1 Ua, Next En, etc
+32. Currency support - MVP-1 UAH, Next USD or EUR looking at Trump :D, Next cryptocurrencies
+33. To find solutions for different tasks, like math, programming, or simple business and optimization process tasks for
     increasing rent prize of your monopoly, and you can do it when other players are doing their steps
+34. Security - MFA, 2FA, Captcha, etc
+35. Backoffice
+36. Compensation
 
 ## Entities
 
