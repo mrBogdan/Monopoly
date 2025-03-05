@@ -1,7 +1,7 @@
 # Monopoly
 Ukrainian Online Monopoly
 
-## Welcome guild
+## Welcome guide
 
 > See docs/Welcome guide.md
 
