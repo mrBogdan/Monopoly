@@ -1,5 +1,5 @@
 export enum RewardType {
-  TripleReward = 'Triple',
-  DuoReward = 'Duo',
-  QuadReward = 'Quad',
+  DuoMonopolyReward = 'DuoMonopolyReward',
+  MonopolyReward = 'MonopolyReward',
+  QuadMonopolyReward = 'QuadMonopolyReward',
 }
