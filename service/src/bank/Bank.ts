@@ -42,8 +42,4 @@ export class Bank {
 
     toAccount.increaseBalance(amount);
   }
-
-  charge(from: string, amount: number) {
-    this.transfer(from);
-  }
 }

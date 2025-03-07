@@ -1,23 +1,17 @@
-import { Player } from './Player';
-import { Room } from './Room';
-import { GameType, PlayersCount } from './Game';
-import { GameEventBus } from './GameEventBus';
+import { WebSocketServer } from 'ws';
 
 const run = async () => {
-  const gameEventBus = GameEventBus.getInstance();
-  const bogdan = new Player('1', 'Bogdan');
-  const userId = '42';
-  const roomId = '433';
+  const wss = new WebSocketServer({
+    port: 8080,
+  });
 
-  const room = new Room(
-    roomId,
-    [],
-    5,
-    userId,
-    false,
-  );
+  wss.on('connection', (ws) => {
+    ws.on('error', console.error);
 
-  room.join(bogdan);
+    ws.on('message', (msg) => {
+      console.log({ msg });
+    });
+  });
 };
 
 run();
