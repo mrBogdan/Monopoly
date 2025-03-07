@@ -6,7 +6,6 @@ import { Credit } from '../Credit';
 export class Bank {
   private readonly accounts: Map<string, BankAccount> = new Map();
   private readonly bankPlayer: Player = Player.of('bank', 'Bank');
-  private readonly credits: Map<string, Credit> = new Map();
 
   constructor(players: Player[], initialBackBalance = 100000) {
     const bankAccount = BankAccount.of(this.bankPlayer, initialBackBalance);
@@ -34,11 +33,11 @@ export class Bank {
     const toAccount = this.getAccount(to);
 
     if (!fromAccount) {
-      throw new UnknownAccountError(fromAccount);
+      throw new UnknownAccountError(from);
     }
 
     if (!toAccount) {
-      throw new UnknownAccountError(toAccount);
+      throw new UnknownAccountError(to);
     }
 
     toAccount.increaseBalance(amount);
