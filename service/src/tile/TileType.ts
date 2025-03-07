@@ -1,4 +1,4 @@
 export enum TileType {
   Game = 'Game',
-  Mono = 'Mono',
+  Monopoly = 'Monopoly',
 }
