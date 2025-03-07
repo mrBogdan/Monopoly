@@ -17,10 +17,6 @@ export class Player {
     return this.round;
   }
 
-  getName(): string {
-    return this.name;
-  }
-
   getId(): string {
     return this.id;
   }
