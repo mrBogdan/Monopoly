@@ -3,14 +3,14 @@ version: "3.8"
 services:
   app:
     build:
-      context: .
-      dockerfile: dev.Dockerfile
+      context: ../
+      dockerfile: ./docker/dev.Dockerfile
     ports:
       - "8080:8080"
     environment:
       NODE_ENV: development
       PORT: 8080
     volumes:
-      - .:/app
+      - ../:/app
       - /app/node_modules
 

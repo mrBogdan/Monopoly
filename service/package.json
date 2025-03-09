@@ -3,7 +3,8 @@
     "test:unit": "npx jest src/__tests__/unit",
     "build": "npx tsc",
     "start": "node ./build/index.js",
-    "start:dev": "npx nodemon"
+    "start:dev": "npx nodemon",
+    "start:docker": "docker-compose -f ./docker/dev.docker-compose.yml up"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
