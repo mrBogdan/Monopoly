@@ -1,5 +1,3 @@
-import { Tile } from '../Tile';
-import { MapTile } from '../MapTile';
 import { boss } from './Perfumeries/boss';
 import { audi } from './Cars/audi';
 import { tax } from './Game/tax';
@@ -14,6 +12,8 @@ import { amazon } from './WebServices/amazon';
 import { rockstar } from './VideoGames/rockstar';
 import { viber } from './WebServices/viber';
 import { facebook } from './WebServices/facebook';
+import { Tile } from '../tile/Tile';
+import { MapTile } from '../tile/MapTile';
 
 const createMapTile = (tile: Tile, index: number): MapTile => {
   return {

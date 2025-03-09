@@ -1,8 +1,8 @@
-import { MonopolyTile } from '../../MonopolyTile';
-import { DuoMonopolyReward } from '../../DuoMonopolyReward';
-import { Monopoly } from '../../Monopoly';
-import { RewardType } from '../../RewardType';
-import { TileType } from '../../TileType';
+import { MonopolyTile } from '../../tile/MonopolyTile';
+import { DuoMonopolyReward } from '../../tile/DuoMonopolyReward';
+import { Monopoly } from '../../tile/Monopoly';
+import { TileType } from '../../tile/TileType';
+import { RewardType } from '../../tile/RewardType';
 
 export const rockstar: MonopolyTile<DuoMonopolyReward> = {
   id: 'rockstar',
