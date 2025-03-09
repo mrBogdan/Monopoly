@@ -2,7 +2,7 @@ const socket = new WebSocket('ws://localhost:8080');
 
 socket.addEventListener('open', (event) => {
   console.log('Connected to WebSocket server');
-  socket.send(JSON.stringify({msg: 'Hello World!'}));
+  socket.send(JSON.stringify({type: 'game:getTiles'}));
 });
 
 socket.addEventListener('message', (event) => {

@@ -1,7 +1,7 @@
-import { UpgradableMonopolyTile } from '../../UpgradableMonopolyTile';
-import { RewardType } from '../../RewardType';
-import { Monopoly } from '../../Monopoly';
-import { TileType } from '../../TileType';
+import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
+import { Monopoly } from '../../tile/Monopoly';
+import { TileType } from '../../tile/TileType';
+import { RewardType } from '../../tile/RewardType';
 
 export const puma: UpgradableMonopolyTile = {
   id: 'Puma',
