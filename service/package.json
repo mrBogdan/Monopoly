@@ -4,16 +4,21 @@
     "build": "npx tsc",
     "start": "node ./build/index.js",
     "start:dev": "npx nodemon",
-    "start:docker": "docker-compose -f ./docker/dev.docker-compose.yml up"
+    "start:docker": "docker-compose -f ./docker/dev.docker-compose.yml up",
+    "lint": "npx eslint"
   },
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
     "@types/jest": "^29.5.14",
     "@types/ws": "^8.18.0",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
     "ws": "^8.18.1"
