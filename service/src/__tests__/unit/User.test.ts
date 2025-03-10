@@ -1,4 +1,4 @@
-import { User } from '../../User';
+import { User } from '../../user/User';
 import { InvalidEmailError } from '../../InvalidEmailError';
 
 describe('User', () => {

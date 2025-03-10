@@ -1,13 +1,13 @@
-import { Email } from './decorators';
+import { Email } from '../decorators';
 
 export class User {
   @Email
   email: string;
 
   constructor(
-    private id: string,
-    private name: string,
-    private password: string,
+    public id: string,
+    public name: string,
+    public passwordHash: string,
     email: string,
   ) {
     this.email = email;
