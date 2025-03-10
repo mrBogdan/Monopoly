@@ -1,12 +1,9 @@
-import { TileAction } from './TileAction';
+import { TileType } from './TileType';
 
 export interface Tile {
   id: string;
-  order: number;
-  group: string;
   name: string;
-  icon: string;
-  action: TileAction;
-  isPurchasable(): boolean;
-  isUpgradable(): boolean;
+  iconUrl: string;
+  description: string;
+  type: TileType;
 }

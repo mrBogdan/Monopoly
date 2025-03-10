@@ -1,10 +1,14 @@
 ## Prerequisites
 * Docker
 * nvm (node-version-manager)
+* node 20 +
 
-## To run
+## To run whole app
 
+```shell
 docker-compose up
+```
+
 
 ## To run backend
 
@@ -12,9 +16,5 @@ docker-compose up
 
 ```shell
 cd ./service
-docker-compose
+docker-compose up
 ```
-
-### non docker env
-
-
