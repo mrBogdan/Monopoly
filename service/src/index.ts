@@ -15,7 +15,7 @@ const parseRequest = (requestMessage: string): Action => {
   }
 }
 
-const handleRequest = (msg: string): object => {
+const handleRequest = async (msg: string): Promise<object> => {
   const request: Action = parseRequest(msg);
 
   if (!('type' in request)) {
@@ -40,10 +40,10 @@ const run = async () => {
   wss.on('connection', (ws) => {
     ws.on('error', console.error);
 
-    ws.on('message', (msg) => {
+    ws.on('message', async (msg) => {
       const request = msg.toString();
       try {
-        const response = handleRequest(request);
+        const response = await handleRequest(request);
         ws.send(JSON.stringify(response));
       } catch (error) {
         if (error instanceof BadRequestError) {
