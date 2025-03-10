@@ -1,7 +1,9 @@
 import { WebSocketServer } from 'ws';
 import { Action } from './action/Action';
 import { actionFactory } from './actionFactory';
-import { BadRequestError } from './BadRequestError';
+import { errorMapper } from './errorMapper';
+import { InternalServerError } from './errors/InternalServerError';
+import { BadRequestError } from './errors/BadRequestError';
 
 const PORT = process.env.PORT || 8080;
 
@@ -9,7 +11,7 @@ const parseRequest = (requestMessage: string): Action => {
   try {
     return JSON.parse(requestMessage);
   } catch (e) {
-    throw new BadRequestError();
+    throw new BadRequestError('Incorrect JSON format');
   }
 }
 
@@ -18,7 +20,7 @@ const handleRequest = (msg: string): object => {
 
   if (!('type' in request)) {
     console.warn('Bad request:', msg);
-    throw new BadRequestError();
+    throw new BadRequestError('Request type is absent or not supported');
   }
 
   const handler = actionFactory(request.type);
@@ -45,12 +47,28 @@ const run = async () => {
         ws.send(JSON.stringify(response));
       } catch (error) {
         if (error instanceof BadRequestError) {
-          console.warn('Bad request:', request);
-          ws.send(JSON.stringify({ status: 400, message: 'Bad Request'}));
+          ws.send(JSON.stringify({
+            message: error.message,
+            status: error.status,
+            reason: error.reason,
+          }));
           return;
         }
 
-        ws.send(JSON.stringify({status: 500, message: 'Internal Server Error'}));
+        for (const [BusinessError, ResponseError] of errorMapper) {
+          if (error instanceof BusinessError) {
+            const responseError = new ResponseError(error.message);
+            ws.send(JSON.stringify({
+              message: responseError.message,
+              status: responseError.status,
+              reason: responseError.reason,
+            }));
+            return;
+          }
+        }
+
+        const internalServerError = new InternalServerError();
+        ws.send(internalServerError.message);
       }
     });
   });
