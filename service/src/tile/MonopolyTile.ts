@@ -1,20 +1,20 @@
 import { Tile } from './Tile';
+import { Reward } from './Reward';
+import { Monopoly } from './Monopoly';
 
-export class MonopolyTile implements Tile {
-  constructor(
-    private id: string,
-    private order: number,
-    private price: number,
-    private icon: string,
-    ) {
-  }
+/**
+ * Player can
+ * Buy it when it's free
+ * Pay rent
+ * Upgrade it
+ * Mortgage
+ * Trade it
+ */
 
-  getPrice(): number {
-    return this.price;
-  }
-
-  isUpgradable(): boolean {
-    return true;
-  }
-
+export interface MonopolyTile<T> extends Tile {
+  reward: Reward<T>;
+  cost: number;
+  mortgageCost: number;
+  unmortgageCost: number;
+  monopoly: Monopoly;
 }
