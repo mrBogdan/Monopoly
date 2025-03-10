@@ -22,3 +22,7 @@ export class GameService {
     return game;
   }
 }
+
+export const createGameService = (gameRepository: GameRepository) => {
+  return new GameService(gameRepository);
+}
