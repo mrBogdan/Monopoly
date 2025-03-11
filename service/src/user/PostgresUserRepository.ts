@@ -16,7 +16,6 @@ export class PostgresUserRepository implements UserRepository {
 
         const result = await this.db.query(query, [user.id, user.name, user.passwordHash, user.email]);
         const createdUser = result.rows[0];
-        console.log({ createdUser });
 
         return new User(createdUser.id, createdUser.name, createdUser.passwordHash, createdUser.email);
     }
