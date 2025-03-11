@@ -16,5 +16,13 @@ docker-compose up
 
 ```shell
 cd ./service
-docker-compose up
+npm run start:docker
+```
+
+## To run backend tests
+
+```shell
+cd ./service
+npm run test:int
+npm run test:unit
 ```
