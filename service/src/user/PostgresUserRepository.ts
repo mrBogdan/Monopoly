@@ -9,7 +9,7 @@ export class PostgresUserRepository implements UserRepository {
     }
 
     async create(user: User): Promise<User> {
-        const query = `
+        const query: string = `
             INSERT INTO users (id, name, "passwordHash", email)
             VALUES ($1, $2, $3, $4) RETURNING *
         `;
@@ -21,7 +21,7 @@ export class PostgresUserRepository implements UserRepository {
     }
 
     async getByEmail(email: string): Promise<User> {
-        const query = 'SELECT * FROM users WHERE email = $1';
+        const query: string = 'SELECT * FROM users WHERE email = $1';
 
         const result = await this.db.query(query, [email]);
 
