@@ -1,6 +1,7 @@
-import { GameTile } from '../../GameTile';
-import { TileActions } from '../../TileAction';
-import { TileType } from '../../TileType';
+import { TileActions } from '../../tile/TileAction';
+import { GameTile } from '../../tile/GameTile';
+import { TileType } from '../../tile/TileType';
+
 
 export const luxuryTax: GameTile = {
   id: 'LuxuryTax',

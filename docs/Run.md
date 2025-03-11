@@ -9,7 +9,6 @@
 docker-compose up
 ```
 
-
 ## To run backend
 
 ### docker
@@ -24,5 +23,16 @@ npm run start:docker
 ```shell
 cd ./service
 npm run test:int
+```
+
+```shell
+cd ./service
 npm run test:unit
+```
+
+## Docker Build service (backend)
+
+```shell
+cd ./service
+npm run build:docker
 ```
