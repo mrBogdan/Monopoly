@@ -1,79 +1,38 @@
+import { Server } from 'http';
 import { WebSocketServer } from 'ws';
-import { Action } from './action/Action';
-import { actionFactory } from './actionFactory';
-import { errorMapper } from './errorMapper';
-import { InternalServerError } from './errors/InternalServerError';
-import { BadRequestError } from './errors/BadRequestError';
 
-const PORT = process.env.PORT || 8080;
+import { ServiceConfiguration } from './ServiceConfiguration';
+import { getHttpServer } from './http';
+import { runWebSocketServer } from './ws';
 
-const parseRequest = (requestMessage: string): Action => {
-  try {
-    return JSON.parse(requestMessage);
-  } catch (e) {
-    throw new BadRequestError('Incorrect JSON format');
-  }
-}
-
-const handleRequest = async (msg: string): Promise<object> => {
-  const request: Action = parseRequest(msg);
-
-  if (!('type' in request)) {
-    console.warn('Bad request:', msg);
-    throw new BadRequestError('Request type is absent or not supported');
-  }
-
-  const handler = actionFactory(request.type);
-
-  return handler(request);
-}
-
-const run = async () => {
-  const wss = new WebSocketServer({
-    port: +PORT,
-  });
-
-  wss.on('listening', () => {
-    console.log(`[WS] Server is running on: ${PORT}`);
-  });
-
-  wss.on('connection', (ws) => {
-    ws.on('error', console.error);
-
-    ws.on('message', async (msg) => {
-      const request = msg.toString();
-      try {
-        const response = await handleRequest(request);
-        ws.send(JSON.stringify(response));
-      } catch (error) {
-        if (error instanceof BadRequestError) {
-          ws.send(JSON.stringify({
-            message: error.message,
-            status: error.status,
-            reason: error.reason,
-          }));
-          return;
-        }
-
-        for (const [BusinessError, ResponseError] of errorMapper) {
-          if (error instanceof BusinessError) {
-            const responseError = new ResponseError(error.message);
-            ws.send(JSON.stringify({
-              message: responseError.message,
-              status: responseError.status,
-              reason: responseError.reason,
-            }));
-            return;
-          }
-        }
-
-        const internalServerError = new InternalServerError();
-        ws.send(internalServerError.message);
-      }
+const gracefulShutdown = (httpServer: Server, wss: WebSocketServer) => {
+    process.on('SIGTERM', () => {
+        console.log('SIGTERM signal received: closing HTTP server');
+        httpServer.close(() => {
+            console.log('HTTP server closed: closing WebSocket server');
+            wss.close(() => {
+                console.log('WebSocket server closed: exiting');
+                process.exit(0);
+            });
+        });
     });
-  });
 };
 
-run();
+const main = async () => {
+    const config: ServiceConfiguration = {
+        httpPort: 8080,
+        wsPort: 8081,
+    };
+
+    const httpServer = getHttpServer();
+    httpServer.listen(config.httpPort, () => {
+        console.log(`[HTTP] Server is running on: ${config.httpPort}`);
+    });
+    const wss = await runWebSocketServer(config);
+
+    gracefulShutdown(httpServer, wss);
+};
+
+main();
 
 process.on('uncaughtException', console.error);
