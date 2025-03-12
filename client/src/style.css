@@ -53,7 +53,7 @@ body {
 }
 
 .property-tile {
-    padding-top: 15px;
+    padding-top: 5px;
 }
 
 .color-bar {
@@ -152,8 +152,7 @@ body {
     justify-content: center;
     position: absolute;
     gap: 2px;
-    margin: 3px 0;
-    height: 14px;
+    margin: 0;
 }
 
 /* hiding all start by default */
@@ -164,10 +163,12 @@ body {
 
 .small-star {
     font-size: 10px;
+    line-height: 1;
 }
 
 .big-star {
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 1;
 }
 
 /* displaying stars based on data-level attribute */
@@ -200,48 +201,44 @@ body {
 #t1 .level-indicator, #t2 .level-indicator, #t3 .level-indicator, 
 #t4 .level-indicator, #t5 .level-indicator, #t6 .level-indicator, 
 #t7 .level-indicator, #t8 .level-indicator, #t9 .level-indicator {
-    position: absolute;
-    top: 0;
+    top: 2px;
+    left: 0;
     width: 100%;
     justify-content: center;
-    padding-top: 2px;
 }
 
 /* left tiles - stars at right */
 #t10 .level-indicator, #t11 .level-indicator, #t12 .level-indicator, 
 #t13 .level-indicator, #t14 .level-indicator, #t15 .level-indicator, 
 #t16 .level-indicator, #t17 .level-indicator, #t18 .level-indicator {
-    position: absolute;
     right: 2px;
     top: 50%;
     transform: translateY(-50%);
     flex-direction: column;
     height: auto;
-    width: 14px;
+    width: auto;
 }
 
 /* top tiles - stars at bottom */
 #t19 .level-indicator, #t20 .level-indicator, #t21 .level-indicator, 
 #t22 .level-indicator, #t23 .level-indicator, #t24 .level-indicator, 
 #t25 .level-indicator, #t26 .level-indicator, #t27 .level-indicator {
-    position: absolute;
-    bottom: 0;
+    bottom: 2px;
+    left: 0;
     width: 100%;
     justify-content: center;
-    padding-bottom: 2px;
 }
 
 /* right tiles - stars at left */
 #t28 .level-indicator, #t29 .level-indicator, #t30 .level-indicator, 
 #t31 .level-indicator, #t32 .level-indicator, #t33 .level-indicator, 
 #t34 .level-indicator, #t35 .level-indicator, #t36 .level-indicator {
-    position: absolute;
     left: 2px;
     top: 50%;
     transform: translateY(-50%);
     flex-direction: column;
     height: auto;
-    width: 14px;
+    width: auto;
 }
 
 /* indicators padding */
