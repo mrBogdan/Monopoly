@@ -1,11 +1,10 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 
 import { Action } from './action/Action';
 import { BadRequestError } from './errors/BadRequestError';
 import { actionFactory } from './actionFactory';
 import { errorMapper } from './errorMapper';
 import { InternalServerError } from './errors/InternalServerError';
-import { ServiceConfiguration } from './ServiceConfiguration';
 import { ResponseError } from './errors/ResponseError';
 
 const parseRequest = (requestMessage: string): Action => {
@@ -37,8 +36,9 @@ const prepareResponseError = (error: ResponseError) => {
     });
 }
 
-const onMessage = async (msg: string, ws: WebSocket) => {
+const onMessage = (ws: WebSocket) => async (msg: string) => {
     const request = msg.toString();
+
     try {
         const response = await handleRequest(request);
         ws.send(JSON.stringify(response));
@@ -61,25 +61,21 @@ const onMessage = async (msg: string, ws: WebSocket) => {
     }
 };
 
-export const runWebSocketServer = (config: ServiceConfiguration): Promise<WebSocketServer>  => {
-    return new Promise((resolve, reject) => {
-        const wss = new WebSocketServer({
-            port: config.wsPort,
-        });
+export const getWebSocketServer = (): WebSocketServer  => {
+    const wss = new WebSocketServer({
+        noServer: true,
+    });
+    wss.on('error', console.error);
 
-        wss.on('listening', () => {
-            console.log(`[WS] Server is running on: ${config.wsPort}`);
-            resolve(wss);
-        });
+    wss.on('connection', (ws) => {
+        ws.on('error', console.error);
 
-        wss.on('error', reject);
-
-        wss.on('connection', (ws) => {
-            ws.on('error', console.error);
-
-            ws.on('message', onMessage);
-        });
+        ws.on('message', onMessage(ws));
     });
 
+    wss.on('close', () => {
+        console.log('Client disconnected');
+    });
 
+    return wss;
 };

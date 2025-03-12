@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws';
 
 import { ServiceConfiguration } from './ServiceConfiguration';
 import { getHttpServer } from './http';
-import { runWebSocketServer } from './ws';
+import { getWebSocketServer } from './ws';
 
 const gracefulShutdown = (httpServer: Server, wss: WebSocketServer) => {
     process.on('SIGTERM', () => {
@@ -21,14 +21,25 @@ const gracefulShutdown = (httpServer: Server, wss: WebSocketServer) => {
 const main = async () => {
     const config: ServiceConfiguration = {
         httpPort: 8080,
-        wsPort: 8081,
     };
 
     const httpServer = getHttpServer();
-    httpServer.listen(config.httpPort, () => {
-        console.log(`[HTTP] Server is running on: ${config.httpPort}`);
+    const wss = getWebSocketServer();
+
+    httpServer.on('upgrade', (request, socket, head) => {
+        if (request.url === '/ws') {
+            wss.handleUpgrade(request, socket, head, (ws) => {
+                wss.emit('connection', ws, request);
+            });
+        } else {
+            socket.destroy();
+        }
     });
-    const wss = await runWebSocketServer(config);
+
+    httpServer.listen(config.httpPort, () => {
+        console.log(`Http and WebSocket Servers are running on: ${config.httpPort}`);
+    });
+
 
     gracefulShutdown(httpServer, wss);
 };
