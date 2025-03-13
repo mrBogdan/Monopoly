@@ -40,11 +40,7 @@ describe('PostgresUserRepository', () => {
     });
 
     afterAll(async () => {
-        console.log('Truncating client');
-        await truncateUsersTable();
-        console.log('Ending client');
         await client.end();
-        console.log('Stopping client');
         await container.stop();
     });
 
