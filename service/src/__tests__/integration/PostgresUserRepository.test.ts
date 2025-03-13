@@ -1,28 +1,29 @@
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import { Pool } from 'pg';
+import { Client } from 'pg';
 
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 
-jest.setTimeout(5000);
-
 describe('PostgresUserRepository', () => {
     let container: StartedPostgreSqlContainer;
-    let client: Pool;
+    let client: Client;
     let repository: PostgresUserRepository;
 
     const regularUser = new User('1', 'John Doe', 'password', 'some@email.com');
 
+    const truncateUsersTable = async () => {
+        await client.query('TRUNCATE TABLE users');
+    }
+
     beforeAll(async () => {
         container = await new PostgreSqlContainer().start();
-        const config = {
+        client = new Client({
             user: container.getUsername(),
             host: container.getHost(),
             database: container.getDatabase(),
             password: container.getPassword(),
             port: container.getMappedPort(5432),
-        };
-        client = new Pool(config);
+        });
         repository = new PostgresUserRepository(client);
 
         await client.connect();
@@ -39,9 +40,15 @@ describe('PostgresUserRepository', () => {
     });
 
     afterAll(async () => {
+        console.log('Truncating client');
+        await truncateUsersTable();
+        console.log('Ending client');
         await client.end();
+        console.log('Stopping client');
         await container.stop();
     });
+
+    beforeEach(truncateUsersTable);
 
     describe('create', () => {
         it('should create a user', async () => {
