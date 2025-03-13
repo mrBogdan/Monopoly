@@ -23,9 +23,8 @@ jobs:
         working-directory: service
         run: npm ci
 
-      - name: Setup Testcontainers
-        run: |
-          echo "DOCKER_HOST=unix:///var/run/docker.sock" >> $GITHUB_ENV
+      - name: Debug Docker
+        run: docker ps -a
 
 
       - name: Run tests
