@@ -23,12 +23,8 @@ jobs:
         working-directory: service
         run: npm ci
 
-      - name: Debug Docker
-        run: docker ps -a
-
-
       - name: Run tests
         working-directory: service
-        run: npm test
+        run: npm test -- --runInBand
 
 

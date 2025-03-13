@@ -4,6 +4,8 @@ import { Client } from 'pg';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 
+jest.setTimeout(5000);
+
 describe('PostgresUserRepository', () => {
     let container: StartedPostgreSqlContainer;
     let client: Client;
