@@ -1,11 +1,11 @@
-import { Pool } from 'pg';
+import { Client } from 'pg';
 
 import { UserRepository } from './UserRepository';
 import { User } from './User';
 import { UserNotFoundError } from './UserNotFoundError';
 
 export class PostgresUserRepository implements UserRepository {
-    constructor(private readonly db: Pool) {
+    constructor(private readonly db: Client) {
     }
 
     async create(user: User): Promise<User> {
