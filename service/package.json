@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "npx tsc",
+    "clear": "rm -rf ./build",
     "build:docker": "docker build -f docker/Dockerfile -t monopoly-service .",
     "start": "node ./build/index.js",
     "start:dev": "npx nodemon",

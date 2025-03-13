@@ -1,5 +1,5 @@
-import { Dice } from '../../Dice';
-import { RandMachine } from '../../RandMachine';
+import { Dice } from '../../game/Dice';
+import { RandMachine } from '../../rand/RandMachine';
 
 describe('Dice', () => {
   const randMachine = new RandMachine();

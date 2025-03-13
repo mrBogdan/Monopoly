@@ -1,6 +1,6 @@
-import { InvalidEmailError } from '../InvalidEmailError';
+import { InvalidEmailError } from './InvalidEmailError';
 
-export function Email(target: any, propertyKey: string) {
+export function Email(target: unknown, propertyKey: string) {
   let value: string;
 
   Object.defineProperty(target, propertyKey, {

@@ -2,7 +2,7 @@ import { actionAdapters, actions } from './actionAdapters';
 
 const notFoundHandler = () => 404;
 
-export const actionFactory = (type: string): any => {
+export const actionFactory = (type: string): CallableFunction => {
   if (!type.includes(':')) {
     const handler = actionAdapters[type];
 

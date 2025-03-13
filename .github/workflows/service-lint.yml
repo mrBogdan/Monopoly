@@ -1,4 +1,4 @@
-name: Test service
+name: Lint Service
 
 on:
   pull_request:
@@ -8,17 +8,21 @@ on:
       - 'service/**'
 
 jobs:
-  test:
-    name: Run Tests
+  lint:
+    name: Run ESLint
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Check repository files
+        run: ls -la
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: 22
           cache: 'npm'
           cache-dependency-path: service/package-lock.json
 
@@ -26,8 +30,6 @@ jobs:
         working-directory: service
         run: npm ci
 
-      - name: Run tests
+      - name: Run ESLint
         working-directory: service
-        run: npm test -- --runInBand
-
-
+        run: npm run lint
