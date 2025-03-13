@@ -1,20 +1,19 @@
 import { actionAdapters, actions } from './actionAdapters';
-
-const notFoundHandler = () => 404;
+import { NotFoundError } from './errors/NotFoundError';
 
 export const actionFactory = (type: string): CallableFunction => {
   if (!type.includes(':')) {
     const handler = actionAdapters[type];
 
     if (!handler) {
-      return notFoundHandler;
+      throw new NotFoundError(`Action "${type}" not found`);
     }
 
     if (!(handler instanceof Function)) {
       const tryGetMain = handler['main'];
 
       if (!tryGetMain) {
-        return notFoundHandler;
+        throw new NotFoundError(`Action "${type}" method not found`);
       }
 
       return tryGetMain;
@@ -30,13 +29,13 @@ export const actionFactory = (type: string): CallableFunction => {
       const handler = adapter[action];
 
       if (!handler) {
-        return notFoundHandler;
+        throw new NotFoundError(`Action "${type}" not found`);
       }
 
       return handler;
     }
     default: {
-      return notFoundHandler;
+      throw new NotFoundError(`Action "${type}" not found`);
     }
   }
 }

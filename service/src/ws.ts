@@ -6,6 +6,9 @@ import { actionFactory } from './actionFactory';
 import { errorMapper } from './errorMapper';
 import { InternalServerError } from './errors/InternalServerError';
 import { ResponseError } from './errors/ResponseError';
+import { NotFoundError } from './errors/NotFoundError';
+
+let wss: WebSocketServer | null = null;
 
 const parseRequest = (requestMessage: string): Action => {
     try {
@@ -21,6 +24,10 @@ const handleRequest = async (msg: string): Promise<object> => {
     if (!('type' in request)) {
         console.warn('Bad request:', msg);
         throw new BadRequestError('Request type is absent or not supported');
+    }
+
+    if (request.type === 'ping') {
+        return { type: 'ping', message: 'pong' };
     }
 
     const handler = actionFactory(request.type);
@@ -48,6 +55,11 @@ const onMessage = (ws: WebSocket) => async (msg: string) => {
             return;
         }
 
+        if (error instanceof NotFoundError) {
+            ws.send(prepareResponseError(error));
+            return;
+        }
+
         for (const [BusinessError, ResponseError] of errorMapper) {
             if (error instanceof BusinessError) {
                 const responseError = new ResponseError(error.message);
@@ -62,7 +74,11 @@ const onMessage = (ws: WebSocket) => async (msg: string) => {
 };
 
 export const getWebSocketServer = (): WebSocketServer  => {
-    const wss = new WebSocketServer({
+    if (wss) {
+        return wss;
+    }
+
+    wss = new WebSocketServer({
         noServer: true,
     });
     wss.on('error', console.error);
