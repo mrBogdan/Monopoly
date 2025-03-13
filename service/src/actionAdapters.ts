@@ -7,6 +7,7 @@ export const actions = {
   Chat: 'chat',
 };
 
-export const actionAdapters: any = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const actionAdapters: {[key: string]: any } = {
   [actions.Game]: createGameAdapter(createGameService({} as GameRepository)),
 };
