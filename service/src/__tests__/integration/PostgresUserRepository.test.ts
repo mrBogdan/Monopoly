@@ -3,6 +3,7 @@ import { Client } from 'pg';
 
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
+import { UserNotFoundError } from '../../user/UserNotFoundError';
 
 jest.setTimeout(10000);
 
@@ -58,6 +59,21 @@ describe('PostgresUserRepository', () => {
             const user = await repository.create(regularUser);
 
             expect(user).toEqual(regularUser);
+        });
+    });
+
+    describe('getByEmail', () => {
+        it('should get a user by email', async () => {
+            await repository.create(regularUser);
+
+            const user = await repository.getByEmail(regularUser.email);
+
+            expect(user).toEqual(regularUser);
+        });
+
+        it('should throw UserNotFoundError if user not found', async () => {
+            await expect(repository.getByEmail(regularUser.email)).rejects
+                .toThrowError(UserNotFoundError)
         });
     });
 });
