@@ -4,9 +4,8 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
+    paths:
+      - 'service/**'
 
 jobs:
   lint:
@@ -21,10 +20,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
+          working-directory: service
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        working-directory: service
+        run: npm ci
 
       - name: Run ESLint
+        working-directory: service
         run: npm run lint

@@ -1,4 +1,4 @@
-name: Run tests in service
+name: Test service
 
 on:
   pull_request:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: service
-        run: npm install
+        run: npm ci
 
       - name: Run tests
         working-directory: service
