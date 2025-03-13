@@ -36,4 +36,14 @@ describe('Health', () => {
             .close()
             .expectClosed();
     });
+
+    it('should return 404 on ws type not found', async () => {
+        const type = 'incorrect-type';
+        await wsRequest(listeningServer)
+            .ws('/ws')
+            .sendJson({ type })
+            .expectJson({ message: `Action "${type}" not found`, status: 404, reason: 'Not Found' })
+            .close()
+            .expectClosed();
+    });
 });
