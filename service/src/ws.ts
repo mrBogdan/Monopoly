@@ -26,7 +26,7 @@ const handleRequest = async (msg: string): Promise<object> => {
     }
 
     if (request.type === 'ping') {
-        return { type: 'pong' };
+        return { type: 'ping', message: 'pong' };
     }
 
     const handler = actionFactory(request.type);

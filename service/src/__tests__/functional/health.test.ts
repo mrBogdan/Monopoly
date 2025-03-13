@@ -32,7 +32,7 @@ describe('Health', () => {
         await wsRequest(listeningServer)
             .ws('/ws')
             .sendJson({ type: 'ping' })
-            .expectJson({ type: 'pong' })
+            .expectJson({ type: 'ping', message: 'pong'  })
             .close()
             .expectClosed();
     });
