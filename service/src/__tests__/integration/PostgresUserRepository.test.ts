@@ -17,16 +17,25 @@ describe('PostgresUserRepository', () => {
 
     beforeAll(async () => {
         container = await new PostgreSqlContainer().start();
-        client = new Client({
+        const config = {
             user: container.getUsername(),
             host: container.getHost(),
             database: container.getDatabase(),
             password: container.getPassword(),
             port: container.getMappedPort(5432),
-        });
+        };
+        client = new Client(config);
         repository = new PostgresUserRepository(client);
 
         await client.connect();
+
+        client.on('error', console.error);
+
+        console.log({
+            config,
+            container,
+            client,
+        })
 
         await client.query(`
             CREATE TABLE users
