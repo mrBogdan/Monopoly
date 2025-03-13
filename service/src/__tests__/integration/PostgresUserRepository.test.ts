@@ -4,6 +4,8 @@ import { Client } from 'pg';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 
+jest.setTimeout(10000);
+
 describe('PostgresUserRepository', () => {
     let container: StartedPostgreSqlContainer;
     let client: Client;
@@ -16,17 +18,22 @@ describe('PostgresUserRepository', () => {
     }
 
     beforeAll(async () => {
-        container = await new PostgreSqlContainer().start();
-        client = new Client({
+        const postgresContainer = new PostgreSqlContainer();
+        container = await postgresContainer.start();
+        const config = {
             user: container.getUsername(),
             host: container.getHost(),
             database: container.getDatabase(),
             password: container.getPassword(),
             port: container.getMappedPort(5432),
-        });
+        };
+
+        client = new Client(config);
         repository = new PostgresUserRepository(client);
 
         await client.connect();
+
+        client.on('error', console.error);
 
         await client.query(`
             CREATE TABLE users
@@ -40,11 +47,7 @@ describe('PostgresUserRepository', () => {
     });
 
     afterAll(async () => {
-        console.log('Truncating client');
-        await truncateUsersTable();
-        console.log('Ending client');
         await client.end();
-        console.log('Stopping client');
         await container.stop();
     });
 

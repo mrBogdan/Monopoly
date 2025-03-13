@@ -40,6 +40,7 @@ const main = async () => {
         console.log(`Http and WebSocket Servers are running on: ${config.httpPort}`);
     });
 
+    console.log('Super puper log');
 
     gracefulShutdown(httpServer, wss);
 };

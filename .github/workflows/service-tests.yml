@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'services/**'
+      - 'service/**'
 
 jobs:
   test:
@@ -20,11 +20,11 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        working-directory: services
+        working-directory: service
         run: npm ci
 
       - name: Run tests
-        working-directory: services
-        run: npm test
+        working-directory: service
+        run: npm test -- --runInBand
 
 
