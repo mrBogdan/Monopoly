@@ -26,20 +26,9 @@ const main = async () => {
     const httpServer = getHttpServer();
     const wss = getWebSocketServer();
 
-    httpServer.on('upgrade', (request, socket, head) => {
-        if (request.url === '/ws') {
-            wss.handleUpgrade(request, socket, head, (ws) => {
-                wss.emit('connection', ws, request);
-            });
-        } else {
-            socket.destroy();
-        }
-    });
-
     httpServer.listen(config.httpPort, () => {
         console.log(`Http and WebSocket Servers are running on: ${config.httpPort}`);
     });
-
 
     gracefulShutdown(httpServer, wss);
 };

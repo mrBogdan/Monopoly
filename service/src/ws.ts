@@ -7,6 +7,8 @@ import { errorMapper } from './errorMapper';
 import { InternalServerError } from './errors/InternalServerError';
 import { ResponseError } from './errors/ResponseError';
 
+let wss: WebSocketServer | null = null;
+
 const parseRequest = (requestMessage: string): Action => {
     try {
         return JSON.parse(requestMessage);
@@ -21,6 +23,10 @@ const handleRequest = async (msg: string): Promise<object> => {
     if (!('type' in request)) {
         console.warn('Bad request:', msg);
         throw new BadRequestError('Request type is absent or not supported');
+    }
+
+    if (request.type === 'ping') {
+        return { type: 'pong' };
     }
 
     const handler = actionFactory(request.type);
@@ -62,7 +68,11 @@ const onMessage = (ws: WebSocket) => async (msg: string) => {
 };
 
 export const getWebSocketServer = (): WebSocketServer  => {
-    const wss = new WebSocketServer({
+    if (wss) {
+        return wss;
+    }
+
+    wss = new WebSocketServer({
         noServer: true,
     });
     wss.on('error', console.error);
