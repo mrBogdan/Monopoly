@@ -1,4 +1,4 @@
-import { RandMachine } from './RandMachine';
+import { RandMachine } from '../rand/RandMachine';
 
 export class Dice {
   constructor(private randMachine: RandMachine) {

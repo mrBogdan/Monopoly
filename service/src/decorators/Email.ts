@@ -1,4 +1,4 @@
-import { InvalidEmailError } from '../InvalidEmailError';
+import { InvalidEmailError } from './InvalidEmailError';
 
 export function Email(target: unknown, propertyKey: string) {
   let value: string;
