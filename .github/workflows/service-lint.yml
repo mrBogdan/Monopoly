@@ -20,8 +20,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
-          working-directory: service
           cache: 'npm'
+
+      - name: Check repository files
+        run: ls -la
 
       - name: Install dependencies
         working-directory: service

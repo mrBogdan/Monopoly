@@ -20,6 +20,9 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
+      - name: Check repository files
+        run: ls -la
+
       - name: Install dependencies
         working-directory: service
         run: npm ci
