@@ -4,7 +4,7 @@ import { Client } from 'pg';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 
-jest.setTimeout(15000);
+jest.setTimeout(10000);
 
 describe('PostgresUserRepository', () => {
     let container: StartedPostgreSqlContainer;
@@ -27,8 +27,6 @@ describe('PostgresUserRepository', () => {
             password: container.getPassword(),
             port: container.getMappedPort(5432),
         };
-
-        console.log({containerId: container.getId()});
 
         client = new Client(config);
         repository = new PostgresUserRepository(client);
