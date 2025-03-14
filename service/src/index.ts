@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws';
 
 import { ServiceConfiguration } from './ServiceConfiguration';
 import { getHttpServer } from './http/getHttpServer';
-import { getWebSocketServer } from './ws';
+import { getWebSocketServer } from './wss/getWebSocketServer';
 
 const gracefulShutdown = (httpServer: Server, wss: WebSocketServer) => {
     process.on('SIGTERM', () => {

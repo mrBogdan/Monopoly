@@ -1,6 +1,6 @@
 import http, { Server } from 'node:http';
 
-import {getWebSocketServer} from '../ws';
+import {getWebSocketServer} from '../wss/getWebSocketServer';
 import { requestHandler } from './requestHandler';
 
 const server = http.createServer(requestHandler);

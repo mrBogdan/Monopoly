@@ -28,6 +28,6 @@ jobs:
 
       - name: Run tests
         working-directory: service
-        run: npm test -- --runInBand
+        run: npm test
 
 
