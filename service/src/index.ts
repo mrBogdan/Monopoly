@@ -1,8 +1,8 @@
-import { Server } from 'http';
+import { Server } from 'node:http';
 import { WebSocketServer } from 'ws';
 
 import { ServiceConfiguration } from './ServiceConfiguration';
-import { getHttpServer } from './http';
+import { getHttpServer } from './http/getHttpServer';
 import { getWebSocketServer } from './ws';
 
 const gracefulShutdown = (httpServer: Server, wss: WebSocketServer) => {

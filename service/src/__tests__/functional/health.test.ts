@@ -1,8 +1,8 @@
 import request from 'supertest';
-import { Server } from 'http';
+import { Server } from 'node:http';
 import wsRequest from 'superwstest';
 
-import { getHttpServer } from '../../http';
+import { getHttpServer } from '../../http/getHttpServer';
 
 describe('Health', () => {
     let listeningServer: Server;
