@@ -7,7 +7,7 @@
     "start:dev": "npx nodemon",
     "start:docker": "docker-compose -f ./docker/dev.docker-compose.yml up",
     "lint": "npx eslint",
-    "test": "npx jest --detectOpenHandles",
+    "test": "npx jest ./src/__tests__ --detectOpenHandles",
     "test:unit": "npx jest src/__tests__/unit",
     "test:int": "npx jest --detectOpenHandles src/__tests__/integration",
     "test:func": "npx jest src/__tests__/functional"

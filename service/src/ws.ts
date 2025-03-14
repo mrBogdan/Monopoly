@@ -6,7 +6,7 @@ import { actionFactory } from './actionFactory';
 import { errorMapper } from './errorMapper';
 import { InternalServerError } from './errors/InternalServerError';
 import { ResponseError } from './errors/ResponseError';
-import { NotFoundError } from './errors/NotFoundError';
+import { errors } from './errors/errors';
 
 let wss: WebSocketServer | null = null;
 
@@ -50,14 +50,11 @@ const onMessage = (ws: WebSocket) => async (msg: string) => {
         const response = await handleRequest(request);
         ws.send(JSON.stringify(response));
     } catch (error) {
-        if (error instanceof BadRequestError) {
-            ws.send(prepareResponseError(error));
-            return;
-        }
-
-        if (error instanceof NotFoundError) {
-            ws.send(prepareResponseError(error));
-            return;
+        for (const ResponseError of errors) {
+            if (error instanceof ResponseError) {
+                ws.send(prepareResponseError(error));
+                return;
+            }
         }
 
         for (const [BusinessError, ResponseError] of errorMapper) {
