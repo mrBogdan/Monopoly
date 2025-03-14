@@ -10,14 +10,6 @@ about investment and basic money rules for society.
 * Become stronger and independence
 * Make people smarter
 
-# Values
-
-* Open-minded
-* Fairness
-* Truth
-* Quality
-* We are respect freedom, but you need to defend your ideas
-
 ## Features
 
 1. User profile
