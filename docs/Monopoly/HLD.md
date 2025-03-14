@@ -1,13 +1,7 @@
 ```mermaid
-classDiagram
-  class User {
-    +string name
-    +string email
-    +login()
-  }
-
-  class Admin {
-    +manageUsers()
-  }
-
-  User <|-- Admin
+sequenceDiagram
+    Client->>Service: WebSocket Action
+    Service->>Postgres: Write to DB
+    Postgres-->>Service: Success
+    Service-->>Client: Broadcast Updates
+```
