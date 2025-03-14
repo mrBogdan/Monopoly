@@ -3,15 +3,15 @@ import { createDuoMonopolyReward, DuoMonopolyReward } from '../../tile/DuoMonopo
 import { Monopoly } from '../../tile/Monopoly';
 import { TileType } from '../../tile/TileType';
 
-export const rockstar: MonopolyTile<DuoMonopolyReward> = {
-  id: 'rockstar',
-  name: 'Rockstar',
-  description: 'Rockstar description',
+export const rovio: MonopolyTile<DuoMonopolyReward> = {
+  id: 'rovio',
+  name: 'Rovio',
+  description: 'Rovio description',
   monopoly: Monopoly.VideoGames,
   mortgageCost: 750,
   unmortgageCost: 900,
   cost: 1500,
-  iconUrl: 'rockstar.svg',
+  iconUrl: 'rovio.svg',
   type: TileType.Monopoly,
   reward: createDuoMonopolyReward(),
 }

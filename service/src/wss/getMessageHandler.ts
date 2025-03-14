@@ -25,8 +25,9 @@ const handleRequest = async (msg: string): Promise<object> => {
     }
 
     const handler = actionFactory(request.type);
+    const response = await handler(request);
 
-    return handler(request);
+    return { data: response, type: request.type };
 }
 
 export const getMessageHandler = (ws: WebSocket) => async (msg: string) => {
