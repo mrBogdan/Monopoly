@@ -20,6 +20,18 @@ export class PostgresUserRepository implements UserRepository {
         return new User(createdUser.id, createdUser.name, createdUser.passwordHash, createdUser.email);
     }
 
+    async register(user: User): Promise<User> {
+        const query: string = `
+            INSERT INTO users (id, name, "passwordHash", email)
+            VALUES ($1, $2, $3, $4) RETURNING *
+        `;
+
+        const result = await this.db.query(query, [user.id, user.name, user.passwordHash, user.email]);
+        const createdUser = result.rows[0];
+
+        return new User(createdUser.id, createdUser.name, createdUser.passwordHash, createdUser.email);
+    }
+
     async getByEmail(email: string): Promise<User> {
         const query: string = 'SELECT * FROM users WHERE email = $1';
 
