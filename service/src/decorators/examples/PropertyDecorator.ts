@@ -1,10 +1,13 @@
+// npm run build && node ./build/decorators/examples/PropertyDecorator.js
+
 import "reflect-metadata";
+import assert from 'node:assert';
 
 const formatMetadataKey = Symbol("format");
 function format(formatString: string) {
   return Reflect.metadata(formatMetadataKey, formatString);
 }
-function getFormat(target: any, propertyKey: string) {
+function getFormat(target: object, propertyKey: string) {
   return Reflect.getMetadata(formatMetadataKey, target, propertyKey);
 }
 
@@ -15,7 +18,12 @@ class Greeter {
     this.greeting = message;
   }
   greet() {
-    let formatString = getFormat(this, "greeting");
+    const formatString = getFormat(this, "greeting");
     return formatString.replace("%s", this.greeting);
   }
 }
+
+void function ShouldFormatClassProperty() {
+  const greeter = new Greeter("world");
+  assert.equal(greeter.greet(), "Hello, world");
+}();

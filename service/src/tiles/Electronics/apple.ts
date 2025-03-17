@@ -1,4 +1,4 @@
-import { createMonopolyReward, MonopolyReward } from '../../tile/MonopolyReward';
+import { createMonopolyReward } from '../../tile/MonopolyReward';
 import { TileType } from '../../tile/TileType';
 import { Monopoly } from '../../tile/Monopoly';
 import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';

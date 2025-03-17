@@ -1,30 +1,35 @@
-import "reflect-metadata";
-const requiredMetadataKey = Symbol("required");
+// npm run build && node ./build/decorators/examples/ParameterDecorator.js
 
-function required(target: Object, propertyKey: string | symbol, parameterIndex: number) {
-  let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
+import 'reflect-metadata';
+import assert from 'node:assert';
+
+const requiredMetadataKey = Symbol('required');
+
+function required(target: object, propertyKey: string | symbol, parameterIndex: number) {
+  const existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
   existingRequiredParameters.push(parameterIndex);
-  Reflect.defineMetadata( requiredMetadataKey, existingRequiredParameters, target, propertyKey);
+  Reflect.defineMetadata(requiredMetadataKey, existingRequiredParameters, target, propertyKey);
 }
 
-function validate(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) {
-  let method = descriptor.value!;
+function validate(target: object, propertyName: string, descriptor: TypedPropertyDescriptor<(verbose: boolean) => string>) {
+  const method = descriptor.value!;
 
-  descriptor.value = function () {
-    let requiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyName);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptor.value = function (...args: any[any]) {
+    const requiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyName);
     if (requiredParameters) {
-      for (let parameterIndex of requiredParameters) {
-        if (parameterIndex >= arguments.length || arguments[parameterIndex] === undefined) {
-          throw new Error("Missing required argument.");
+      for (const parameterIndex of requiredParameters) {
+        if (parameterIndex >= args.length || args[parameterIndex] === undefined) {
+          throw new Error('Missing required argument.');
         }
       }
     }
-    return method.apply(this, arguments);
+    return method.apply(this, args);
   };
 }
 
 class BugReport {
-  type = "report";
+  type = 'report';
   title: string;
 
   constructor(t: string) {
@@ -32,7 +37,7 @@ class BugReport {
   }
 
   @validate
-  print(@required verbose: boolean) {
+  print(@required verbose?: boolean) {
     if (verbose) {
       return `type: ${this.type}\ntitle: ${this.title}`;
     } else {
@@ -40,3 +45,12 @@ class BugReport {
     }
   }
 }
+
+void function ShouldValidateRequiredParam() {
+  const report = new BugReport('Needs more jQuery');
+  assert.throws(() => report.print(), {
+    message: 'Missing required argument.'
+  });
+  assert.equal(report.print(true), 'type: report\ntitle: Needs more jQuery');
+  assert.equal(report.print(false), 'Needs more jQuery');
+}();
