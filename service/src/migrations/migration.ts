@@ -39,8 +39,8 @@ const readMigrationFile = async (migrationName: string): Promise<string> => {
 const executeMigration = async (connectedClient: Client, migrationFiles: string[]) => {
   const migrations = await Promise.all(migrationFiles.map(readMigrationFile));
 
-  return Promise.all(migrations.map(migration => {
-    return connectedClient.query(migration);
+  return Promise.all(migrations.map(migrationCode => {
+    return connectedClient.query(migrationCode);
   }));
 };
 
