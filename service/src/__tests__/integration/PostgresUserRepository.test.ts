@@ -4,8 +4,9 @@ import { Client } from 'pg';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 import { UserNotFoundError } from '../../user/UserNotFoundError';
+import { migrate } from '../../migrations/migration';
 
-jest.setTimeout(10000);
+jest.setTimeout(15000);
 
 describe('PostgresUserRepository', () => {
     let container: StartedPostgreSqlContainer;
@@ -30,21 +31,12 @@ describe('PostgresUserRepository', () => {
         };
 
         client = new Client(config);
+        client.on('error', console.error);
         repository = new PostgresUserRepository(client);
 
         await client.connect();
 
-        client.on('error', console.error);
-
-        await client.query(`
-            CREATE TABLE users
-            (
-                id             TEXT PRIMARY KEY,
-                name           TEXT NOT NULL,
-                "passwordHash" TEXT NOT NULL,
-                email          TEXT NOT NULL
-            )
-        `);
+        await migrate(client);
     });
 
     afterAll(async () => {
