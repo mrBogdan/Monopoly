@@ -26,5 +26,12 @@
     /* When type checking, take into account 'null' and 'undefined'. */
     "skipLibCheck": true
     /* Skip type checking all .d.ts files. */
-  }
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "build",
+    "node_modules"
+  ]
 }
