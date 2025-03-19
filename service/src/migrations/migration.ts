@@ -1,15 +1,18 @@
-import {readFile, access} from 'node:fs/promises';
-import {Client} from 'pg';
+import { readFile, access } from 'node:fs/promises';
 import path from 'node:path';
+import { Client } from 'pg';
 
 import agendaJson from './migration-agenda.json';
-import * as fs from 'node:fs';
+
+type Migration = {
+  up: string,
+  rollback: string,
+  description: string,
+  issueCode: string
+};
 
 type MigrationAgenda = {
-  migrations: Record<string,  {
-    up: string,
-    rollback: string,
-  }>
+  migrations: Migration[]
 }
 
 const isFileExists = async (filePath: string): Promise<boolean> => {
@@ -19,7 +22,7 @@ const isFileExists = async (filePath: string): Promise<boolean> => {
   } catch {
     return false;
   }
-}
+};
 
 const toSqlExt = (fileName: string): string => (`${fileName}.sql`);
 
@@ -31,7 +34,7 @@ const readMigrationFile = async (migrationName: string): Promise<string> => {
   }
 
   return readFile(filePath, 'utf8');
-}
+};
 
 const executeMigration = async (connectedClient: Client, migrationFiles: string[]) => {
   const migrations = await Promise.all(migrationFiles.map(readMigrationFile));
@@ -39,32 +42,26 @@ const executeMigration = async (connectedClient: Client, migrationFiles: string[
   return Promise.all(migrations.map(migration => {
     return connectedClient.query(migration);
   }));
-}
+};
 
 export const migrate = async (connectedClient: Client) => {
   const agenda: MigrationAgenda = agendaJson;
 
-  const featureMigrations = Object.keys(agenda.migrations);
-
-  const migrationFiles: string[] = featureMigrations
-    .map(migration => agenda.migrations[migration].up)
-    .filter(v => v);
+  const migrationFiles: string[] = agenda.migrations
+    .map(migration => migration.up);
 
   const result = await executeMigration(connectedClient, migrationFiles);
 
-  console.log('Migration done', { result});
-}
+  console.log('Migration done', { result });
+};
 
 export const rollback = async (connectedClient: Client) => {
   const agenda: MigrationAgenda = agendaJson;
 
-  const featureMigrations = Object.keys(agenda.migrations);
-
-  const migrationFiles: string[] = featureMigrations
-  .map(migration => agenda.migrations[migration].rollback)
-  .filter(v => v);
+  const migrationFiles: string[] = agenda.migrations
+    .map(migration => migration.rollback);
 
   const result = await executeMigration(connectedClient, migrationFiles);
 
   console.log('Rollback migration done', { result });
-}
+};
