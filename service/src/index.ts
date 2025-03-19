@@ -1,12 +1,10 @@
-import { ServiceConfiguration } from './ServiceConfiguration';
 import { getHttpServer } from './http/getHttpServer';
 import { getWebSocketServer } from './wss/getWebSocketServer';
 import { gracefulShutdown } from './gracefulShutdown';
+import { getConfig } from './getConfig';
 
 const main = async () => {
-    const config: ServiceConfiguration = {
-        httpPort: 8080,
-    };
+    const config = getConfig();
 
     const httpServer = getHttpServer();
     const wss = getWebSocketServer();
