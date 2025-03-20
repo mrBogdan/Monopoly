@@ -1,0 +1,8 @@
+{
+  "migrations": [{
+      "description": "Add user table",
+      "issueCode": "MNP-22",
+      "up": "MNP-22/table/create-user-table",
+      "rollback": "MNP-22/table/rollback-create-user-table"
+  }]
+}
