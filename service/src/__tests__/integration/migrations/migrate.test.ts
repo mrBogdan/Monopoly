@@ -1,7 +1,8 @@
+import { Client } from 'pg';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+
 import { getConnectedPostgresClient } from '../../../getConnectedPostgresClient';
 import { migrate, rollback } from '../../../migrations/migration';
-import { Client } from 'pg';
 
 describe('migrate test', () => {
   let container: StartedPostgreSqlContainer;
