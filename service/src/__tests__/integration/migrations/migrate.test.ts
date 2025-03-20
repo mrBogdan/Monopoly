@@ -20,6 +20,11 @@ describe('migrate test', () => {
     });
   });
 
+  afterAll(async () => {
+    await client.end();
+    await container.stop();
+  });
+
   it('migration test', async () => {
     expect(await migrate(client)).toBeUndefined();
   });
