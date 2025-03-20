@@ -5,6 +5,7 @@ import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 import { UserNotFoundError } from '../../user/UserNotFoundError';
 import { migrate } from '../../migrations/migration';
+import { getConnectedPostgresClient } from '../../getConnectedPostgresClient';
 
 jest.setTimeout(15000);
 
@@ -22,19 +23,15 @@ describe('PostgresUserRepository', () => {
     beforeAll(async () => {
         const postgresContainer = new PostgreSqlContainer();
         container = await postgresContainer.start();
-        const config = {
+
+        client = await getConnectedPostgresClient({
             user: container.getUsername(),
             host: container.getHost(),
             database: container.getDatabase(),
             password: container.getPassword(),
             port: container.getMappedPort(5432),
-        };
-
-        client = new Client(config);
-        client.on('error', console.error);
+        });
         repository = new PostgresUserRepository(client);
-
-        await client.connect();
 
         await migrate(client);
     });
