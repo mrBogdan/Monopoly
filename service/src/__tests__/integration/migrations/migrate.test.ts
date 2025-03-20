@@ -1,0 +1,30 @@
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { getConnectedPostgresClient } from '../../../getConnectedPostgresClient';
+import { migrate, rollback } from '../../../migrations/migration';
+import { Client } from 'pg';
+
+describe('migrate test', () => {
+  let container: StartedPostgreSqlContainer;
+  let client: Client;
+
+  beforeAll(async () => {
+    const postgresContainer = new PostgreSqlContainer();
+    container = await postgresContainer.start();
+
+    client = await getConnectedPostgresClient({
+      user: container.getUsername(),
+      host: container.getHost(),
+      database: container.getDatabase(),
+      password: container.getPassword(),
+      port: container.getMappedPort(5432),
+    });
+  });
+
+  it('migration test', async () => {
+    expect(await migrate(client)).toBeUndefined();
+  });
+
+  it('rollback test', async () => {
+    expect(await rollback(client)).toBeUndefined();
+  })
+})
