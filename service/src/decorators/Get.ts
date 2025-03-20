@@ -1,5 +1,5 @@
 import { RequestMapping } from './RequestMapping';
 
-export function Get(path: string) {
+export function Get(path?: string) {
   return RequestMapping(path);
 }
