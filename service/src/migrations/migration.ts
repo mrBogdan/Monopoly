@@ -62,7 +62,7 @@ export const rollback = async (connectedClient: Client) => {
   const migrationFiles: string[] = agenda.migrations
     .map(migration => migration.rollback);
 
-  const result = await executeMigration(connectedClient, migrationFiles);
+  await executeMigration(connectedClient, migrationFiles);
 
-  console.log('Rollback migration done', { result });
+  console.log('Rollback migration done', migrationFiles);
 };
