@@ -6,6 +6,7 @@
     "start": "node ./build/index.js",
     "start:dev": "npx nodemon",
     "start:docker": "docker-compose -f ./docker/dev.docker-compose.yml up",
+    "start:docker:migration": "WITH_MIGRATION=true docker-compose -f ./docker/dev.docker-compose.yml up",
     "lint": "npx eslint",
     "test": "npx jest ./src/__tests__ --detectOpenHandles",
     "test:unit": "npx jest src/__tests__/unit",

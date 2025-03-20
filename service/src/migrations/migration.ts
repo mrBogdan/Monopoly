@@ -45,14 +45,15 @@ const executeMigration = async (connectedClient: Client, migrationFiles: string[
 };
 
 export const migrate = async (connectedClient: Client) => {
+  console.log('Migration started...');
   const agenda: MigrationAgenda = agendaJson;
 
   const migrationFiles: string[] = agenda.migrations
     .map(migration => migration.up);
 
-  const result = await executeMigration(connectedClient, migrationFiles);
+  await executeMigration(connectedClient, migrationFiles);
 
-  console.log('Migration done', { result });
+  console.log('Migration done', migrationFiles);
 };
 
 export const rollback = async (connectedClient: Client) => {

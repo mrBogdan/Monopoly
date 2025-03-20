@@ -1,6 +1,6 @@
 export interface ServiceConfiguration {
     httpPort: number;
-    webSocketResponse?: string;
+    withMigration: boolean;
     postgresConfig: {
         port: number;
         host: string;
