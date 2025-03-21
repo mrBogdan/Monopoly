@@ -1,6 +1,6 @@
 import { Controller } from '../../../decorators/Controller';
 import { Get } from '../../../decorators/Get';
-import { getHandler } from '../../../http/getHandler';
+import { parseRoute } from '../../../http/parseRoute';
 import { Methods } from '../../../http/Methods';
 
 describe('getHandler', () => {
@@ -11,8 +11,8 @@ describe('getHandler', () => {
       return 'GetFooBar()';
     }
 
-    @Get('')
-    main() {
+    @Get()
+    getFoo() {
       return 'Main';
     }
   }
@@ -21,28 +21,32 @@ describe('getHandler', () => {
   class Bar {
     @Get()
     foo() {
-      return 'GetFooBar';
+      return 'GetBarFoo()';
     }
   }
 
+  it('should thrown not found error if no handler found', async () => {
+    expect(() => parseRoute(Methods.GET, '/no-path')).toThrow();
+  });
+
   it('should return correct controller and action', async () => {
-    const result = getHandler(Methods.GET, '/foo/bar');
+    const result = parseRoute(Methods.GET, '/foo/bar');
     expect(result).toEqual({
       class: Foo,
       method: 'getBar',
     })
   });
 
-  it('should return correct index method', async () => {
-    const result = getHandler(Methods.GET, '/foo');
+  it('should return correct action handler', async () => {
+    const result = parseRoute(Methods.GET, '/foo');
     expect(result).toEqual({
       class: Foo,
-      method: 'main',
+      method: 'getFoo',
     });
   });
 
-  it('should return correct index method', async () => {
-    const result = getHandler(Methods.GET, '/');
+  it('should return correct controller index handler', async () => {
+    const result = parseRoute(Methods.GET, '/');
     expect(result).toEqual({
       class: Bar,
       method: 'foo',
