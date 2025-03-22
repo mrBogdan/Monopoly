@@ -28,7 +28,7 @@ const findHandler = (Controller: unknown, prototype: object, method: Methods, pa
   }
 
   throw notFoundError;
-}
+};
 
 export const parseRoute = (method: Methods, url: string) => {
   const controllers = getControllers();
@@ -70,7 +70,7 @@ export const parseRoute = (method: Methods, url: string) => {
       const handlerMethod = Reflect.getOwnMetadata(METHOD_KEY, Controller.prototype, handler);
       const partPath = preparePath(splitUrl[1]);
 
-      if (handlerPath === partPath  && handlerMethod === method) {
+      if (handlerPath === partPath && handlerMethod === method) {
         return {
           class: Controller,
           method: handler,
@@ -86,50 +86,6 @@ const buildPath = (paths: string[]) => {
   return paths.join(delimiter);
 };
 
-type Route = {
-  fullPath: string;
-  controller: unknown;
-  action: string;
-  method: Methods;
-  isDynamic: boolean;
-}
-
-const buildRoutes = () => {
-  const controllers = getControllers();
-  const routes: Map<string, Route> = new Map<string, Route>();
-
-  controllers.forEach((Controller, path) => {
-    const handlers = Object.getOwnPropertyNames(Controller.prototype);
-
-    handlers.forEach(handler => {
-      const actionPath = Reflect.getOwnMetadata(PATH_KEY, Controller.prototype, handler);
-      const method = Reflect.getOwnMetadata(METHOD_KEY, Controller.prototype, handler);
-      const fullPath = buildPath([path, actionPath]);
-
-      routes.set(fullPath,{
-        method,
-        fullPath,
-        controller: Controller,
-        action: handler,
-        isDynamic: path.includes(dynamicPathToken),
-      });
-    });
-  });
-
-  return routes;
-};
-
-const routes = buildRoutes();
-
-export const findHandlerByPath = (method: Methods, path: string) => {
-  const route = routes.get(path);
-
-  if (!route || route.method !== method) {
-    throw notFoundError;
-  }
-
-  return route;
-}
 
 // /user/:id
 // /user/images/list
@@ -154,7 +110,25 @@ export const findHandlerByPath = (method: Methods, path: string) => {
 
 const isLast = (index: number, array: string[]) => index === array.length - 1;
 
-class RouteTree {
+class Route {
+  private readonly _pathParts: string[];
+
+  constructor(path: string) {
+    const split = path.split(delimiter).filter(Boolean);
+    split.unshift(rootPath);
+    this._pathParts = split;
+  }
+
+  public parts(): string[] {
+    return this._pathParts;
+  }
+
+  public fromRoot(): string[] {
+    return this._pathParts.slice(1);
+  }
+}
+
+ class RouteTree {
   private readonly root: RouteNode;
 
   constructor() {
@@ -163,16 +137,26 @@ class RouteTree {
 
   // / & /:id
   // POST /public/user/:id
+  // GET /public/user/:id
   // GET /public/game/:id
-  addRoute(path: string, method: Methods, handler: Handler) {
-    const routeParts = path.split(delimiter).filter(Boolean);
+  // GET /
+  // GET /:param
+  addRoute(path: string, method: Methods, handler: Handler): undefined {
+    const route = new Route(path);
+    const parts = route.parts();
+    const fromRoot = route.fromRoot();
     let currentNode = this.root;
 
-    routeParts.forEach((routePart, index) => {
+    if (parts.length === 1) {
+      currentNode.setHandler(method, handler);
+      return;
+    }
+
+    fromRoot.forEach((routePart, index) => {
       let child = currentNode.findChild(routePart);
 
       if (!child) {
-        child = isLast(index, routeParts) ?
+        child = isLast(index, fromRoot) ?
           RouteNode.of(routePart, method, handler) :
           RouteNode.empty(routePart);
         currentNode.addChild(routePart, child);
@@ -180,21 +164,47 @@ class RouteTree {
 
       currentNode = child;
 
-      if (isLast(index, routeParts)) {
-        child.setHandler(method, handler);
+      if (isLast(index, fromRoot)) {
+        currentNode.setHandler(method, handler);
       }
+    });
+  }
+
+  findRoute(path: string, method: Methods): RouteNode | undefined {
+    const route = new Route(path);
+    const parts = route.parts();
+    const fromRoot = route.fromRoot();
+
+    let currentNode = this.root;
+
+    if (parts.length === 1) {
+      return currentNode;
+    }
+
+    fromRoot.forEach((routePart, index) => {
+      const child = currentNode.findChild(routePart);
+
+      if (!child) {
+        return;
+      }
+
+      if (isLast(index, fromRoot) && child.hasMethod(method)) {
+        return child;
+      }
+
+      currentNode = child;
     });
   }
 }
 
-interface Handler {
+ interface Handler {
   controller: string;
   action: string;
 
   isEmpty(): boolean;
 }
 
-class EmptyHandler implements Handler {
+ class EmptyHandler implements Handler {
   controller = '';
   action = '';
 
@@ -218,7 +228,7 @@ class RouteNode {
     this.pathNode = pathNode;
     this.children = new Map<string, RouteNode>();
     this.methods = new Map<Methods, Handler>([
-      [method, handler]
+      [method, handler],
     ]);
     this._isDynamic = pathNode.includes(dynamicPathToken);
 
@@ -233,6 +243,10 @@ class RouteNode {
 
   public static empty(path: string) {
     return new RouteNode(path, Methods.NONE, EmptyHandler.of());
+  }
+
+  public hasMethod(method: Methods) {
+    return this.methods.has(method) || this.methods.has(Methods.ANY);
   }
 
   public findChild(pathNode: string) {
@@ -258,17 +272,23 @@ class RouteNode {
 
 void function Playground() {
   const tree = new RouteTree();
-  tree.addRoute('/public/user/@id', Methods.GET, EmptyHandler.of());
+  const path = '/public/user/@id';
+  const specificPath = '/public/user/123';
+  const handler = EmptyHandler.of()
+  tree.addRoute(path, Methods.GET, handler);
+  const node = tree.findRoute(specificPath, Methods.GET);
 
-  console.dir({ tree }, { depth: 15 });
+  console.dir({node, tree}, {depth: 15});
 }();
 
 void function TestCases() {
   return [
-    'Should have only one dynamic path for each route',
+    'Should have only one dynamic path for each tree level',
     'Should have single root',
     'Should be handled with correct method',
     'Should be possible to set handler for root',
     'Should be possible to have a static path after dynamic path',
+    'Should be possible to add few methods for the same path',
+    'Should be possible add ANY method for handling all methods',
   ];
 }();

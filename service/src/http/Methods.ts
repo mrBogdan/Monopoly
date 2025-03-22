@@ -4,4 +4,5 @@ export enum Methods {
   PUT = 'PUT',
   DELETE = 'DELETE',
   NONE = 'NONE',
+  ANY = 'ANY',
 }
