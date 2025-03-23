@@ -3,6 +3,8 @@ import { EmptyHandler } from '../../../http/router/EmptyHandler';
 import { RouteTree } from '../../../http/router/RouteTree';
 import { NotFoundError } from '../../../errors/NotFoundError';
 import { MethodNotAllowedError } from '../../../errors/MethodNotAllowedError';
+import { Route } from '../../../http/router/Route';
+import { Handler } from '../../../http/router/Handler';
 
 // / & /:id
 // POST /public/user/:id
@@ -12,17 +14,27 @@ import { MethodNotAllowedError } from '../../../errors/MethodNotAllowedError';
 // GET /:param
 
 describe('Router tests', () => {
+  const verifyRoute = (route: Route, path: string, method: Methods, handler: Handler, withParameters?: {param: string, value: string}[]) => {
+    expect(route).toBeDefined();
+    expect(route.handler()).toBeDefined();
+    expect(route.buildPath()).toBe(path);
+    expect(route.handler()).toEqual(handler);
+    expect(route.method()).toBe(method);
+    if (withParameters) {
+      for (const withParameter of withParameters) {
+        expect(route.getParams().get(withParameter.param)).toBe(withParameter.value);
+      }
+    }
+  };
+
   it('should return correct controller and action', async () => {
     const tree = new RouteTree();
     const path = '/public/user/@id';
     const specificPath = '/public/user/123';
-    const handler = EmptyHandler.of()
-    tree.addRoute(path, Methods.GET, handler);
-    const node = tree.findRoute(specificPath, Methods.GET);
+    tree.addRoute(path, Methods.GET, EmptyHandler.of());
+    const route = tree.findRoute(specificPath, Methods.GET);
 
-    expect(node).toBeDefined();
-    expect(node?.paramName()).toBe('id');
-    expect(node?.paramValue()).toBe('123');
+    verifyRoute(route, path, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '123'}]);
   });
 
   it('should throw error when route not found', async () => {
@@ -55,14 +67,11 @@ describe('Router tests', () => {
     tree.addRoute(path1, Methods.GET, EmptyHandler.of());
     tree.addRoute(path2, Methods.GET, EmptyHandler.of());
 
-    const node1 = tree.findRoute(path1, Methods.GET);
-    const node2 = tree.findRoute(path2, Methods.GET);
+    const route1 = tree.findRoute(path1, Methods.GET);
+    const route2 = tree.findRoute(path2, Methods.GET);
 
-    expect(node1).toBeDefined();
-    expect(node2).toBeDefined();
-    expect(node1.pathNode()).toBe('image');
-    expect(node2.pathNode()).toBe('list');
-    expect(node2?.paramName()).toBeUndefined();
+    verifyRoute(route1, path1, Methods.GET, EmptyHandler.of());
+    verifyRoute(route2, path2, Methods.GET, EmptyHandler.of());
   });
 
   it('should handle two routes where one of them is dynamic', () => {
@@ -73,32 +82,22 @@ describe('Router tests', () => {
     tree.addRoute(path1, Methods.GET, EmptyHandler.of());
     tree.addRoute(path2, Methods.GET, EmptyHandler.of());
 
-    const node1 = tree.findRoute(path1, Methods.GET);
-    const node2 = tree.findRoute(path2, Methods.GET);
+    const route1 = tree.findRoute(path1, Methods.GET);
+    const route2 = tree.findRoute(path2, Methods.GET);
 
-    expect(node1).toBeDefined();
-    expect(node2).toBeDefined();
-    expect(node1.pathNode()).toBe('@id');
-    expect(node2.pathNode()).toBe('list');
-    expect(node1?.paramName()).toBe('id');
-    expect(node2?.paramName()).toBeUndefined();
-    expect(node1?.paramValue()).toBe('@id');
-    expect(node2?.paramValue()).toBeUndefined();
-
+    verifyRoute(route1, path1, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
+    verifyRoute(route2, path2, Methods.GET, EmptyHandler.of());
   });
 
   it('should handle static path after dynamic path', () => {
     const tree = new RouteTree();
-    const path3 = '/public/user/@id/image';
+    const path = '/public/user/@id/image';
 
-    tree.addRoute(path3, Methods.GET, EmptyHandler.of());
+    tree.addRoute(path, Methods.GET, EmptyHandler.of());
 
-    const node3 = tree.findRoute(path3, Methods.GET);
+    const route = tree.findRoute(path, Methods.GET)
 
-    expect(node3).toBeDefined();
-    expect(node3.pathNode()).toBe('image');
-    expect(node3?.paramName()).toBeUndefined();
-    expect(node3?.paramValue()).toBeUndefined();
+    verifyRoute(route, path, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
   });
 
   it('should not give to set two dynamic paths on the same level', () => {
@@ -118,12 +117,9 @@ describe('Router tests', () => {
 
     tree.addRoute(path, Methods.GET, EmptyHandler.of());
 
-    const node = tree.findRoute(path, Methods.GET);
+    const route = tree.findRoute(path, Methods.GET);
 
-    expect(node).toBeDefined();
-    expect(node.pathNode()).toBe('/');
-    expect(node.paramName()).toBeUndefined();
-    expect(node.paramValue()).toBeUndefined();
+    verifyRoute(route, path, Methods.GET, EmptyHandler.of());
   });
 
   it('should be possible to add few dynamic paths on the same level', () => {
@@ -134,12 +130,24 @@ describe('Router tests', () => {
     tree.addRoute(path1, Methods.GET, EmptyHandler.of());
     tree.addRoute(path2, Methods.POST, EmptyHandler.of());
 
-    const node = tree.findRoute(path1, Methods.GET);
-    const node2 = tree.findRoute(path2, Methods.POST);
+    const route1 = tree.findRoute(path1, Methods.GET);
+    const route2 = tree.findRoute(path2, Methods.POST);
 
-    expect(node).toBeDefined();
-    expect(node2).toBeDefined();
+    verifyRoute(route1, path1, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
+    verifyRoute(route2, path2, Methods.POST, EmptyHandler.of(), [{param: 'param', value: '@param'}, {param: 'id', value: '@id'}]);
   });
 
-  it('should be possible to add multiple handlers for the same route', () => {});
+  it('should be possible to add multiple handlers for the same route', () => {
+    const tree = new RouteTree();
+    const path = '/public/user/@id';
+
+    tree.addRoute(path, Methods.GET, EmptyHandler.of());
+    tree.addRoute(path, Methods.POST, EmptyHandler.of());
+
+    const route1 = tree.findRoute(path, Methods.GET);
+    const route2 = tree.findRoute(path, Methods.POST);
+
+    verifyRoute(route1, path, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
+    verifyRoute(route2, path, Methods.POST, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
+  });
 });

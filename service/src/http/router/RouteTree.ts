@@ -1,22 +1,25 @@
 import { Methods } from '../Methods';
-import { RouteNode } from './RouteNode';
+import { StaticRouteNode } from './StaticRouteNode';
 import { rootPath } from './constants';
-import { Route } from './Route';
+import { RouteParticle } from './RouteParticle';
 import { Handler } from './Handler';
 import { NotFoundError } from '../../errors/NotFoundError';
 import { MethodNotAllowedError } from '../../errors/MethodNotAllowedError';
+import { DynamicRouteNode } from './DynamicRouteNode';
+import { RouteNodeFactory } from './RouteNodeFactory';
+import { Route } from './Route';
 
 const isLast = (index: number, array: string[]) => index === array.length - 1;
 
 export class RouteTree {
-  private readonly root: RouteNode;
+  private readonly root: StaticRouteNode;
 
   constructor() {
-    this.root = RouteNode.empty(rootPath);
+    this.root = StaticRouteNode.empty(rootPath);
   }
 
-  addRoute(path: string, method: Methods, handler: Handler): undefined {
-    const route = new Route(path);
+  addRoute(path: string, method: Methods, handler: Handler): void {
+    const route = new RouteParticle(path);
     const fromRoot = route.fromRoot();
     let currentNode = this.root;
 
@@ -30,8 +33,8 @@ export class RouteTree {
       const isLastElement = isLast(index, fromRoot);
       if (!child) {
         child = isLastElement ?
-          RouteNode.of(routePart, method, handler) :
-          RouteNode.empty(routePart);
+          RouteNodeFactory.create(routePart, method, handler) :
+          RouteNodeFactory.empty(routePart);
 
         if (currentNode.hasDynamicChild() && child.isDynamic()) {
           throw new Error(`There is already a dynamic child in the route "${path}"`);
@@ -48,14 +51,17 @@ export class RouteTree {
     });
   }
 
-  findRoute(path: string, method: Methods): RouteNode {
-    const route = new Route(path);
-    const fromRoot = route.fromRoot();
+  findRoute(path: string, method: Methods): Route {
+    const routeParticle = new RouteParticle(path);
+    const fromRoot = routeParticle.fromRoot();
+    const route = new Route(path, method);
 
     let currentNode = this.root;
 
-    if (route.isRoot() && currentNode.hasMethod(method)) {
-      return currentNode;
+    if (routeParticle.isRoot() && currentNode.hasMethod(method)) {
+      route.setHandler(currentNode.handler(method));
+      route.addRouteNode(currentNode);
+      return route;
     }
 
     for (const [index, routePart] of fromRoot.entries()) {
@@ -66,9 +72,10 @@ export class RouteTree {
       }
 
       if (child.isDynamic()) {
-        child.setParamValue(routePart);
+        (child as DynamicRouteNode).setParamValue(routePart);
       }
 
+      route.addRouteNode(child);
       currentNode = child;
 
       if (isLast(index, fromRoot)) {
@@ -76,7 +83,8 @@ export class RouteTree {
           throw new MethodNotAllowedError(`Method ${method} not allowed for route "${path}"`);
         }
 
-        return child;
+        route.setHandler(child.handler(method));
+        return route;
       }
     }
 
