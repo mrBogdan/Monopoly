@@ -1,37 +1,34 @@
 import { Methods } from '../Methods';
 import { Handler } from './Handler';
-import { EmptyHandler } from './EmptyHandler';
 import { dynamicPathToken } from './constants';
+import { EmptyHandler } from './EmptyHandler';
 
-export class RouteNode {
-  private readonly _isDynamic: boolean;
-  private _pathNode: string;
+export abstract class RouteNode {
+  private readonly _pathNode: string;
   private children: Map<string, RouteNode>;
   private methods: Map<Methods, Handler>;
-  private _paramName?: string;
-  private _paramValue?: string;
 
-  constructor(pathNode: string, method: Methods, handler: Handler) {
+  protected constructor(pathNode: string, method: Methods, handler: Handler) {
     this._pathNode = pathNode;
     this.children = new Map<string, RouteNode>();
-    this._paramValue = undefined;
     this.methods = new Map<Methods, Handler>([
       [method, handler],
     ]);
-    this._isDynamic = pathNode.includes(dynamicPathToken);
-
-    if (this._isDynamic) {
-      this._paramName = pathNode.slice(1);
-    }
   }
 
-  public static of(path: string, method: Methods, handler: Handler) {
-    return new RouteNode(path, method, handler);
+  public static of<T extends RouteNode>(this: new (path: string, method: Methods, handler: Handler) => T, path: string, method: Methods, handler: Handler): T {
+    return new this(path, method, handler);
   }
 
-  public static empty(path: string) {
-    return new RouteNode(path, Methods.NONE, EmptyHandler.of());
+  public static empty<T extends RouteNode>(this: new (path: string, method: Methods, handler: Handler) => T, path: string): T {
+    return new this(path, Methods.NONE, EmptyHandler.of()) as T;
   }
+
+  public static isDynamicPath(path: string): boolean {
+    return path.includes(dynamicPathToken);
+  }
+
+  abstract isDynamic(): boolean;
 
   public hasMethod(method: Methods) {
     return this.methods.has(method) || this.methods.has(Methods.ANY);
@@ -49,35 +46,19 @@ export class RouteNode {
     return !!Array.from(this.children.values()).find(child => child.isDynamic());
   }
 
-  public isDynamicPath(path: string): boolean {
-    return path.includes(dynamicPathToken);
-  }
-
   public addChild(pathNode: string, childNode: RouteNode): void {
     this.children.set(pathNode, childNode);
-  }
-
-  public isDynamic(): boolean {
-    return this._isDynamic;
-  }
-
-  public paramName(): string | undefined {
-    return this._paramName;
   }
 
   public pathNode(): string {
     return this._pathNode;
   }
 
-  public paramValue(): string | undefined {
-    return this._paramValue;
-  }
-
-  public setParamValue(value: string) {
-    this._paramValue = value;
-  }
-
   public setHandler(method: Methods, handler: Handler) {
     this.methods.set(method, handler);
+  }
+
+  public handler(method: Methods): Handler {
+    return this.methods.get(method) || this.methods.get(Methods.ANY) || EmptyHandler.of();
   }
 }

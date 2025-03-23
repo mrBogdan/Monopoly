@@ -122,6 +122,28 @@ describe('Router tests', () => {
     verifyRoute(route, path, Methods.GET, EmptyHandler.of());
   });
 
+  it('should handle root path with dynamic path', () => {
+    const tree = new RouteTree();
+    const path = '/@param';
+
+    tree.addRoute(path, Methods.GET, EmptyHandler.of());
+
+    const route = tree.findRoute(path, Methods.GET);
+
+    verifyRoute(route, path, Methods.GET, EmptyHandler.of(), [{param: 'param', value: '@param'}]);
+  });
+
+  it('should handle root path with static path', () => {
+    const tree = new RouteTree();
+    const path = '/public';
+
+    tree.addRoute(path, Methods.GET, EmptyHandler.of());
+
+    const route = tree.findRoute(path, Methods.GET);
+
+    verifyRoute(route, path, Methods.GET, EmptyHandler.of());
+  });
+
   it('should be possible to add few dynamic paths on the same level', () => {
     const tree = new RouteTree();
     const path1 = '/public/user/@id';
@@ -150,4 +172,6 @@ describe('Router tests', () => {
     verifyRoute(route1, path, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
     verifyRoute(route2, path, Methods.POST, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
   });
+
+
 });
