@@ -4,7 +4,6 @@ import { gracefulShutdown } from './gracefulShutdown';
 import { getConfig } from './nodejs/getConfig';
 import { migrate } from './migrations/migration';
 import { getConnectedPostgresClient } from './getConnectedPostgresClient';
-import { Router } from './http/router/Router';
 
 const main = async () => {
     const config = getConfig();
@@ -13,8 +12,6 @@ const main = async () => {
     if (config.withMigration) {
         await migrate(client);
     }
-
-    const router = new Router();
 
     const httpServer = getHttpServer();
     const wss = getWebSocketServer();

@@ -3,6 +3,7 @@ import { Server } from 'node:http';
 
 import { getHttpServer } from '../../http/getHttpServer';
 import { mapTiles } from '../../tiles/tiles';
+import { Router } from '../../http/router/Router';
 
 
 describe('game:getTiles', () => {

@@ -1,13 +1,15 @@
 import { Handler } from './Handler';
 
 export class RouteHandler implements Handler {
-  constructor(private readonly _controller: string, private readonly _action: string) {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(private readonly _controller: any, private readonly _action: string) {}
 
   public static empty(): Handler {
     return new RouteHandler('', '');
   }
 
-  public controller(): string {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public controller(): any {
     return this._controller;
   }
 
