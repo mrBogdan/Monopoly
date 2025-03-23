@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { Methods } from '../http/Methods';
 import { METHOD_KEY, PATH_KEY } from './constants';
 

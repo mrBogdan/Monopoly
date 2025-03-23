@@ -1,7 +1,9 @@
 import http from 'node:http';
 
-import {Headers} from './headers';
+import { Headers } from './headers';
 import { routes } from './routes';
+import { Router } from './router/Router';
+
 
 export const requestHandler = (req: http.IncomingMessage, res: http.ServerResponse) => {
     if (req.method?.toLowerCase() === 'get' && req.url === routes.health) {

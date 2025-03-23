@@ -1,7 +1,7 @@
 import { Methods } from '../Methods';
 import { Handler } from './Handler';
 import { dynamicPathToken } from './constants';
-import { EmptyHandler } from './EmptyHandler';
+import { RouteHandler } from './RouteHandler';
 
 export abstract class RouteNode {
   private readonly _pathNode: string;
@@ -21,7 +21,7 @@ export abstract class RouteNode {
   }
 
   public static empty<T extends RouteNode>(this: new (path: string, method: Methods, handler: Handler) => T, path: string): T {
-    return new this(path, Methods.NONE, EmptyHandler.of()) as T;
+    return new this(path, Methods.NONE, RouteHandler.empty()) as T;
   }
 
   public static isDynamicPath(path: string): boolean {
@@ -59,6 +59,6 @@ export abstract class RouteNode {
   }
 
   public handler(method: Methods): Handler {
-    return this.methods.get(method) || this.methods.get(Methods.ANY) || EmptyHandler.of();
+    return this.methods.get(method) || this.methods.get(Methods.ANY) || RouteHandler.empty();
   }
 }
