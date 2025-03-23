@@ -172,6 +172,4 @@ describe('Router tests', () => {
     verifyRoute(route1, path, Methods.GET, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
     verifyRoute(route2, path, Methods.POST, EmptyHandler.of(), [{param: 'id', value: '@id'}]);
   });
-
-
 });
