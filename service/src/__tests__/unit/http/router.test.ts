@@ -39,7 +39,7 @@ describe('Router tests', () => {
     tree.addRoute(path, Methods.GET, handler);
     expect(() => {
       tree.findRoute(specificPath, Methods.POST);
-    }).toThrowError(MethodNotAllowedError);
+    }).toThrow(MethodNotAllowedError);
   });
 
   it('should throw error when route not found', async () => {
@@ -50,7 +50,7 @@ describe('Router tests', () => {
     tree.addRoute(path, Methods.GET, handler);
     expect(() => {
       tree.findRoute(specificPath, Methods.GET);
-    }).toThrowError(NotFoundError);
+    }).toThrow(NotFoundError);
   });
 
   it('should handle few routes on the same level', () => {
@@ -102,7 +102,7 @@ describe('Router tests', () => {
     tree.addRoute(path1, Methods.GET, EmptyHandler.of());
     expect(() => {
       tree.addRoute(path2, Methods.GET, EmptyHandler.of());
-    }).toThrowError(BadRouteError);
+    }).toThrow(BadRouteError);
   });
 
   it('should handle root path', () => {
