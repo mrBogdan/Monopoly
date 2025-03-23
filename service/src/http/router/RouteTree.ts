@@ -8,6 +8,7 @@ import { MethodNotAllowedError } from '../../errors/MethodNotAllowedError';
 import { DynamicRouteNode } from './DynamicRouteNode';
 import { RouteNodeFactory } from './RouteNodeFactory';
 import { Route } from './Route';
+import { BadRouteError } from './BadRouteError';
 
 const isLast = (index: number, array: string[]) => index === array.length - 1;
 
@@ -37,7 +38,7 @@ export class RouteTree {
           RouteNodeFactory.empty(routePart);
 
         if (currentNode.hasDynamicChild() && child.isDynamic()) {
-          throw new Error(`There is already a dynamic child in the route "${path}"`);
+          throw new BadRouteError(`There is already a dynamic child in the route "${path}"`);
         }
 
         currentNode.addChild(routePart, child);

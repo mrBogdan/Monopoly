@@ -5,13 +5,7 @@ import { NotFoundError } from '../../../errors/NotFoundError';
 import { MethodNotAllowedError } from '../../../errors/MethodNotAllowedError';
 import { Route } from '../../../http/router/Route';
 import { Handler } from '../../../http/router/Handler';
-
-// / & /:id
-// POST /public/user/:id
-// GET /public/user/:id
-// GET /public/game/:id
-// GET /
-// GET /:param
+import { BadRouteError } from '../../../http/router/BadRouteError';
 
 describe('Router tests', () => {
   const verifyRoute = (route: Route, path: string, method: Methods, handler: Handler, withParameters?: {param: string, value: string}[]) => {
@@ -108,7 +102,7 @@ describe('Router tests', () => {
     tree.addRoute(path1, Methods.GET, EmptyHandler.of());
     expect(() => {
       tree.addRoute(path2, Methods.GET, EmptyHandler.of());
-    }).toThrowError();
+    }).toThrowError(BadRouteError);
   });
 
   it('should handle root path', () => {
