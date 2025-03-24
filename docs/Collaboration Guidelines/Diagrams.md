@@ -17,3 +17,4 @@ classDiagram
 
   User <|-- Admin
 
+```
