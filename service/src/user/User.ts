@@ -1,4 +1,4 @@
-import { Email } from '../decorators';
+import { Email } from '../decorators/Email';
 
 export class User {
   @Email
