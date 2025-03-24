@@ -6,14 +6,11 @@ import { RouteHandler } from './RouteHandler';
 import { METHOD_KEY, PATH_KEY } from '../../decorators/constants';
 import { delimiter } from './constants';
 import { Route } from './Route';
-import { ControllerManager } from '../../ControllerManager';
 
 export class Router {
-  private readonly _routeTree: RouteTree;
+  private _routeTree: RouteTree = new RouteTree();
 
   constructor() {
-    ControllerManager.getInstance();
-    this._routeTree = new RouteTree();
     this.buildRoutes();
   }
 

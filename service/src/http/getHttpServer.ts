@@ -3,11 +3,17 @@ import http, { Server } from 'node:http';
 import { getWebSocketServer } from '../wss/getWebSocketServer';
 import { requestHandler } from './requestHandler';
 import { Router } from './router/Router';
+import { ModuleManager } from '../ModuleManager';
+import { HealthModule } from '../health/HealthModule';
 
 let server: Server | null = null;
 
 export const getHttpServer = (): Server => {
   if (!server) {
+    ModuleManager.registerModules([
+      HealthModule,
+    ]);
+
     const router = new Router();
 
     server = http.createServer(requestHandler(router));
