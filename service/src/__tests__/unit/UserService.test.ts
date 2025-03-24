@@ -3,6 +3,7 @@ import {UserRepository} from "../../user/UserRepository";
 import {User} from "../../user/User";
 import {UserIdGenerator} from "../../user/UserIdGenerator";
 import {UserPasswordHasher} from "../../user/UserPasswordHasher";
+import {UserRegistrationDataDto} from "../../user/DTO/UserRegistrationDataDto";
 
 describe('UserService', () => {
   let userRepository: jest.Mocked<UserRepository>;
@@ -12,7 +13,7 @@ describe('UserService', () => {
 
   beforeEach(() => {
     userRepository = {
-      getByEmail: jest.fn(),
+      getRequiredUserByEmail: jest.fn(),
       create: jest.fn(),
     } as unknown as jest.Mocked<UserRepository>;
 
@@ -28,11 +29,11 @@ describe('UserService', () => {
   });
 
   it('should register a new user', async () => {
-    userRepository.getByEmail.mockResolvedValue(null);
+    userRepository.getRequiredUserByEmail.mockResolvedValue(undefined);
 
-    await userService.register('John Doe', 'test@gmail.com', 'password', 'password');
+    await userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'password'));
 
-    expect(userRepository.getByEmail).toHaveBeenCalledWith('test@gmail.com');
+    expect(userRepository.getRequiredUserByEmail).toHaveBeenCalledWith('test@gmail.com');
 
     expect(userRepository.create).toHaveBeenCalledWith(
         new User('generated-id', 'John Doe', 'hashed-password', 'test@gmail.com')
@@ -42,22 +43,22 @@ describe('UserService', () => {
   });
 
   it('should throw an error if email already exists', async () => {
-    userRepository.getByEmail.mockResolvedValue(
+    userRepository.getRequiredUserByEmail.mockResolvedValue(
         new User('existing-id', 'John Doe', 'hashed-password', 'test@gmail.com')
     );
 
     await expect(
-        userService.register('John Doe', 'test@gmail.com', 'password', 'password')
+        userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'password'))
     ).rejects.toThrow('User email test@gmail.com already exists');
 
-    expect(userRepository.getByEmail).toHaveBeenCalledWith('test@gmail.com');
+    expect(userRepository.getRequiredUserByEmail).toHaveBeenCalledWith('test@gmail.com');
   });
 
   it('should throw an error if passwords do not match', async () => {
-    userRepository.getByEmail.mockResolvedValue(null);
+    userRepository.getRequiredUserByEmail.mockResolvedValue(undefined);
 
     await expect(
-        userService.register('John Doe', 'test@gmail.com', 'password', 'wrong-password')
+        userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'wrong-password'))
     ).rejects.toThrow('Incorrect password or repeated password');
   });
 });

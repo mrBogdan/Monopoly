@@ -51,17 +51,17 @@ describe('PostgresUserRepository', () => {
         });
     });
 
-    describe('getByEmail', () => {
+    describe('getRequiredUserByEmail', () => {
         it('should get a user by email', async () => {
             await repository.create(regularUser);
 
-            const user = await repository.getByEmail(regularUser.email);
+            const user = await repository.getRequiredUserByEmail(regularUser.email);
 
             expect(user).toEqual(regularUser);
         });
 
         it('should throw UserNotFoundError if user not found', async () => {
-            await expect(repository.getByEmail(regularUser.email)).rejects
+            await expect(repository.getRequiredUserByEmail(regularUser.email)).rejects
                 .toThrowError(UserNotFoundError)
         });
     });

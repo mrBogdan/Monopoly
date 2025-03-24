@@ -4,6 +4,10 @@ import {UserEmailAlreadyExistsError} from "./UserEmailAlreadyExistsError";
 import {UserRepeatedPasswordWrongError} from "./UserRepeatedPasswordWrongError";
 import {UserPasswordHasher} from "./UserPasswordHasher";
 import {UserIdGenerator} from "./UserIdGenerator";
+import {UserRegistrationDataDto} from "./DTO/UserRegistrationDataDto";
+import {PostgresUserRepository} from "./PostgresUserRepository";
+import {getConfig} from "../nodejs/getConfig";
+import {getConnectedPostgresClient} from "../getConnectedPostgresClient";
 
 export class UserService {
     constructor(
@@ -13,13 +17,17 @@ export class UserService {
     ) {
     }
 
-    async register(name: string, email: string, password: string, repeatedPassword: string): Promise<User>
+    async register(userRegistrationDataDto: UserRegistrationDataDto): Promise<User>
     {
+        const {name, email, password, repeatedPassword} = userRegistrationDataDto;
         if (await this.isEmailExists(email)) {
             throw new UserEmailAlreadyExistsError(email);
         }
 
-        if (!this.isCorrectRepeatedPassword(password, repeatedPassword)) {
+        if (!this.isCorrectRepeatedPassword(
+            password,
+            repeatedPassword)
+        ) {
             throw new UserRepeatedPasswordWrongError();
         }
 
@@ -28,7 +36,9 @@ export class UserService {
         const hashedPassword = this.userPasswordHasher.hash(password);
         const userId = this.userIdGenerator.generateUUID();
 
-        return await this.userRepository.create(new User(userId, name, hashedPassword, email));
+        return await this.userRepository.create(
+            new User(userId, name, hashedPassword, email)
+        );
     }
 
     private isCorrectRepeatedPassword(password: string, repeatedPassword: string): boolean {
@@ -36,7 +46,18 @@ export class UserService {
     }
 
     private async isEmailExists(email: string): Promise<boolean> {
-        const user = await this.userRepository.getByEmail(email);
+        const user = await this.userRepository.findByEmail(email);
         return !!user;
     }
+}
+
+export const createUserService = async () => {
+    // TODO: fix when DI implemented
+    const client = await getConnectedPostgresClient(getConfig().postgresConfig);
+
+    return new UserService(
+        new UserIdGenerator(),
+        new PostgresUserRepository(client),
+        new UserPasswordHasher(),
+    );
 }

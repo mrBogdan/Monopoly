@@ -2,5 +2,6 @@ import { User } from './User';
 
 export interface UserRepository {
     create(user: User): Promise<User>;
-    getByEmail(email: string): Promise<User|null>
+    findByEmail(email: string): Promise<User|undefined>
+    getRequiredUserByEmail(email: string): Promise<User|undefined>
 }
