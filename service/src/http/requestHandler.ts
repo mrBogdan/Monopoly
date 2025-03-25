@@ -18,6 +18,7 @@ type RequestContext = {
   params?: Map<string, string>;
   query?: Record<string, string>;
   body?: object;
+  headers?: Record<string, string>;
 };
 
 export const requestHandler = (router: Router) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
@@ -61,7 +62,7 @@ export const requestHandler = (router: Router) => async (req: http.IncomingMessa
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const executeHandler = async (instance: any, method: string, requestContext: RequestContext) => {
+const executeHandler = (instance: any, method: string, requestContext: RequestContext): Promise<object> => {
   const params = getParams(instance, method);
   const queryParams = getQueryParams(instance, method);
   const args = [];
@@ -90,7 +91,7 @@ const executeHandler = async (instance: any, method: string, requestContext: Req
     }
   }
 
-  return await instance[method](...args);
+  return instance[method](...args);
 };
 
 const castToType = (value: string, type: string) => {
