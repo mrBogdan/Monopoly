@@ -1,6 +1,4 @@
 export class ModuleManager {
-  private constructor() {
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static registerModules(modules: unknown[]) {}
 }

@@ -7,6 +7,7 @@ import request from 'supertest';
 import { Param } from '../../decorators/Param';
 import { UseErrorMapper } from '../../decorators/UseErrorMapper';
 import { BadRequestError } from '../../errors/BadRequestError';
+import { QueryParam } from '../../decorators/QueryParam';
 
 const USER_1 = 'USER_1';
 
@@ -35,9 +36,24 @@ class UserController {
     return this.userService.getUserById(id);
   }
 
+  @Get('/number-param/@id')
+  getNumberParam(@Param('id') id: number) {
+    return id;
+  }
+
   @Get('/business-error')
   getBusinessError() {
     throw new SomeBusinessError();
+  }
+
+  @Get('query-param')
+  getQueryParam(@QueryParam('query') query: string) {
+    return query;
+  }
+
+  @Get('query-param-and-path-param/@id')
+  getQueryParamAndPathParam(@QueryParam('query') query: string, @Param('id') id: string) {
+    return { query, id };
   }
 }
 
@@ -69,5 +85,24 @@ describe('Http server framework tests', () => {
     const response = await request(listeningServer).get('/user/business-error');
     expect(response.status).toBe(400);
     expect(response.body).toEqual({ message: 'Bad Request', reason: 'Some business error', status: 400 });
+  });
+
+  it('should cast param to number', async () => {
+    const response = await request(listeningServer).get('/user/number-param/1');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(1);
+    expect(typeof response.body).toBe('number');
+  });
+
+  it('should return query param', async () => {
+    const response = await request(listeningServer).get('/user/query-param?query=hello');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual('hello');
+  });
+
+  it('should be possible to use query param and path param together', async () => {
+    const response = await request(listeningServer).get('/user/query-param-and-path-param/some-id?query=hello');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ query: 'hello', id: 'some-id' });
   });
 });

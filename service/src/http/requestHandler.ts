@@ -24,7 +24,7 @@ export const requestHandler = (router: Router) => async (req: http.IncomingMessa
   let handler;
   try {
     const urlParsed = parse(req.url ?? '', true);
-    const route = router.findRoute(urlParsed.path ?? '', req.method?.toUpperCase() as Methods);
+    const route = router.findRoute(urlParsed.pathname ?? '', req.method?.toUpperCase() as Methods);
 
     handler = route.handler();
     const instance = globalContainer.resolve(handler.controller());

@@ -3,7 +3,6 @@ import { BadRequestError } from '../errors/BadRequestError';
 import { actionFactory } from '../action/actionFactory';
 import { WebSocket } from 'ws';
 import { handleBusinessError } from '../errors/handleBusinessError';
-import { errorMapper } from '../errorMapper';
 import { toJsonError } from '../errors/toJsonError';
 import { handleProtocolError } from '../errors/handleProtocolError';
 
@@ -45,6 +44,6 @@ export const getMessageHandler = (ws: WebSocket) => async (msg: string) => {
             return;
         }
 
-        ws.send(toJsonError(handleBusinessError(error, errorMapper)));
+        ws.send(toJsonError(handleBusinessError(error, new Map())));
     }
 };
