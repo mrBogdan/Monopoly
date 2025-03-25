@@ -6,7 +6,7 @@ export class Container {
 
   register<T>(target: new (...args: any[]) => T) {
     if (!this.services.has(target)) {
-      this.services.set(target, new target(this.resolveDependencies(target)));
+      this.services.set(target, new target(...this.resolveDependencies(target)));
     }
   }
 
