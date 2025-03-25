@@ -1,11 +1,9 @@
 import { RouteTree } from './RouteTree';
 import { Handler } from './Handler';
 import { Methods } from '../Methods';
-import { getControllers } from '../../decorators/Controller';
 import { RouteHandler } from './RouteHandler';
-import { METHOD_KEY, PATH_KEY } from '../../decorators/constants';
-import { delimiter } from './constants';
 import { Route } from './Route';
+import { buildRoutes } from '../../decorators/buildRoutes';
 
 export class Router {
   private _routeTree: RouteTree = new RouteTree();
@@ -35,17 +33,8 @@ export class Router {
   }
 
   private buildRoutes() {
-    const controllers = getControllers();
-
-    controllers.forEach((Controller, path) => {
-      Reflect.ownKeys(Controller.prototype).forEach((action) => {
-        const route = Reflect.getMetadata(PATH_KEY, Controller.prototype, action.toString());
-        const method = Reflect.getMetadata(METHOD_KEY, Controller.prototype, action.toString());
-
-        if (route !== undefined && method !== undefined) {
-          this._routeTree.addRoute([path, route].join(delimiter), method, new RouteHandler(Controller, action.toString()));
-        }
-      });
+    buildRoutes((path, method, Controller, action) => {
+      this._routeTree.addRoute(path, method, new RouteHandler(Controller, action));
     });
   }
 }
