@@ -105,4 +105,10 @@ describe('Http server framework tests', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ query: 'hello', id: 'some-id' });
   });
+
+  it('should throw BadRequestError if query param is not passed', async () => {
+    const response = await request(listeningServer).get('/user/query-param');
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing query parameter: query', status: 400 });
+  });
 });
