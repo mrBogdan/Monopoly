@@ -13,9 +13,9 @@ export class GameAdapter {
   }
 
   pay(payload: GameAction<PayPayload>) {
-    console.log({payload});
     return {
-      status: 'PAID'
+      status: 'PAID',
+      payload,
     }
   }
 }

@@ -4,15 +4,12 @@ import { getWebSocketServer } from '../wss/getWebSocketServer';
 import { requestHandler } from './requestHandler';
 import { Router } from './router/Router';
 import { ModuleManager } from '../ModuleManager';
-import { HealthModule } from '../health/HealthModule';
 
 let server: Server | null = null;
 
-export const getHttpServer = (): Server => {
+export const getHttpServer = (modules: unknown[]): Server => {
   if (!server) {
-    ModuleManager.registerModules([
-      HealthModule,
-    ]);
+    ModuleManager.registerModules(modules);
 
     const router = new Router();
 

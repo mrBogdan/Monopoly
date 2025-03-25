@@ -26,7 +26,7 @@ describe('Health', () => {
     it('should return 404 on path not found', async () => {
         const response = await request(listeningServer).get('/incorrect-path');
         expect(response.status).toBe(404);
-        expect(response.body).toEqual({ message: 'Not Found' });
+        expect(response.body).toEqual({ message: 'Not Found', status: 404, reason: 'Route "/incorrect-path" with method GET not found' });
     });
 
     it('should ping pong on ws', async () => {
