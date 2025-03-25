@@ -14,7 +14,7 @@ export class Router {
     this.buildRoutes();
   }
 
-  public findRoute(path: string, method: Methods): Route | undefined {
+  public findRoute(path: string, method: Methods): Route {
     return this._routeTree.findRoute(path, method);
   }
 

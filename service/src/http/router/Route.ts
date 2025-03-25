@@ -3,6 +3,7 @@ import { Methods } from '../Methods';
 import { RouteNode } from './RouteNode';
 import { DynamicRouteNode } from './DynamicRouteNode';
 import { delimiter } from './constants';
+import { NotFoundError } from '../../errors/NotFoundError';
 
 export class Route {
   private readonly _routeParams: Map<string, string> = new Map();
@@ -12,7 +13,8 @@ export class Route {
   constructor(
     private readonly _originalPath: string,
     private readonly _method: Methods,
-  ) {}
+  ) {
+  }
 
   public method(): Methods {
     return this._method;
@@ -22,7 +24,10 @@ export class Route {
     return this._originalPath;
   }
 
-  public handler(): Handler | undefined {
+  public handler(): Handler {
+    if (!this._handler) {
+      throw new NotFoundError('Handler is not set');
+    }
     return this._handler;
   }
 
