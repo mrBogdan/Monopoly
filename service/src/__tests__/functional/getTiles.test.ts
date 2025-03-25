@@ -9,7 +9,7 @@ describe('game:getTiles', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const server = getHttpServer();
+        const server = getHttpServer([]);
         listeningServer = server.listen(0);
     });
 
