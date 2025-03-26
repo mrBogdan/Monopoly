@@ -66,6 +66,11 @@ class UserController {
   createUser(@RequestBody() user: SimpleUser) {
     return user;
   }
+
+  @Post('/set-age')
+  createUserWithParam(@RequestBody('age') age: number) {
+    return { age };
+  }
 }
 
 @Module({
@@ -126,6 +131,13 @@ describe('Http server framework tests', () => {
   it('should correctly handle POST request', async () => {
     const expected = { id: 'USER_1' };
     const response = await request(listeningServer).post('/user').send(expected);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(expected);
+  });
+
+  it('should be possible to pick a param from request body', async () => {
+    const expected = { age: 25 };
+    const response = await request(listeningServer).post('/user/set-age').send(expected);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(expected);
   });
