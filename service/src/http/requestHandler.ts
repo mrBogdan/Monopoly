@@ -33,7 +33,7 @@ export const requestHandler = (router: Router) => async (req: http.IncomingMessa
       query: urlParsed?.query as Record<string, string>,
       params: route.getParams(),
     });
-    res.writeHead(200, Headers.ContentTypes.json);
+    res.writeHead(200, Headers.ContentType.json);
     res.end(JSON.stringify(response));
   } catch (error) {
     console.error(error);
@@ -41,22 +41,16 @@ export const requestHandler = (router: Router) => async (req: http.IncomingMessa
     const protocolError = handleProtocolError(error);
 
     if (protocolError) {
-      res.writeHead(protocolError.status, Headers.ContentTypes.json);
+      res.writeHead(protocolError.status, Headers.ContentType.json);
       res.end(toJsonError(protocolError));
       return;
     }
 
-    if (!handler) {
-      res.writeHead(500, Headers.ContentTypes.json);
-      res.end(toJsonError({ message: 'Internal server error', status: 500 } as ResponseError));
-      return;
-    }
-
-    const errorMapper = getErrorMapper(handler.controller());
+    const errorMapper = getErrorMapper(handler?.controller());
 
     const responseError = handleBusinessError(error, errorMapper);
 
-    res.writeHead(responseError.status, Headers.ContentTypes.json);
+    res.writeHead(responseError.status, Headers.ContentType.json);
     res.end(toJsonError(responseError));
   }
 };

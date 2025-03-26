@@ -1,5 +1,5 @@
 export const Headers = {
-    ContentTypes: {
+    ContentType: {
         json: {'Content-Type': 'application/json'},
         plain: {'Content-Type': 'text/plain'},
     },
