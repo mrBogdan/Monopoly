@@ -2,8 +2,8 @@ import {UserRepository} from "./UserRepository";
 import {User} from "./User";
 import {UserEmailAlreadyExistsError} from "./UserEmailAlreadyExistsError";
 import {UserRepeatedPasswordWrongError} from "./UserRepeatedPasswordWrongError";
-import {UserPasswordHasher} from "./UserPasswordHasher";
-import {UserIdGenerator} from "./UserIdGenerator";
+import {Hasher} from "../hasher/Hasher";
+import {IdGenerator} from "../idGenerator/IdGenerator";
 import {UserRegistrationDataDto} from "./DTO/UserRegistrationDataDto";
 import {PostgresUserRepository} from "./PostgresUserRepository";
 import {getConfig} from "../nodejs/getConfig";
@@ -11,9 +11,9 @@ import {getConnectedPostgresClient} from "../getConnectedPostgresClient";
 
 export class UserService {
     constructor(
-        private userIdGenerator: UserIdGenerator,
+        private userIdGenerator: IdGenerator,
         private userRepository: UserRepository,
-        private userPasswordHasher: UserPasswordHasher,
+        private userPasswordHasher: Hasher,
     ) {
     }
 
@@ -36,9 +36,7 @@ export class UserService {
         const hashedPassword = this.userPasswordHasher.hash(password);
         const userId = this.userIdGenerator.generateUUID();
 
-        return await this.userRepository.create(
-            new User(userId, name, hashedPassword, email)
-        );
+        return this.userRepository.create(new User(userId, name, hashedPassword, email));
     }
 
     private isCorrectRepeatedPassword(password: string, repeatedPassword: string): boolean {
@@ -56,8 +54,8 @@ export const createUserService = async () => {
     const client = await getConnectedPostgresClient(getConfig().postgresConfig);
 
     return new UserService(
-        new UserIdGenerator(),
+        new IdGenerator(),
         new PostgresUserRepository(client),
-        new UserPasswordHasher(),
+        new Hasher(),
     );
 }

@@ -1,8 +1,8 @@
 import {hash} from "node:crypto";
 
-export class UserPasswordHasher
+export class Hasher
 {
-    algorithm: string = 'sha1';
+    private algorithm: string = 'sha1';
 
     public hash(password: string): string {
         return hash(this.algorithm, password);

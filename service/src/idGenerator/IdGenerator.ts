@@ -1,6 +1,6 @@
 import {randomUUID, UUID} from "crypto";
 
-export class UserIdGenerator
+export class IdGenerator
 {
     public generateUUID(): UUID {
         return randomUUID();

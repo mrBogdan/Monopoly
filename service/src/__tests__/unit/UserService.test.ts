@@ -1,14 +1,14 @@
 import {UserService} from "../../user/UserService";
 import {UserRepository} from "../../user/UserRepository";
 import {User} from "../../user/User";
-import {UserIdGenerator} from "../../user/UserIdGenerator";
-import {UserPasswordHasher} from "../../user/UserPasswordHasher";
+import {IdGenerator} from "../../idGenerator/IdGenerator";
+import {Hasher} from "../../hasher/Hasher";
 import {UserRegistrationDataDto} from "../../user/DTO/UserRegistrationDataDto";
 
 describe('UserService', () => {
   let userRepository: jest.Mocked<UserRepository>;
-  let userIdGenerator: jest.Mocked<UserIdGenerator>;
-  let userPasswordHasher: jest.Mocked<UserPasswordHasher>;
+  let userIdGenerator: jest.Mocked<IdGenerator>;
+  let userPasswordHasher: jest.Mocked<Hasher>;
   let userService: UserService;
 
   beforeEach(() => {
@@ -19,11 +19,11 @@ describe('UserService', () => {
 
     userIdGenerator = {
       generateUUID: jest.fn().mockReturnValue('generated-id'),
-    } as unknown as jest.Mocked<UserIdGenerator>;
+    } as unknown as jest.Mocked<IdGenerator>;
 
     userPasswordHasher = {
       hash: jest.fn().mockReturnValue('hashed-password'),
-    } as unknown as jest.Mocked<UserPasswordHasher>;
+    } as unknown as jest.Mocked<Hasher>;
 
     userService = new UserService(userIdGenerator, userRepository, userPasswordHasher);
   });
