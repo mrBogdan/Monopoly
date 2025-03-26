@@ -12,7 +12,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 8080
-      WITH_MIGRATION:
+      WITH_MIGRATION: true
     volumes:
       - ../:/app
       - /app/node_modules

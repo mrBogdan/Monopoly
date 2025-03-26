@@ -13,7 +13,7 @@ describe('UserService', () => {
 
   beforeEach(() => {
     userRepository = {
-      getRequiredUserByEmail: jest.fn(),
+      findByEmail: jest.fn(),
       create: jest.fn(),
     } as unknown as jest.Mocked<UserRepository>;
 
@@ -29,11 +29,11 @@ describe('UserService', () => {
   });
 
   it('should register a new user', async () => {
-    userRepository.getRequiredUserByEmail.mockResolvedValue(undefined);
+    userRepository.findByEmail.mockResolvedValue(undefined);
 
     await userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'password'));
 
-    expect(userRepository.getRequiredUserByEmail).toHaveBeenCalledWith('test@gmail.com');
+    expect(userRepository.findByEmail).toHaveBeenCalledWith('test@gmail.com');
 
     expect(userRepository.create).toHaveBeenCalledWith(
         new User('generated-id', 'John Doe', 'hashed-password', 'test@gmail.com')
@@ -43,7 +43,7 @@ describe('UserService', () => {
   });
 
   it('should throw an error if email already exists', async () => {
-    userRepository.getRequiredUserByEmail.mockResolvedValue(
+    userRepository.findByEmail.mockResolvedValue(
         new User('existing-id', 'John Doe', 'hashed-password', 'test@gmail.com')
     );
 
@@ -51,11 +51,11 @@ describe('UserService', () => {
         userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'password'))
     ).rejects.toThrow('User email test@gmail.com already exists');
 
-    expect(userRepository.getRequiredUserByEmail).toHaveBeenCalledWith('test@gmail.com');
+    expect(userRepository.findByEmail).toHaveBeenCalledWith('test@gmail.com');
   });
 
   it('should throw an error if passwords do not match', async () => {
-    userRepository.getRequiredUserByEmail.mockResolvedValue(undefined);
+    userRepository.findByEmail.mockResolvedValue(undefined);
 
     await expect(
         userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'wrong-password'))
