@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import { PARAMS_KEY, UNKNOWN_TYPE } from './constants';
@@ -10,7 +9,7 @@ export type ParamInfo = {
 }
 
 export function Param(param: string) {
-    return (target: any, key: string, index: number) => {
+    return (target: object, key: string, index: number) => {
         if (!Reflect.hasMetadata(PARAMS_KEY, target, key)) {
             Reflect.defineMetadata(PARAMS_KEY, [], target, key);
         }
@@ -25,6 +24,6 @@ export function Param(param: string) {
     };
 }
 
-export const getParams = (target: any, key: string): ParamInfo[] => {
+export const getParams = (target: object, key: string): ParamInfo[] => {
     return Reflect.getMetadata(PARAMS_KEY, target, key);
 }

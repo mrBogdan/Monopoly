@@ -8,6 +8,8 @@ import { Param } from '../../decorators/Param';
 import { UseErrorMapper } from '../../decorators/UseErrorMapper';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { QueryParam } from '../../decorators/QueryParam';
+import { Post } from '../../decorators/Post';
+import { RequestBody } from '../../decorators/RequestBody';
 
 const USER_1 = 'USER_1';
 
@@ -15,6 +17,10 @@ class UserService {
   getUserById(id: string) {
     return [USER_1].find(user => user === id);
   }
+}
+
+class SimpleUser {
+  public id: string = USER_1;
 }
 
 class SomeBusinessError extends Error {
@@ -54,6 +60,11 @@ class UserController {
   @Get('query-param-and-path-param/@id')
   getQueryParamAndPathParam(@QueryParam('query') query: string, @Param('id') id: string) {
     return { query, id };
+  }
+
+  @Post()
+  createUser(@RequestBody() user: SimpleUser) {
+    return user;
   }
 }
 
@@ -110,5 +121,12 @@ describe('Http server framework tests', () => {
     const response = await request(listeningServer).get('/user/query-param');
     expect(response.status).toBe(400);
     expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing query parameter: query', status: 400 });
+  });
+
+  it('should correctly handle POST request', async () => {
+    const expected = { id: 'USER_1' };
+    const response = await request(listeningServer).post('/user').send(expected);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(expected);
   });
 });

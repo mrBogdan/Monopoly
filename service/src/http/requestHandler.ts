@@ -3,7 +3,7 @@ import { parse } from 'node:url';
 
 import { Headers } from './headers';
 import { Router } from './router/Router';
-import { Methods } from './Methods';
+import { isMethodWithBody, Methods } from './Methods';
 import { Container } from '../di/Container';
 import { getErrorMapper } from '../decorators/UseErrorMapper';
 import { getParams } from '../decorators/Param';
@@ -12,11 +12,13 @@ import { BadRequestError } from '../errors/BadRequestError';
 import { toJsonError } from '../errors/toJsonError';
 import { handleBusinessError } from '../errors/handleBusinessError';
 import { handleProtocolError } from '../errors/handleProtocolError';
+import { parseRequestBody } from './parseRequestBody';
+import { getRequestBodyParams } from '../decorators/RequestBody';
 
 type RequestContext = {
+  body?: unknown;
   params?: Map<string, string>;
   query?: Record<string, string>;
-  body?: object;
   headers?: Record<string, string>;
 };
 
@@ -28,7 +30,9 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
 
     handler = route.handler();
     const instance = diContainer.resolve(handler.controller());
+    const body = isMethodWithBody(req.method?.toUpperCase() as Methods) ? await parseRequestBody(req) : undefined;
     const response = await executeHandler(instance, handler.action(), {
+      body,
       query: url?.query as Record<string, string>,
       params: route.getParams(),
       headers: req.headers as Record<string, string>,
@@ -53,10 +57,11 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const executeHandler = (instance: any, method: string, requestContext: RequestContext): Promise<object> => {
+const executeHandler = (instance: {[key: string]: CallableFunction}, method: string, requestContext: RequestContext): Promise<object> => {
   const params = getParams(instance, method);
   const queryParams = getQueryParams(instance, method);
+  const requestBodyParams = getRequestBodyParams(instance, method);
+
   const args = [];
 
   if (params) {
@@ -83,10 +88,30 @@ const executeHandler = (instance: any, method: string, requestContext: RequestCo
     }
   }
 
+  if (requestBodyParams) {
+    if (!requestContext?.body) {
+      throw new BadRequestError('Request Body is missing');
+    }
+
+    for (const param of requestBodyParams) {
+      if (param.param) {
+        const bodyValue = (requestContext.body as Record<string, unknown>)[param.param];
+
+        if (!bodyValue) {
+          throw new BadRequestError(`Missing body parameter: ${param.param}`);
+        }
+
+        args[param.index] = castToType(bodyValue, param.type);
+      } else {
+        args[param.index] = requestContext.body;
+      }
+    }
+  }
+
   return instance[method](...args);
 };
 
-const castToType = (value: string, type: string) => {
+const castToType = (value: unknown, type: string) => {
   switch (type) {
     case 'Number':
       return Number(value);

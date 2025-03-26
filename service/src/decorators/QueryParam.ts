@@ -5,7 +5,7 @@ import { QUERY_PARAM_KEY, UNKNOWN_TYPE } from './constants';
 import { ParamInfo } from './Param';
 
 export function QueryParam(param: string) {
-    return (target: any, key: string, index: number) => {
+    return (target: object, key: string, index: number) => {
         if (!Reflect.hasMetadata(QUERY_PARAM_KEY, target, key)) {
             Reflect.defineMetadata(QUERY_PARAM_KEY, [], target, key);
         }
@@ -20,6 +20,6 @@ export function QueryParam(param: string) {
     };
 }
 
-export const getQueryParams = (target: any, key: string): ParamInfo[] => {
+export const getQueryParams = (target: object, key: string): ParamInfo[] => {
     return Reflect.getMetadata(QUERY_PARAM_KEY, target, key);
 }
