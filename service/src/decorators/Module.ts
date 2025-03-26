@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { globalContainer } from '../di/Container';
+import {getGlobalContainer} from '../di/globalContainer';
 
 type ModuleParams = {
   controllers: any[];
@@ -8,8 +8,9 @@ type ModuleParams = {
 
 export function Module(module: ModuleParams) {
   return function <T extends { new(...args: never[]): object }>(constructor: T) {
-    module?.services?.forEach((service) => globalContainer.register(service));
-    module.controllers.forEach((controller) => globalContainer.register(controller));
+    const container = getGlobalContainer();
+    module?.services?.forEach((service) => container.register(service));
+    module.controllers.forEach((controller) => container.register(controller));
     return constructor;
   };
 }

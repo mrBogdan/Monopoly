@@ -4,6 +4,7 @@ import { getWebSocketServer } from '../wss/getWebSocketServer';
 import { requestHandler } from './requestHandler';
 import { Router } from './router/Router';
 import { ModuleManager } from '../ModuleManager';
+import { getGlobalContainer } from '../di/globalContainer';
 
 let server: Server | null = null;
 
@@ -13,7 +14,7 @@ export const getHttpServer = (modules: unknown[]): Server => {
 
     const router = new Router();
 
-    server = http.createServer(requestHandler(router));
+    server = http.createServer(requestHandler(router, getGlobalContainer()));
 
     const wss = getWebSocketServer();
 

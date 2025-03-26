@@ -4,7 +4,7 @@ import { parse } from 'node:url';
 import { Headers } from './headers';
 import { Router } from './router/Router';
 import { Methods } from './Methods';
-import { globalContainer } from '../di/Container';
+import { Container } from '../di/Container';
 import { getErrorMapper } from '../decorators/UseErrorMapper';
 import { getParams } from '../decorators/Param';
 import { getQueryParams } from '../decorators/QueryParam';
@@ -12,7 +12,6 @@ import { BadRequestError } from '../errors/BadRequestError';
 import { toJsonError } from '../errors/toJsonError';
 import { handleBusinessError } from '../errors/handleBusinessError';
 import { handleProtocolError } from '../errors/handleProtocolError';
-import { ResponseError } from '../errors/ResponseError';
 
 type RequestContext = {
   params?: Map<string, string>;
@@ -21,17 +20,18 @@ type RequestContext = {
   headers?: Record<string, string>;
 };
 
-export const requestHandler = (router: Router) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
+export const requestHandler = (router: Router, diContainer: Container) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
   let handler;
   try {
-    const urlParsed = parse(req.url ?? '', true);
-    const route = router.findRoute(urlParsed.pathname ?? '', req.method?.toUpperCase() as Methods);
+    const url = parse(req.url ?? '', true);
+    const route = router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
 
     handler = route.handler();
-    const instance = globalContainer.resolve(handler.controller());
+    const instance = diContainer.resolve(handler.controller());
     const response = await executeHandler(instance, handler.action(), {
-      query: urlParsed?.query as Record<string, string>,
+      query: url?.query as Record<string, string>,
       params: route.getParams(),
+      headers: req.headers as Record<string, string>,
     });
     res.writeHead(200, Headers.ContentType.json);
     res.end(JSON.stringify(response));
@@ -46,9 +46,7 @@ export const requestHandler = (router: Router) => async (req: http.IncomingMessa
       return;
     }
 
-    const errorMapper = getErrorMapper(handler?.controller());
-
-    const responseError = handleBusinessError(error, errorMapper);
+    const responseError = handleBusinessError(error, getErrorMapper(handler?.controller()));
 
     res.writeHead(responseError.status, Headers.ContentType.json);
     res.end(toJsonError(responseError));

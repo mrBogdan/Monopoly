@@ -22,5 +22,3 @@ export class Container {
     return dependencies.map((dependency: any) => this.resolve(dependency));
   }
 }
-
-export const globalContainer = new Container();
