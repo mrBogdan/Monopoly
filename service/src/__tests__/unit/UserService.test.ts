@@ -3,7 +3,7 @@ import {UserRepository} from "../../user/UserRepository";
 import {User} from "../../user/User";
 import {IdGenerator} from "../../idGenerator/IdGenerator";
 import {Hasher} from "../../hasher/Hasher";
-import {UserRegistrationDataDto} from "../../user/DTO/UserRegistrationDataDto";
+import {UserRegistrationDto} from "../../user/UserRegistrationDto";
 
 describe('UserService', () => {
   let userRepository: jest.Mocked<UserRepository>;
@@ -31,7 +31,7 @@ describe('UserService', () => {
   it('should register a new user', async () => {
     userRepository.findByEmail.mockResolvedValue(undefined);
 
-    await userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'password'));
+    await userService.register(new UserRegistrationDto('John Doe', 'test@gmail.com', 'password', 'password'));
 
     expect(userRepository.findByEmail).toHaveBeenCalledWith('test@gmail.com');
 
@@ -48,7 +48,7 @@ describe('UserService', () => {
     );
 
     await expect(
-        userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'password'))
+        userService.register(new UserRegistrationDto('John Doe', 'test@gmail.com', 'password', 'password'))
     ).rejects.toThrow('User email test@gmail.com already exists');
 
     expect(userRepository.findByEmail).toHaveBeenCalledWith('test@gmail.com');
@@ -58,7 +58,7 @@ describe('UserService', () => {
     userRepository.findByEmail.mockResolvedValue(undefined);
 
     await expect(
-        userService.register(new UserRegistrationDataDto('John Doe', 'test@gmail.com', 'password', 'wrong-password'))
+        userService.register(new UserRegistrationDto('John Doe', 'test@gmail.com', 'password', 'wrong-password'))
     ).rejects.toThrow('Incorrect password or repeated password');
   });
 });

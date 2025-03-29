@@ -36,3 +36,18 @@ npm run test:unit
 cd ./service
 npm run build:docker
 ```
+
+## Run migration
+
+```shell
+cd ./service
+npm run start:doker:migration
+```
+
+## Run nodejs debuger for specific file
+
+> Useful line: https://nodejs.org/en/learn/getting-started/debugging
+
+```shell
+cd ./service
+

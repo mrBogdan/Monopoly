@@ -3,12 +3,15 @@ import { Server } from 'node:http';
 import wsRequest from 'superwstest';
 
 import { getHttpServer } from '../../http/getHttpServer';
+import { Router } from '../../http/router/Router';
+import { getGlobalContainer } from '../../di/globalContainer';
+import '../../AppModule';
 
 describe('Health', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const server = getHttpServer();
+        const server = getHttpServer(new Router(), getGlobalContainer());
         listeningServer = server.listen(0);
     });
 
@@ -25,7 +28,7 @@ describe('Health', () => {
     it('should return 404 on path not found', async () => {
         const response = await request(listeningServer).get('/incorrect-path');
         expect(response.status).toBe(404);
-        expect(response.body).toEqual({ message: 'Not found' });
+        expect(response.body).toEqual({ message: 'Not Found', status: 404, reason: 'Route "/incorrect-path" with method GET not found' });
     });
 
     it('should ping pong on ws', async () => {

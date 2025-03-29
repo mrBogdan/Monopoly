@@ -2,7 +2,9 @@ import { Action } from '../action/Action';
 import { BadRequestError } from '../errors/BadRequestError';
 import { actionFactory } from '../action/actionFactory';
 import { WebSocket } from 'ws';
-import { handleWebSocketError } from './handleWebSocketError';
+import { handleBusinessError } from '../errors/handleBusinessError';
+import { toJsonError } from '../errors/toJsonError';
+import { handleProtocolError } from '../errors/handleProtocolError';
 
 const parseRequest = (requestMessage: string): Action => {
     try {
@@ -34,7 +36,14 @@ export const getMessageHandler = (ws: WebSocket) => async (msg: string) => {
     try {
         const response = await handleRequest(msg.toString());
         ws.send(JSON.stringify(response));
-    } catch (error) {
-        ws.send(handleWebSocketError(error));
+    } catch (error: unknown) {
+        const protocolError = handleProtocolError(error);
+
+        if (protocolError) {
+            ws.send(toJsonError(protocolError));
+            return;
+        }
+
+        ws.send(toJsonError(handleBusinessError(error, new Map())));
     }
 };

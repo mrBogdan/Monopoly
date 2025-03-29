@@ -1,28 +1,19 @@
 import { getHttpServer } from './http/getHttpServer';
-import { getWebSocketServer } from './wss/getWebSocketServer';
-import { gracefulShutdown } from './gracefulShutdown';
 import { getConfig } from './nodejs/getConfig';
-import { migrate } from './migrations/migration';
-import { getConnectedPostgresClient } from './getConnectedPostgresClient';
+import { AppModule } from './AppModule';
+import { getGlobalContainer } from './di/globalContainer';
+import { Application } from './Application';
+import { Router } from './http/router/Router';
 
-const main = async () => {
-    const config = getConfig();
-    const client = await getConnectedPostgresClient(config.postgresConfig);
+if (process.env.NODE_ENV === 'production') {
+  const application = new Application(
+    getGlobalContainer(),
+    new Router(),
+    AppModule,
+    getConfig(),
+  );
 
-    if (config.withMigration) {
-        await migrate(client);
-    }
-
-    const httpServer = getHttpServer();
-    const wss = getWebSocketServer();
-
-    httpServer.listen(config.httpPort, () => {
-        console.log(`Http and WebSocket Servers are running on: ${config.httpPort}`);
-    });
-
-    gracefulShutdown(httpServer, wss);
-};
-
-main();
+  application.run(getHttpServer);
+}
 
 process.on('uncaughtException', console.error);

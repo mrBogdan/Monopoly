@@ -1,61 +1,56 @@
-import {UserRepository} from "./UserRepository";
-import {User} from "./User";
-import {UserEmailAlreadyExistsError} from "./UserEmailAlreadyExistsError";
-import {UserRepeatedPasswordWrongError} from "./UserRepeatedPasswordWrongError";
-import {Hasher} from "../hasher/Hasher";
-import {IdGenerator} from "../idGenerator/IdGenerator";
-import {UserRegistrationDataDto} from "./DTO/UserRegistrationDataDto";
-import {PostgresUserRepository} from "./PostgresUserRepository";
-import {getConfig} from "../nodejs/getConfig";
-import {getConnectedPostgresClient} from "../getConnectedPostgresClient";
+import { UserRepository } from './UserRepository';
+import { User } from './User';
+import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
+import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError';
+import { Hasher } from '../hasher/Hasher';
+import { IdGenerator } from '../idGenerator/IdGenerator';
+import { UserRegistrationDto } from './UserRegistrationDto';
+import { PostgresUserRepository } from './PostgresUserRepository';
+import { Client } from 'pg';
 
 export class UserService {
-    constructor(
-        private userIdGenerator: IdGenerator,
-        private userRepository: UserRepository,
-        private userPasswordHasher: Hasher,
+  constructor(
+    private userIdGenerator: IdGenerator,
+    private userRepository: UserRepository,
+    private userPasswordHasher: Hasher,
+  ) {
+  }
+
+  async register(userRegistrationDataDto: UserRegistrationDto): Promise<User> {
+    const {name, email, password, repeatedPassword} = userRegistrationDataDto;
+    if (await this.isEmailExists(email)) {
+      throw new UserEmailAlreadyExistsError(email);
+    }
+
+    if (!this.isCorrectRepeatedPassword(
+      password,
+      repeatedPassword)
     ) {
+      throw new UserRepeatedPasswordWrongError();
     }
 
-    async register(userRegistrationDataDto: UserRegistrationDataDto): Promise<User>
-    {
-        const {name, email, password, repeatedPassword} = userRegistrationDataDto;
-        if (await this.isEmailExists(email)) {
-            throw new UserEmailAlreadyExistsError(email);
-        }
+    //TODO: sendEmailConfirmation();
 
-        if (!this.isCorrectRepeatedPassword(
-            password,
-            repeatedPassword)
-        ) {
-            throw new UserRepeatedPasswordWrongError();
-        }
+    const hashedPassword = this.userPasswordHasher.hash(password);
+    const userId = this.userIdGenerator.generateUUID();
 
-        //TODO: sendEmailConfirmation();
+    return this.userRepository.create(new User(userId, name, hashedPassword, email));
+  }
 
-        const hashedPassword = this.userPasswordHasher.hash(password);
-        const userId = this.userIdGenerator.generateUUID();
+  private isCorrectRepeatedPassword(password: string, repeatedPassword: string): boolean {
+    return password.trim() === repeatedPassword.trim();
+  }
 
-        return this.userRepository.create(new User(userId, name, hashedPassword, email));
-    }
-
-    private isCorrectRepeatedPassword(password: string, repeatedPassword: string): boolean {
-        return password.trim() === repeatedPassword.trim();
-    }
-
-    private async isEmailExists(email: string): Promise<boolean> {
-        const user = await this.userRepository.findByEmail(email);
-        return !!user;
-    }
+  private async isEmailExists(email: string): Promise<boolean> {
+    const user = await this.userRepository.findByEmail(email);
+    return !!user;
+  }
 }
 
-export const createUserService = async () => {
-    // TODO: fix when DI implemented
-    const client = await getConnectedPostgresClient(getConfig().postgresConfig);
-
-    return new UserService(
-        new IdGenerator(),
-        new PostgresUserRepository(client),
-        new Hasher(),
-    );
-}
+export const createUserService = (client: Client) => {
+  return new UserService(
+    new IdGenerator(),
+    new PostgresUserRepository(client),
+    new Hasher(),
+  );
+};

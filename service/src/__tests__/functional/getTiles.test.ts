@@ -3,13 +3,15 @@ import { Server } from 'node:http';
 
 import { getHttpServer } from '../../http/getHttpServer';
 import { mapTiles } from '../../tiles/tiles';
+import { getTestContainer } from '../../di/globalContainer';
+import { Router } from '../../http/router/Router';
 
 
 describe('game:getTiles', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const server = getHttpServer();
+        const server = getHttpServer(new Router(), getTestContainer());
         listeningServer = server.listen(0);
     });
 

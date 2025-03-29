@@ -3,9 +3,10 @@ import { Client } from 'pg';
 import { UserRepository } from './UserRepository';
 import { User } from './User';
 import { UserNotFoundError } from './UserNotFoundError';
+import { Inject } from '../di/Inject';
 
 export class PostgresUserRepository implements UserRepository {
-    constructor(private readonly db: Client) {
+    constructor(@Inject('db') private readonly db: Client) {
     }
 
     async create(user: User): Promise<User> {

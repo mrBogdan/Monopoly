@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "pg": "^8.13.3",
+    "reflect-metadata": "0.2.2",
     "ws": "8.18.1"
   }
 }
