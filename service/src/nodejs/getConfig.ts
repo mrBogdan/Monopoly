@@ -3,7 +3,7 @@ import { isDevelopment } from './getEnv';
 import { toNumber } from './toNumber';
 import { toBoolean } from './toBoolean';
 
-export const getConfig = (): ServiceConfiguration => {
+export const getConfig = (override: Partial<ServiceConfiguration> = {}): ServiceConfiguration => {
   if (isDevelopment()) {
     return {
       httpPort: 8080,
@@ -14,7 +14,8 @@ export const getConfig = (): ServiceConfiguration => {
         database: process.env.POSTGRES_DATABASE || 'monopoly',
         host: process.env.POSTGRES_HOST || 'postgres',
         port: toNumber(process.env.POSTGRES_PORT) || 5432,
-      }
+      },
+      ...override,
     }
   }
 

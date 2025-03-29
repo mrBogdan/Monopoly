@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'reflect-metadata';
 
 import { QUERY_PARAM_KEY, UNKNOWN_TYPE } from './constants';

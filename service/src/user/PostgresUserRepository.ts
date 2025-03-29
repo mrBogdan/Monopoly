@@ -3,9 +3,12 @@ import { Client } from 'pg';
 import { UserRepository } from './UserRepository';
 import { User } from './User';
 import { UserNotFoundError } from './UserNotFoundError';
+import { Inject } from '../di/Inject';
+
+export const POSTGRES_USER_REPOSITORY = Symbol('POSTGRES_USER_REPOSITORY');
 
 export class PostgresUserRepository implements UserRepository {
-    constructor(private readonly db: Client) {
+    constructor(@Inject('db') private readonly db: Client) {
     }
 
     async create(user: User): Promise<User> {
@@ -20,7 +23,7 @@ export class PostgresUserRepository implements UserRepository {
         return new User(createdUser.id, createdUser.name, createdUser.passwordHash, createdUser.email);
     }
 
-    async getByEmail(email: string): Promise<User> {
+    async findByEmail(email: string): Promise<User | undefined> {
         const query: string = 'SELECT * FROM users WHERE email = $1';
 
         const result = await this.db.query(query, [email]);
@@ -28,9 +31,19 @@ export class PostgresUserRepository implements UserRepository {
         const user = result.rows[0];
 
         if (!user) {
-            throw new UserNotFoundError(email);
+            return undefined;
         }
 
         return new User(user.id, user.name, user.passwordHash, user.email);
+    }
+
+    async getRequiredUserByEmail(email: string): Promise<User> {
+        const user = await this.findByEmail(email);
+
+        if (!user) {
+            throw new UserNotFoundError(email);
+        }
+
+        return user;
     }
 }
