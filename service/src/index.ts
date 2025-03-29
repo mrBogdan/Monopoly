@@ -4,8 +4,9 @@ import { AppModule } from './AppModule';
 import { getGlobalContainer } from './di/globalContainer';
 import { Application } from './Application';
 import { Router } from './http/router/Router';
+import { isProduction } from './nodejs/getEnv';
 
-if (process.env.NODE_ENV === 'production') {
+if (isProduction()) {
   const application = new Application(
     getGlobalContainer(),
     new Router(),
@@ -13,7 +14,7 @@ if (process.env.NODE_ENV === 'production') {
     getConfig(),
   );
 
+  process.on('uncaughtException', console.error);
+
   application.run(getHttpServer);
 }
-
-process.on('uncaughtException', console.error);

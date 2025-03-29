@@ -1,14 +1,13 @@
 import { Client } from 'pg';
 
-import { UserRepository } from './UserRepository';
+import { USER_REPOSITORY, UserRepository } from './UserRepository';
 import { User } from './User';
 import { UserNotFoundError } from './UserNotFoundError';
-import { Inject } from '../di/Inject';
+import { Injectable } from '../di/Injectable';
 
-export const POSTGRES_USER_REPOSITORY = Symbol('POSTGRES_USER_REPOSITORY');
-
+@Injectable()
 export class PostgresUserRepository implements UserRepository {
-    constructor(@Inject('db') private readonly db: Client) {
+    constructor(private readonly db: Client) {
     }
 
     async create(user: User): Promise<User> {
@@ -46,4 +45,9 @@ export class PostgresUserRepository implements UserRepository {
 
         return user;
     }
+}
+
+export const POSTGRES_USER_REPOSITORY = {
+    param: USER_REPOSITORY,
+    useClass: PostgresUserRepository,
 }

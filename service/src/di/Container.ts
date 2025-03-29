@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import {
+  ClassFactory,
   Factory,
   FactoryParam,
   getModuleControllers,
@@ -86,20 +87,46 @@ export class Container {
             injectables.set(Service, Service);
             break;
           }
+          case ServiceType.CLASS_FACTORY: {
+            const classFactory = Service as ClassFactory;
+            const Class = classFactory.useClass as Constructor<unknown>;
+            const dependencies = getDependenciesMetadata(Class);
+
+            if (isEmpty(dependencies)) {
+              injectables.set(classFactory.param, resolved(new Class()));
+              continue;
+            }
+
+            const injectParams = getInjectParams(Class);
+
+            if (!isEmpty(injectParams)) {
+              if (isAllDependenciesResolved(injectParams.map(({token}) => token), injectables)) {
+                injectParams.forEach(({token, index}) => {
+                  dependencies[index] = getResolvedInstance(injectables.get(token) as ResolvedInstance);
+                });
+              }
+            }
+
+            if(isAllDependenciesResolved(dependencies, injectables)) {
+              injectables.set(classFactory.param, resolved(new Class(...dependencies)));
+              continue;
+            }
+
+            injectables.set(classFactory.param, Class);
+
+            break;
+          }
           case ServiceType.FACTORY: {
             const factory = Service as Factory;
-            let instance = null;
             if (isEmpty(factory.inject)) {
-              instance = await factory.useFactory();
+              injectables.set(factory.param, resolved(await factory.useFactory()));
+              continue;
             }
 
             if (!isEmpty(factory.inject) && isAllDependenciesResolved(factory.inject as [], injectables)) {
               const dependencies = (factory.inject as []).map((dep: unknown) => injectables.get(dep));
-              instance = await factory.useFactory(...dependencies);
-            }
-
-            if (instance) {
-              injectables.set(factory.param, resolved(instance));
+              injectables.set(factory.param, resolved(await factory.useFactory(...dependencies)));
+              continue;
             }
 
             injectables.set(factory.param, factory);
@@ -113,8 +140,16 @@ export class Container {
         }
       }
 
-      for (const Controller of Controllers) {
-        injectables.set(Controller as Constructor<unknown>, Controller);
+      for (const Class of Controllers) {
+        const Controller = Class as Constructor<unknown>;
+        const dependencies = getDependenciesMetadata(Controller);
+
+        if (isEmpty(dependencies)) {
+          injectables.set(Controller, resolved(new Controller()));
+          continue;
+        }
+
+        injectables.set(Controller, Controller);
       }
     }
 
@@ -124,7 +159,7 @@ export class Container {
       stack.push(injectable);
 
       while (!stack.isEmpty()) {
-        const [, value] = stack.top();
+        const [key, value] = stack.top();
 
         if (isResolved(value)) {
           stack.pop();
@@ -137,16 +172,17 @@ export class Container {
 
             const inject = factory.inject as unknown[];
 
-            const dependencies = inject.filter((dep: unknown) => !isResolved(injectables.get(dep)));
+            const notResolvedDependencies = inject.filter((dep: unknown) => !isResolved(injectables.get(dep)));
 
-            if (isEmpty(dependencies)) {
-              const resolvedDependencies = inject.map((dep: unknown) => injectables.get(dep));
+            if (isEmpty(notResolvedDependencies)) {
+              const resolvedDependencies = inject.map((dep: unknown) => getResolvedInstance(injectables.get(dep) as ResolvedInstance));
               const instance = await factory.useFactory(...resolvedDependencies);
               injectables.set(factory.param, resolved(instance));
               stack.pop();
+              continue;
             }
 
-            for (const dependency of dependencies) {
+            for (const dependency of notResolvedDependencies) {
               stack.push([dependency, injectables.get(dependency)]);
             }
 
@@ -156,24 +192,27 @@ export class Container {
           case ServiceType.CLASS: {
             const Class = value as Constructor<unknown>;
             const dependencies = getDependenciesMetadata(Class);
+
+            const injectParams = getInjectParams(Class as Constructor<unknown>);
+
+            if (!isEmpty(injectParams)) {
+              injectParams.forEach(({token, index}) => {
+                dependencies[index] = token;
+              });
+            }
+
             const notResolvedDependencies = dependencies.filter((dep: unknown) => !isResolved(injectables.get(dep)));
 
             if (isEmpty(notResolvedDependencies)) {
               const resolvedDependencies = dependencies.map((dep: unknown) => getResolvedInstance(injectables.get(dep) as ResolvedInstance));
 
-              const injectParams = getInjectParams(Class as Constructor<unknown>);
-
-              if (!isEmpty(injectParams)) {
-                if (isAllDependenciesResolved(injectParams.map(({token}) => token), injectables)) {
-                  injectParams.forEach(({token, index}) => {
-                    resolvedDependencies[index] = token;
-                  });
-                }
-              }
-
               const instance = new Class(...resolvedDependencies);
-              injectables.set(Class, resolved(instance));
+              injectables.set(key, resolved(instance));
               stack.pop();
+            } else {
+              for (const dependency of notResolvedDependencies) {
+                stack.push([dependency, injectables.get(dependency)]);
+              }
             }
             break;
           }
@@ -214,6 +253,6 @@ const isAllDependenciesResolved = (dependencies: unknown[], injectables: Map<unk
 
 const isResolved = (instance: unknown) => instance && Object.hasOwn(instance, INSTANCE_KEY);
 
-const getDependenciesMetadata = (Class: object): unknown[] => {
+const getDependenciesMetadata = (Class: Constructor<unknown>): unknown[] => {
   return Reflect.getMetadata('design:paramtypes', Class) || [];
 };

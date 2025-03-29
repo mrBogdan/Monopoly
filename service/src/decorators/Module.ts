@@ -6,7 +6,13 @@ export type FactoryParam = {
   param: unknown | string;
   useFactory?: (...rest: unknown[]) => unknown;
   useValue?: unknown;
+  useClass?: unknown;
   inject?: unknown[];
+}
+
+export type ClassFactory = {
+  param: string | symbol | unknown;
+  useClass: unknown;
 }
 
 export type Factory = {
@@ -51,6 +57,7 @@ export enum ServiceType {
   FACTORY,
   VALUE,
   CLASS,
+  CLASS_FACTORY,
 }
 
 export function getServiceType(service: unknown): ServiceType {
@@ -70,11 +77,16 @@ export function getServiceType(service: unknown): ServiceType {
     return ServiceType.FACTORY;
   }
 
+  if (isClassFactory(service)) {
+    return ServiceType.CLASS_FACTORY;
+  }
+
   throw new Error('Unknown service type');
 }
 
-const isObject = (service: unknown): boolean => typeof service === 'object';
-const isClass = (service: unknown): boolean => typeof service === 'function';
+const isObject = (service: unknown): boolean => (typeof service === 'object');
+const isClass = (service: object): boolean => typeof service === 'function';
 const isValue = (service: object): boolean => isObject(service) && Object.hasOwn(service, 'useValue');
 const isFactory = (service: object): boolean => isObject(service) && Object.hasOwn(service, 'useFactory');
+const isClassFactory = (service: object): boolean => isObject(service) && Object.hasOwn(service, 'useClass');
 

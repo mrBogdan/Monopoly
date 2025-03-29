@@ -18,6 +18,22 @@ export class UserPublicController {
 
     @Post()
     singUp(@RequestBody() body: UserRegistrationDto): Promise<User> {
+        this.validateUserRegistrationDto(body);
         return this.userService.register(body);
+    }
+
+    private validateUserRegistrationDto(userRegistrationDto: UserRegistrationDto): void {
+        if (!userRegistrationDto.name) {
+            throw new BadRequestError('Name is required');
+        }
+        if (!userRegistrationDto.email) {
+            throw new BadRequestError('Email is required');
+        }
+        if (!userRegistrationDto.password) {
+            throw new BadRequestError('Password is required');
+        }
+        if (!userRegistrationDto.repeatedPassword) {
+            throw new BadRequestError('Repeated password is required');
+        }
     }
 }

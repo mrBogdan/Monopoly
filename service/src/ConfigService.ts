@@ -1,11 +1,19 @@
 import { Inject } from './di/Inject';
-import { CONFIG } from './SharedModule';
+import { getConfig } from './nodejs/getConfig';
+import { ServiceConfiguration } from './ServiceConfiguration';
+
+export const CONFIG = Symbol('Config');
 
 export class ConfigService {
-  constructor(@Inject(CONFIG) private readonly config: never) {
+  constructor(@Inject(CONFIG) private readonly config: ServiceConfiguration) {
   }
 
   get(key: string): unknown {
-    return this.config[key];
+    return (this.config as never)[key];
   }
 }
+
+export const getConfigValue = (config: ServiceConfiguration = getConfig()) => ({
+  param: CONFIG,
+  useValue: config,
+});

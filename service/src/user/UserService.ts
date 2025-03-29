@@ -1,21 +1,20 @@
-import { UserRepository } from './UserRepository';
+import { USER_REPOSITORY, UserRepository } from './UserRepository';
 import { User } from './User';
 import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
 import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError';
 import { Hasher } from '../hasher/Hasher';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 import { UserRegistrationDto } from './UserRegistrationDto';
-import { POSTGRES_USER_REPOSITORY, PostgresUserRepository } from './PostgresUserRepository';
+import { PostgresUserRepository } from './PostgresUserRepository';
 import { Client } from 'pg';
 import { Inject } from '../di/Inject';
 
 export class UserService {
   constructor(
     private userIdGenerator: IdGenerator,
-    @Inject(POSTGRES_USER_REPOSITORY) private userRepository: UserRepository,
+    @Inject(USER_REPOSITORY) private userRepository: UserRepository,
     private userPasswordHasher: Hasher,
-  ) {
-  }
+  ) {}
 
   async register(userRegistrationDataDto: UserRegistrationDto): Promise<User> {
     const {name, email, password, repeatedPassword} = userRegistrationDataDto;
