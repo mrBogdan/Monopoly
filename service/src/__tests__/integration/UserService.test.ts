@@ -38,12 +38,12 @@ describe('UserService Integration Tests (Real Database)', () => {
   beforeEach(truncateUsersTable);
 
   it('should register a new user in the database', async () => {
-    const userData = new UserRegistrationDto(
-      'Integration Test User',
-      testEmail,
-      'securePassword123!',
-      'securePassword123!',
-    );
+    const userData: UserRegistrationDto = {
+      name: 'Integration Test User',
+      email: testEmail,
+      password: 'securePassword123!',
+      repeatedPassword: 'securePassword123!',
+    }
 
     const user = await userService.register(userData);
 
@@ -59,24 +59,20 @@ describe('UserService Integration Tests (Real Database)', () => {
   });
 
   it('should throw UserEmailAlreadyExistsError when email exists', async () => {
-    await userService.register(
-      new UserRegistrationDto(
-        'Existing User',
-        testEmail,
-        'password123',
-        'password123',
-      ),
-    );
+    await userService.register({
+      name: 'Existing User',
+      email: testEmail,
+      password: 'password123',
+      repeatedPassword: 'password123',
+    });
 
     await expect(
-      userService.register(
-        new UserRegistrationDto(
-          'Duplicate User',
-          testEmail,
-          'password456',
-          'password456',
-        ),
-      ),
+      userService.register({
+        name: 'Duplicate User',
+        email: testEmail,
+        password: 'password456',
+        repeatedPassword: 'password456',
+      }),
     ).rejects.toThrow(UserEmailAlreadyExistsError);
   });
 
@@ -84,14 +80,12 @@ describe('UserService Integration Tests (Real Database)', () => {
     const uniqueEmail = `test-${Date.now()}@example.com`;
 
     await expect(
-      userService.register(
-        new UserRegistrationDto(
-          'Test User',
-          uniqueEmail,
-          'password123',
-          'differentPassword',
-        ),
-      ),
+      userService.register({
+        name: 'Test User',
+        email: uniqueEmail,
+        password: 'password123',
+        repeatedPassword: 'differentPassword',
+        }),
     ).rejects.toThrow(UserRepeatedPasswordWrongError);
 
     const dbUser = await userRepository.findByEmail(uniqueEmail);
@@ -102,14 +96,12 @@ describe('UserService Integration Tests (Real Database)', () => {
     const uniqueEmail = `test-${Date.now()}@example.com`;
     const plainPassword = 'myPlainPassword123';
 
-    const user = await userService.register(
-      new UserRegistrationDto(
-        'Password Test User',
-        uniqueEmail,
-        plainPassword,
-        plainPassword,
-      ),
-    );
+    const user = await userService.register({
+      name: 'Password Test User',
+      email: uniqueEmail,
+      password: plainPassword,
+      repeatedPassword: plainPassword,
+    });
 
     expect(user.passwordHash).not.toBe(plainPassword);
     expect(user.passwordHash.length).toBeGreaterThan(plainPassword.length);

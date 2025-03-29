@@ -11,7 +11,7 @@ import { BadRequestError } from '../../errors/BadRequestError';
 import { QueryParam } from '../../decorators/QueryParam';
 import { Post } from '../../decorators/Post';
 import { RequestBody } from '../../decorators/RequestBody';
-import { getGlobalContainer } from '../../di/globalContainer';
+import { getTestContainer } from '../../di/globalContainer';
 import { Router } from '../../http/router/Router';
 
 const USER_1 = 'USER_1';
@@ -86,7 +86,8 @@ describe('Http server framework tests', () => {
   let listeningServer: Server;
 
   beforeEach(async () => {
-    const server = getHttpServer(new Router(), getGlobalContainer());
+    const container = await getTestContainer([TestModule]);
+    const server = getHttpServer(new Router(), container);
     listeningServer = server.listen(0);
   });
 

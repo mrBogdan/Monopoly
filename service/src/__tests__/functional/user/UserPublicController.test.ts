@@ -4,7 +4,7 @@ import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers
 import { getHttpServer } from '../../../http/getHttpServer';
 import { AppModule } from '../../../AppModule';
 import { Application } from '../../../Application';
-import { getGlobalContainer } from '../../../di/globalContainer';
+import { getTestContainer } from '../../../di/globalContainer';
 import { Router } from '../../../http/router/Router';
 import { getTestConfig } from '../../../nodejs/getTestConfig';
 import request from 'supertest';
@@ -17,7 +17,8 @@ describe('UserPublicController', () => {
   beforeAll(async () => {
     const postgresContainer = new PostgreSqlContainer();
     container = await postgresContainer.start();
-    app = new Application(getGlobalContainer(), new Router(), AppModule, getTestConfig({
+    const diContainer = await getTestContainer(AppModule);
+    app = new Application(diContainer, new Router(), AppModule, getTestConfig({
       postgresConfig: {
         host: container.getHost(),
         port: container.getMappedPort(5432),

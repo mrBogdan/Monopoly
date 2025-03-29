@@ -20,6 +20,7 @@ export class Application {
   }
 
   async run(getHttpServer: (router: Router, container: Container) => Server) {
+    await this.diContainer.init(this.modules);
     this.client = await getConnectedPostgresClient(this.config.postgresConfig);
 
     if (this.config.withMigration) {

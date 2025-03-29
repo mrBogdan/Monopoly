@@ -5,6 +5,8 @@ import { User } from './User';
 import { UserNotFoundError } from './UserNotFoundError';
 import { Inject } from '../di/Inject';
 
+export const POSTGRES_USER_REPOSITORY = Symbol('POSTGRES_USER_REPOSITORY');
+
 export class PostgresUserRepository implements UserRepository {
     constructor(@Inject('db') private readonly db: Client) {
     }

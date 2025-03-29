@@ -4,14 +4,16 @@ import wsRequest from 'superwstest';
 
 import { getHttpServer } from '../../http/getHttpServer';
 import { Router } from '../../http/router/Router';
-import { getGlobalContainer } from '../../di/globalContainer';
+import { getTestContainer } from '../../di/globalContainer';
 import '../../AppModule';
+import { HealthModule } from '../../health/HealthModule';
 
 describe('Health', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const server = getHttpServer(new Router(), getGlobalContainer());
+        const container = await getTestContainer([HealthModule]);
+        const server = getHttpServer(new Router(), container);
         listeningServer = server.listen(0);
     });
 

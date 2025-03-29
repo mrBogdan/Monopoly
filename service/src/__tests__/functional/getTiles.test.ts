@@ -11,7 +11,7 @@ describe('game:getTiles', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const server = getHttpServer(new Router(), getTestContainer());
+        const server = getHttpServer(new Router(), await getTestContainer([]));
         listeningServer = server.listen(0);
     });
 

@@ -5,13 +5,14 @@ import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError
 import { Hasher } from '../hasher/Hasher';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 import { UserRegistrationDto } from './UserRegistrationDto';
-import { PostgresUserRepository } from './PostgresUserRepository';
+import { POSTGRES_USER_REPOSITORY, PostgresUserRepository } from './PostgresUserRepository';
 import { Client } from 'pg';
+import { Inject } from '../di/Inject';
 
 export class UserService {
   constructor(
     private userIdGenerator: IdGenerator,
-    private userRepository: UserRepository,
+    @Inject(POSTGRES_USER_REPOSITORY) private userRepository: UserRepository,
     private userPasswordHasher: Hasher,
   ) {
   }

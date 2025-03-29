@@ -10,6 +10,8 @@ export const getGlobalContainer = () => {
   return globalContainer;
 }
 
-export const getTestContainer = () => {
-  return new Container();
+export const getTestContainer = async (modules: unknown[]) => {
+  const container = new Container();
+  await container.init(modules);
+  return container;
 }

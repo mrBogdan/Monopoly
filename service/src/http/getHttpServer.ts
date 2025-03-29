@@ -6,12 +6,6 @@ import { Router } from './router/Router';
 import { Container } from '../di/Container';
 
 export const getHttpServer = (router: Router, diContainer: Container): Server => {
-  console.dir({
-    router,
-    diContainer,
-  }, {
-    depth: null
-  });
   const server = http.createServer(requestHandler(router, diContainer));
 
   const wss = getWebSocketServer();

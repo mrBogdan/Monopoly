@@ -159,7 +159,7 @@ export class Container {
             const notResolvedDependencies = dependencies.filter((dep: unknown) => !isResolved(injectables.get(dep)));
 
             if (isEmpty(notResolvedDependencies)) {
-              const resolvedDependencies = dependencies.map((dep: unknown) => injectables.get(dep));
+              const resolvedDependencies = dependencies.map((dep: unknown) => getResolvedInstance(injectables.get(dep) as ResolvedInstance));
 
               const injectParams = getInjectParams(Class as Constructor<unknown>);
 
