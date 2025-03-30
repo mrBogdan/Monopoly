@@ -28,7 +28,6 @@ export class TestDatabase {
   }
 
   async cleanup() {
-
     await Promise.all([
       this.client.end(),
       this.container.stop()
