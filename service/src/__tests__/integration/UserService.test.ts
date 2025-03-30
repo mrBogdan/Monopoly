@@ -5,7 +5,6 @@ import { Hasher } from '../../hasher/Hasher';
 import { UserRegistrationDto } from '../../user/UserRegistrationDto';
 import { UserEmailAlreadyExistsError } from '../../user/UserEmailAlreadyExistsError';
 import { UserRepeatedPasswordWrongError } from '../../user/UserRepeatedPasswordWrongError';
-import { User } from '../../user/User';
 import { TestDatabase } from './TestDatabase';
 import { UserResponse } from '../../user/UserResponse';
 
