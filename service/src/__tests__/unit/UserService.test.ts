@@ -36,15 +36,15 @@ describe('UserService', () => {
   });
 
   it('should register a new user', async () => {
+    const user = new User('generated-id', 'John Doe', 'hashed-password', 'test@gmail.com');
     userRepository.findByEmail.mockResolvedValue(undefined);
+    userRepository.create.mockResolvedValue(user);
 
     await userService.register(userRegistrationDto);
 
     expect(userRepository.findByEmail).toHaveBeenCalledWith('test@gmail.com');
 
-    expect(userRepository.create).toHaveBeenCalledWith(
-      new User('generated-id', 'John Doe', 'hashed-password', 'test@gmail.com'),
-    );
+    expect(userRepository.create).toHaveBeenCalledWith(user);
 
     expect(userPasswordHasher.hash).toHaveBeenCalledWith('password');
   });

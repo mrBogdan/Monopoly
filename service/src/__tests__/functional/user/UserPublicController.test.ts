@@ -57,7 +57,7 @@ describe('UserPublicController', () => {
     it('should throw error on empty body', async () => {
       const response = await request(listeningServer).post('/public/sign-up').send({});
       expect(response.status).toBe(400);
-      expect(response.body.reason).toEqual('Name is required');
+      expect(response.body.reason).toEqual('name is required');
     });
 
     it('should register user', async () => {

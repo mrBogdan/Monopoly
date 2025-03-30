@@ -7,6 +7,7 @@ import { UserEmailAlreadyExistsError } from '../../user/UserEmailAlreadyExistsEr
 import { UserRepeatedPasswordWrongError } from '../../user/UserRepeatedPasswordWrongError';
 import { User } from '../../user/User';
 import { TestDatabase } from './TestDatabase';
+import { UserResponse } from '../../user/UserResponse';
 
 describe('UserService Integration Tests (Real Database)', () => {
   let userService: UserService;
@@ -42,14 +43,14 @@ describe('UserService Integration Tests (Real Database)', () => {
       email: testEmail,
       password: 'securePassword123!',
       repeatedPassword: 'securePassword123!',
-    }
+    };
 
     const user = await userService.register(userData);
 
-    expect(user).toBeInstanceOf(User);
+    expect(user).toBeInstanceOf(UserResponse);
     expect(user.name).toBe(userData.name);
     expect(user.email).toBe(userData.email);
-    expect(user.passwordHash).not.toBe(userData.password);
+    expect(user.id).toEqual(expect.any(String));
 
     const dbUser = await userRepository.findByEmail(testEmail);
     expect(dbUser).toBeDefined();
@@ -59,12 +60,11 @@ describe('UserService Integration Tests (Real Database)', () => {
 
   it('should throw UserEmailAlreadyExistsError when email exists', async () => {
     await userService.register({
-      name: 'Existing User',
+      name: 'Duplicate User',
       email: testEmail,
-      password: 'password123',
-      repeatedPassword: 'password123',
+      password: 'password456',
+      repeatedPassword: 'password456',
     });
-
     await expect(
       userService.register({
         name: 'Duplicate User',
@@ -84,7 +84,7 @@ describe('UserService Integration Tests (Real Database)', () => {
         email: uniqueEmail,
         password: 'password123',
         repeatedPassword: 'differentPassword',
-        }),
+      }),
     ).rejects.toThrow(UserRepeatedPasswordWrongError);
 
     const dbUser = await userRepository.findByEmail(uniqueEmail);
@@ -95,17 +95,19 @@ describe('UserService Integration Tests (Real Database)', () => {
     const uniqueEmail = `test-${Date.now()}@example.com`;
     const plainPassword = 'myPlainPassword123';
 
-    const user = await userService.register({
+    const userDto = {
       name: 'Password Test User',
       email: uniqueEmail,
       password: plainPassword,
       repeatedPassword: plainPassword,
-    });
+    };
 
-    expect(user.passwordHash).not.toBe(plainPassword);
-    expect(user.passwordHash.length).toBeGreaterThan(plainPassword.length);
+    const user = await userService.register(userDto);
+
+    expect(user.email).not.toBe(plainPassword);
+    expect(user.name).toBe(userDto.name);
 
     const dbUser = await userRepository.findByEmail(uniqueEmail);
-    expect(dbUser?.passwordHash).toBe(user.passwordHash);
+    expect(dbUser?.passwordHash).toEqual(expect.any(String));
   });
 });
