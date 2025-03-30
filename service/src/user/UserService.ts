@@ -5,8 +5,6 @@ import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError
 import { Hasher } from '../hasher/Hasher';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 import { UserRegistrationDto } from './UserRegistrationDto';
-import { PostgresUserRepository } from './PostgresUserRepository';
-import { Client } from 'pg';
 import { Inject } from '../di/Inject';
 import { UserResponse } from './UserResponse';
 
