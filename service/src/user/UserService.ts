@@ -8,6 +8,7 @@ import { UserRegistrationDto } from './UserRegistrationDto';
 import { PostgresUserRepository } from './PostgresUserRepository';
 import { Client } from 'pg';
 import { Inject } from '../di/Inject';
+import { UserResponse } from './UserResponse';
 
 export class UserService {
   constructor(
@@ -16,7 +17,7 @@ export class UserService {
     private userPasswordHasher: Hasher,
   ) {}
 
-  async register(userRegistrationDataDto: UserRegistrationDto): Promise<User> {
+  async register(userRegistrationDataDto: UserRegistrationDto): Promise<UserResponse> {
     const {name, email, password, repeatedPassword} = userRegistrationDataDto;
     if (await this.isEmailExists(email)) {
       throw new UserEmailAlreadyExistsError(email);
@@ -34,7 +35,8 @@ export class UserService {
     const hashedPassword = this.userPasswordHasher.hash(password);
     const userId = this.userIdGenerator.generateUUID();
 
-    return this.userRepository.create(new User(userId, name, hashedPassword, email));
+    const user = await this.userRepository.create(new User(userId, name, hashedPassword, email));
+    return new UserResponse(user.id, user.name, user.email);
   }
 
   private isCorrectRepeatedPassword(password: string, repeatedPassword: string): boolean {

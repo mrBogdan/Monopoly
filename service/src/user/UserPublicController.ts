@@ -7,6 +7,7 @@ import { User } from './User';
 import { UseErrorMapper } from '../decorators/UseErrorMapper';
 import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
 import { BadRequestError } from '../errors/BadRequestError';
+import { UserResponse } from './UserResponse';
 
 @UseErrorMapper(new Map([
   [UserEmailAlreadyExistsError, BadRequestError],
@@ -17,23 +18,16 @@ export class UserPublicController {
     }
 
     @Post()
-    singUp(@RequestBody() body: UserRegistrationDto): Promise<User> {
-        this.validateUserRegistrationDto(body);
+    singUp(@RequestBody() body: UserRegistrationDto): Promise<UserResponse> {
+        this.validateUserRegistrationDto(body as unknown as Record<string, unknown>);
         return this.userService.register(body);
     }
 
-    private validateUserRegistrationDto(userRegistrationDto: UserRegistrationDto): void {
-        if (!userRegistrationDto.name) {
-            throw new BadRequestError('Name is required');
-        }
-        if (!userRegistrationDto.email) {
-            throw new BadRequestError('Email is required');
-        }
-        if (!userRegistrationDto.password) {
-            throw new BadRequestError('Password is required');
-        }
-        if (!userRegistrationDto.repeatedPassword) {
-            throw new BadRequestError('Repeated password is required');
-        }
+    private validateUserRegistrationDto(userRegistrationDto: Record<string, unknown>): void {
+        ['name', 'email', 'password', 'repeatedPassword'].forEach((field) => {
+            if (!userRegistrationDto[field]) {
+                throw new BadRequestError(`${field} is required`);
+            }
+        });
     }
 }

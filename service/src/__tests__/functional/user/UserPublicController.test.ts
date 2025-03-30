@@ -10,6 +10,7 @@ import { Router } from '../../../http/router/Router';
 import { getTestConfig } from '../../../nodejs/getTestConfig';
 import { getAnonymousModule } from '../../../getAnonymousModule';
 import { getConfigValue } from '../../../ConfigService';
+import { UserRegistrationDto } from '../../../user/UserRegistrationDto';
 
 describe('UserPublicController', () => {
   let listeningServer: Server;
@@ -35,15 +36,33 @@ describe('UserPublicController', () => {
   });
 
   afterAll(async () => {
-    await app.gracefulShutdown();
-    await container.stop();
+    await Promise.all([
+      app.gracefulShutdown(),
+      container.stop(),
+    ]);
   });
 
   describe('singUp', () => {
-    it('should return a user', async () => {
+    it('should throw error on empty body', async () => {
       const response = await request(listeningServer).post('/public/sign-up').send({});
       expect(response.status).toBe(400);
       expect(response.body.reason).toEqual('Name is required');
+    });
+
+    it('should register user', async () => {
+      const user = {
+        name: 'Test User',
+        email: `test@example.com`,
+        password: 'securePassword123!',
+        repeatedPassword: 'securePassword123!',
+      }
+      const response = await request(listeningServer).post('/public/sign-up').send(user);
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        id: expect.any(String),
+        name: user.name,
+        email: user.email,
+      });
     });
   });
 });
