@@ -3,7 +3,6 @@ import { Controller } from '../decorators/Controller';
 import { Post } from '../decorators/Post';
 import { RequestBody } from '../decorators/RequestBody';
 import { UserRegistrationDto } from './UserRegistrationDto';
-import { User } from './User';
 import { UseErrorMapper } from '../decorators/UseErrorMapper';
 import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
 import { BadRequestError } from '../errors/BadRequestError';
