@@ -48,11 +48,3 @@ export class UserService {
     return !!user;
   }
 }
-
-export const createUserService = (client: Client) => {
-  return new UserService(
-    new IdGenerator(),
-    new PostgresUserRepository(client),
-    new Hasher(),
-  );
-};
