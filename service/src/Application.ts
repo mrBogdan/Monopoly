@@ -31,6 +31,10 @@ export class Application {
     return this.server;
   }
 
+  get<T>(token: Constructor<T> | string | symbol): T {
+    return this.diContainer.resolve(token);
+  }
+
   async gracefulShutdown() {
     if (this.server) {
       this.server.close();
