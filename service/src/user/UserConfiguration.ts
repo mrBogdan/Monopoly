@@ -1,10 +1,10 @@
-import { Pool } from 'pg';
+import { Client } from 'pg';
 
 import { UserRepository } from './UserRepository';
 import { PostgresUserRepository } from './PostgresUserRepository';
 
 export class UserConfiguration {
-    constructor(private readonly dbConnection: Pool) {
+    constructor(private readonly dbConnection: Client) {
     }
 
     createRepository(): UserRepository  {

@@ -5,12 +5,31 @@ services:
     build:
       context: ../
       dockerfile: ./docker/dev.Dockerfile
+    depends_on:
+      - postgres
     ports:
       - "8080:8080"
     environment:
       NODE_ENV: development
       PORT: 8080
+      WITH_MIGRATION: true
     volumes:
       - ../:/app
       - /app/node_modules
+  postgres:
+    container_name: monopoly-postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: monopoly
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+
 

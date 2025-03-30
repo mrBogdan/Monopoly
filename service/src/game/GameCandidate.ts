@@ -1,4 +1,4 @@
-import { Player } from '../Player';
+import { Player } from './Player';
 import { GameType } from './GameType';
 
 export interface GameCandidate {

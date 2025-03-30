@@ -53,7 +53,7 @@ body {
 }
 
 .property-tile {
-    padding-top: 15px;
+    padding-top: 5px;
 }
 
 .color-bar {
@@ -146,3 +146,117 @@ body {
 #t35 { grid-column: 11; grid-row: 9; }
 #t36 { grid-column: 11; grid-row: 10; }
 
+/* level indicators styles */
+.level-indicator {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    gap: 2px;
+    margin: 0;
+}
+
+/* hiding all start by default */
+.level-indicator span {
+    display: none;
+    color: gold;
+}
+
+.small-star {
+    font-size: 10px;
+    line-height: 1;
+}
+
+.big-star {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* displaying stars based on data-level attribute */
+.property-tile[data-level="1"] .small-star:nth-child(1) {
+    display: inline;
+}
+
+.property-tile[data-level="2"] .small-star:nth-child(-n+2) {
+    display: inline;
+}
+
+.property-tile[data-level="3"] .small-star:nth-child(-n+3) {
+    display: inline;
+}
+
+.property-tile[data-level="4"] .small-star:nth-child(-n+4) {
+    display: inline;
+}
+
+.property-tile[data-level="5"] .small-star {
+    display: none;
+}
+
+.property-tile[data-level="5"] .big-star {
+    display: inline;
+}
+
+/* positioning of the indicators based on side
+/* bottom tiles - start on top*/
+#t1 .level-indicator, #t2 .level-indicator, #t3 .level-indicator, 
+#t4 .level-indicator, #t5 .level-indicator, #t6 .level-indicator, 
+#t7 .level-indicator, #t8 .level-indicator, #t9 .level-indicator {
+    top: 2px;
+    left: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+/* left tiles - stars at right */
+#t10 .level-indicator, #t11 .level-indicator, #t12 .level-indicator, 
+#t13 .level-indicator, #t14 .level-indicator, #t15 .level-indicator, 
+#t16 .level-indicator, #t17 .level-indicator, #t18 .level-indicator {
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    height: auto;
+    width: auto;
+}
+
+/* top tiles - stars at bottom */
+#t19 .level-indicator, #t20 .level-indicator, #t21 .level-indicator, 
+#t22 .level-indicator, #t23 .level-indicator, #t24 .level-indicator, 
+#t25 .level-indicator, #t26 .level-indicator, #t27 .level-indicator {
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+/* right tiles - stars at left */
+#t28 .level-indicator, #t29 .level-indicator, #t30 .level-indicator, 
+#t31 .level-indicator, #t32 .level-indicator, #t33 .level-indicator, 
+#t34 .level-indicator, #t35 .level-indicator, #t36 .level-indicator {
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    height: auto;
+    width: auto;
+}
+
+/* indicators padding */
+/* bottom tiles */
+#t1, #t2, #t3, #t4, #t5, #t6, #t7, #t8, #t9 {
+    padding-top: 18px;
+}
+
+/* top tiles */
+#t19, #t20, #t21, #t22, #t23, #t24, #t25, #t26, #t27 {
+    padding-bottom: 18px;
+}
+
+/* left and right tiles - adjusting horizontal padding */
+#t10, #t11, #t12, #t13, #t14, #t15, #t16, #t17, #t18 {
+    padding-right: 18px;
+}
+
+#t28, #t29, #t30, #t31, #t32, #t33, #t34, #t35, #t36 {
+    padding-left: 18px;
+}

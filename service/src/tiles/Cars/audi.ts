@@ -1,8 +1,7 @@
 import { MonopolyTile } from '../../tile/MonopolyTile';
-import { QuadMonopolyReward } from '../../tile/QuadMonopolyReward';
+import { createQuadMonopolyReward, QuadMonopolyReward } from '../../tile/QuadMonopolyReward';
 import { Monopoly } from '../../tile/Monopoly';
 import { TileType } from '../../tile/TileType';
-import { RewardType } from '../../tile/RewardType';
 
 export const audi: MonopolyTile<QuadMonopolyReward> = {
   id: 'audi',
@@ -14,14 +13,5 @@ export const audi: MonopolyTile<QuadMonopolyReward> = {
   mortgageCost: 1000,
   unmortgageCost: 1200,
   type: TileType.Monopoly,
-  reward: {
-    type: RewardType.QuadMonopolyReward,
-    rent: 250,
-    upgradeRent: {
-      level1Rent: 250,
-      level2Rent: 500,
-      level3Rent: 1000,
-      level4Rent: 2000,
-    }
-  }
+  reward: createQuadMonopolyReward(),
 }

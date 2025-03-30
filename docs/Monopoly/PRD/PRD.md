@@ -10,14 +10,6 @@ about investment and basic money rules for society.
 * Become stronger and independence
 * Make people smarter
 
-# Values
-
-* Open-minded
-* Fairness
-* Truth
-* Quality
-* We are respect freedom, but you need to defend your ideas
-
 ## Features
 
 1. User profile
@@ -80,6 +72,7 @@ about investment and basic money rules for society.
 * Double dice 1 - 6 x 1 - 6 - basic mode, equal values give you chance to go once more, but it can be only 3 times
 * Triple dice 1 - 6 x 1 - 6 x 1 - 6 - drops randomly in fast game mode, equal numbers on tree dices give you chance to go on any tile
 * Bus dice - Is special dice that can be used in fast mode for choosing where to go it drops randomly in fast game mode
+* M1 - goes to the first empty tile or to the closest enemy tile which is not mortgaged
 
 ## Game modes
 
