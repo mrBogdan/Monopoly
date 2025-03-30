@@ -1,15 +1,18 @@
 import { Server } from 'node:http';
+import request from 'supertest';
+
 import { getHttpServer } from '../../http/getHttpServer';
 import { Module } from '../../decorators/Module';
 import { Controller } from '../../decorators/Controller';
 import { Get } from '../../decorators/Get';
-import request from 'supertest';
 import { Param } from '../../decorators/Param';
 import { UseErrorMapper } from '../../decorators/UseErrorMapper';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { QueryParam } from '../../decorators/QueryParam';
 import { Post } from '../../decorators/Post';
 import { RequestBody } from '../../decorators/RequestBody';
+import { getTestContainer } from '../../di/globalContainer';
+import { Router } from '../../http/router/Router';
 
 const USER_1 = 'USER_1';
 
@@ -83,7 +86,8 @@ describe('Http server framework tests', () => {
   let listeningServer: Server;
 
   beforeEach(async () => {
-    const server = getHttpServer([TestModule]);
+    const container = await getTestContainer([TestModule]);
+    const server = getHttpServer(new Router(), container);
     listeningServer = server.listen(0);
   });
 

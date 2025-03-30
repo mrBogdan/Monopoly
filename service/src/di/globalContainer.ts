@@ -1,4 +1,4 @@
-import { Container } from './Container';
+import { Constructor, Container } from './Container';
 
 let globalContainer: Container | null = null;
 
@@ -10,6 +10,8 @@ export const getGlobalContainer = () => {
   return globalContainer;
 }
 
-export const setGlobalContainer = (container: Container) => {
-  globalContainer = container;
+export const getTestContainer = async (modules: Constructor<unknown>[]) => {
+  const container = new Container();
+  await container.init(modules);
+  return container;
 }

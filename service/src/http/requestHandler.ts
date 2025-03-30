@@ -22,6 +22,8 @@ type RequestContext = {
   headers?: Record<string, string>;
 };
 
+type ClassInstance = {[key: string]: CallableFunction};
+
 export const requestHandler = (router: Router, diContainer: Container) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
   let handler;
   try {
@@ -29,7 +31,7 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
     const route = router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
 
     handler = route.handler();
-    const instance = diContainer.resolve(handler.controller());
+    const instance = diContainer.resolve<ClassInstance>(handler.controller());
     const body = isMethodWithBody(req.method?.toUpperCase() as Methods) ? await parseRequestBody(req) : undefined;
     const response = await executeHandler(instance, handler.action(), {
       body,
@@ -57,7 +59,7 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
   }
 };
 
-const executeHandler = (instance: {[key: string]: CallableFunction}, method: string, requestContext: RequestContext): Promise<object> => {
+const executeHandler = (instance: ClassInstance, method: string, requestContext: RequestContext): Promise<object> => {
   const params = getParams(instance, method);
   const queryParams = getQueryParams(instance, method);
   const requestBodyParams = getRequestBodyParams(instance, method);
