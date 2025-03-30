@@ -1,68 +1,226 @@
 import { Container } from '../../../di/Container';
 import { Module } from '../../../decorators/Module';
 import { Inject } from '../../../di/Inject';
-
-class UserPublicController {
-  constructor(private userService: UserService) {
-  }
-
-  public async getUser() {
-    return 'user';
-  }
-}
-
-interface IUserService {
-  getUser(): Promise<string>;
-}
-
-class UserService implements IUserService {
-  public async getUser() {
-    return 'user';
-  }
-}
-
-const SERVICE = 'Service';
-
-class AdminService {
-  constructor(@Inject(SERVICE) private service: IUserService) {
-  }
-
-  public async getAdmin() {
-    return this.service.getUser();
-  }
-}
-
-@Module({
-  controllers: [UserPublicController],
-  services: [UserService, {
-    param: SERVICE,
-    useValue: new UserService(),
-  }, AdminService],
-})
-class UserModule {
-}
-
-const modules = [UserModule];
+import { Injectable } from '../../../di/Injectable';
 
 describe('ContainerInit', () => {
-  let container: Container;
+  describe('Simple auto injection', () => {
+    @Injectable()
+    class UserService {
+      public async getUser() {
+        return 'user';
+      }
+    }
 
-  beforeEach(() => {
-    container = new Container();
+    @Module({
+      services: [UserService],
+    })
+    class SimpleModule {
+    }
+
+    it('should inject service', async () => {
+      const container = new Container();
+      await container.init([SimpleModule]);
+      const userService = container.resolve<UserService>(UserService);
+      expect(userService).toBeInstanceOf(UserService);
+      expect(await userService.getUser()).toBe('user');
+    });
   });
 
-  it('should init service', () => {
-    container.init(modules);
-    const userService = container.resolve(UserService);
-    expect(userService).toBeInstanceOf(UserService);
-    expect((userService as unknown as UserService).getUser()).resolves.toBe('user');
+  describe('Should register  dependencies in Module decorator', () => {
+    class UserRepository {
+      public async getUser() {
+        return 'user';
+      }
+    }
+
+    class UserService {
+      constructor(private userRepository: UserRepository) {
+      }
+
+      public async getUser() {
+        return this.userRepository.getUser();
+      }
+    }
+
+    @Module({
+      services: [UserService],
+    })
+    class SimpleModule {
+    }
+
+    it('should throw error for resolving sub dependency without decorator', async () => {
+      const container = new Container();
+      await container.init([SimpleModule]);
+
+      expect(() => container.resolve(UserRepository)).toThrow('Service UserRepository not found');
+    });
   });
 
-  it('should init service with injected service', () => {
-    container.init(modules);
-    const adminService = container.resolve(AdminService);
-    expect(adminService).toBeInstanceOf(AdminService);
-    expect((adminService as unknown as AdminService).getAdmin()).resolves.toBe('user');
+  describe('Should resolve sub dependencies', () => {
+    @Injectable()
+    class UserRepository {
+      public async getUser() {
+        return 'user';
+      }
+    }
+
+    @Injectable()
+    class UserService {
+      constructor(private userRepository: UserRepository) {
+      }
+
+      public async getUser() {
+        return this.userRepository.getUser();
+      }
+    }
+
+    @Module({
+      services: [UserService, UserRepository],
+    })
+    class SimpleModule {
+    }
+
+    it('should resolve sub dependencies', async () => {
+      const container = new Container();
+      await container.init([SimpleModule]);
+      const userService = container.resolve<UserService>(UserService);
+      const userRepository = container.resolve<UserRepository>(UserRepository);
+      expect(userService).toBeInstanceOf(UserService);
+      expect(userRepository).toBeInstanceOf(UserRepository);
+      expect(await userService.getUser()).toBe('user');
+    });
   });
+
+  describe('Should be possible to inject service in another service', () => {
+    const param = 'UserRepository';
+
+    interface UserRepository {
+      getUser(): Promise<string>;
+    }
+
+    @Injectable()
+    class ConcreteUserRepository implements UserRepository {
+      public async getUser() {
+        return 'user';
+      }
+    }
+
+    @Injectable()
+    class UserService {
+      constructor(@Inject(param) private userRepository: UserRepository) {
+      }
+
+      public async getUser() {
+        return this.userRepository.getUser();
+      }
+    }
+
+    @Module({
+      services: [UserService, {param, useClass: ConcreteUserRepository}],
+    })
+    class SimpleModule {
+    }
+
+    it('should inject service in another service', async () => {
+      const container = new Container();
+      await container.init([SimpleModule]);
+      const userService = container.resolve<UserService>(UserService);
+      const userRepository = container.resolve<UserRepository>(param);
+      expect(userService).toBeInstanceOf(UserService);
+      expect(userRepository).toBeInstanceOf(ConcreteUserRepository);
+      expect(await userService.getUser()).toBe('user');
+    });
+  });
+
+  describe('Should be possible to inject async dependencies', () => {
+    class Db {
+      private connected = false;
+
+      async connect() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.connected = true;
+            resolve('db');
+          }, 22);
+        });
+      }
+
+      async query() {
+        if (!this.connected) {
+          throw new Error('Not connected');
+        }
+        return 'query'
+      }
+    }
+
+    @Injectable()
+    class UserRepository {
+      constructor(private db: Db) {
+      }
+
+      public async getUser() {
+        return this.db.query();
+      }
+    }
+
+    @Injectable()
+    class UserService {
+      constructor(private userRepository: UserRepository) {
+      }
+
+      public async getUser() {
+        return this.userRepository.getUser();
+      }
+    }
+
+    @Module({
+      services: [UserService, UserRepository, {
+        param: Db, useFactory: async () => {
+          const db = new Db();
+          await db.connect();
+          return db;
+        },
+      }],
+    })
+    class SimpleModule {}
+
+    it('should inject async dependencies', async () => {
+      const container = new Container();
+      await container.init([SimpleModule]);
+      const userService = container.resolve<UserService>(UserService);
+      const repository = container.resolve<UserRepository>(UserRepository);
+      const db = container.resolve<Db>(Db);
+      expect(userService).toBeInstanceOf(UserService);
+      expect(db).toBeInstanceOf(Db);
+      expect(repository).toBeInstanceOf(UserRepository);
+      expect(await userService.getUser()).toBe('query');
+    });
+  });
+
+  describe('Should be possible to inject simple value', () => {
+    @Injectable()
+    class UserRepository {
+      constructor(@Inject('db') private db: string) {
+      }
+
+      public async getUser() {
+        return this.db;
+      }
+    }
+
+    @Module({
+      services: [UserRepository, {param: 'db', useValue: 'db'}],
+    })
+    class SimpleModule {}
+
+    it('should inject simple value', async () => {
+      const container = new Container();
+      await container.init([SimpleModule]);
+      const repository = container.resolve<UserRepository>(UserRepository);
+      expect(repository).toBeInstanceOf(UserRepository);
+      expect(await repository.getUser()).toBe('db');
+    });
+  })
 
 });
