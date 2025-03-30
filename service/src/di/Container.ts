@@ -41,9 +41,10 @@ export class Container {
     }
   }
 
-  public resolve<T>(classOrToken: T | string): T {
+  public resolve<T>(classOrToken: Constructor<T> | string | unknown): T {
     if (!this.services.has(classOrToken)) {
-      throw new Error(`Service ${classOrToken} not found`);
+      const token = isToken(classOrToken) ? classOrToken : (classOrToken as Constructor<unknown>).name;
+      throw new Error(`Service ${token} not found`);
     }
     return this.services.get(classOrToken) as T;
   }
@@ -53,23 +54,24 @@ export class Container {
     return dependencies.map((dependency: unknown) => this.resolve(dependency));
   }
 
-  public async init(modules: unknown[]) {
+  public async init(modules: Constructor<unknown>[]) {
     const injectables = new Map<unknown, unknown>();
     for (const module of modules) {
-      const Services = getModuleServices(module as object);
-      const Controllers = getModuleControllers(module as object);
+      const Services = getModuleServices(module );
+      const Controllers = getModuleControllers(module);
 
       for (const Service of Services) {
         switch (getServiceType(Service)) {
           case ServiceType.CLASS: {
-            const dependencies = getDependenciesMetadata(Service as Constructor<unknown>);
+            const Class = Service as Constructor<unknown>;
+            const dependencies = getDependenciesMetadata(Class);
 
             if (isEmpty(dependencies)) {
-              injectables.set(Service, resolved(new (Service as Constructor<unknown>)()));
+              injectables.set(Class, resolved(new Class()));
               continue;
             }
 
-            const injectParams = getInjectParams(Service as Constructor<unknown>);
+            const injectParams = getInjectParams(Class);
 
             if (!isEmpty(injectParams)) {
               if (isAllDependenciesResolved(injectParams.map(({token}) => token), injectables)) {
@@ -80,11 +82,11 @@ export class Container {
             }
 
             if (isAllDependenciesResolved(dependencies.map(s => Object.getPrototypeOf(s).constructor), injectables)) {
-              injectables.set(Service, resolved(new (Service as Constructor<unknown>)(...dependencies)));
+              injectables.set(Class, resolved(new Class(...dependencies)));
               continue;
             }
 
-            injectables.set(Service, Service);
+            injectables.set(Class, Class);
             break;
           }
           case ServiceType.CLASS_FACTORY: {
@@ -193,7 +195,7 @@ export class Container {
             const Class = value as Constructor<unknown>;
             const dependencies = getDependenciesMetadata(Class);
 
-            const injectParams = getInjectParams(Class as Constructor<unknown>);
+            const injectParams = getInjectParams(Class);
 
             if (!isEmpty(injectParams)) {
               injectParams.forEach(({token, index}) => {

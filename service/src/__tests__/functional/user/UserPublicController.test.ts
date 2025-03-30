@@ -30,7 +30,7 @@ describe('UserPublicController', () => {
       withMigration: true,
     });
     app = new Application(getGlobalContainer(), new Router(), [...AppModule, getAnonymousModule(undefined, [getConfigValue(config)])], config);
-    const server = await app.run(getHttpServer);
+    const server = await app.init(getHttpServer);
     listeningServer = server.listen(0);
   });
 

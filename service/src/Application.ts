@@ -1,7 +1,7 @@
 import { Server } from 'node:http';
 import { Client } from 'pg';
 
-import { Container } from './di/Container';
+import { Constructor, Container } from './di/Container';
 import { Router } from './http/router/Router';
 import { ServiceConfiguration } from './ServiceConfiguration';
 import { getConnectedPostgresClient } from './getConnectedPostgresClient';
@@ -14,12 +14,12 @@ export class Application {
   constructor(
     private readonly diContainer: Container,
     private readonly router: Router,
-    private readonly modules: unknown[],
+    private readonly modules: Constructor<unknown>[],
     private readonly config: ServiceConfiguration,
   ) {
   }
 
-  async run(getHttpServer: (router: Router, container: Container) => Server) {
+  async init(getHttpServer: (router: Router, container: Container) => Server) {
     await this.diContainer.init(this.modules);
     this.client = await getConnectedPostgresClient(this.config.postgresConfig);
 

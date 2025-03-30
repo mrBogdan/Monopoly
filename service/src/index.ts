@@ -16,5 +16,5 @@ if (isProduction()) {
 
   process.on('uncaughtException', console.error);
 
-  application.run(getHttpServer);
+  application.init(getHttpServer);
 }

@@ -15,10 +15,9 @@ describe('UserService Integration Tests (Real Database)', () => {
   let testDb: TestDatabase;
 
   beforeAll(async () => {
-    testDb = new TestDatabase();
-    const client = await testDb.setup();
+    testDb = await TestDatabase.create();
 
-    userRepository = new PostgresUserRepository(client);
+    userRepository = new PostgresUserRepository(testDb.getClient());
     userService = new UserService(
       new IdGenerator(),
       userRepository,
