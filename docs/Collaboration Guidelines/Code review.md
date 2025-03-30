@@ -2,7 +2,7 @@
 
 1. Tests and linters should be green
 2. Business logic is working and logical edge cases are covered
-3. Code quality, best practises, code style
+3. Code quality, best practises, code style (empty line, import ordering, correct wordings etc.)
 4. Bugs and mistakes
 5. Clear naming
 6. Developer has a choice about his code if it's not critical
