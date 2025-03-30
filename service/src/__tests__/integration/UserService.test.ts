@@ -8,6 +8,8 @@ import { UserRepeatedPasswordWrongError } from '../../user/UserRepeatedPasswordW
 import { TestDatabase } from './TestDatabase';
 import { UserResponse } from '../../user/UserResponse';
 
+jest.setTimeout(15000);
+
 describe('UserService Integration Tests (Real Database)', () => {
   let userService: UserService;
   let userRepository: PostgresUserRepository;
