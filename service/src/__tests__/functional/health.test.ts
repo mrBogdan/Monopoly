@@ -2,19 +2,17 @@ import request from 'supertest';
 import { Server } from 'node:http';
 import wsRequest from 'superwstest';
 
-import { getHttpServer } from '../../http/getHttpServer';
-import { Router } from '../../http/router/Router';
-import { getTestContainer } from '../../di/globalContainer';
-import '../../AppModule';
 import { HealthModule } from '../../health/HealthModule';
+import { runTestApp } from './runTestApp';
+import { getTestConfigModule } from './getTestConfigModule';
+import { getTestConfig } from '../../nodejs/getTestConfig';
 
 describe('Health', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const container = await getTestContainer([HealthModule]);
-        const server = getHttpServer(new Router(), container);
-        listeningServer = server.listen(0);
+        const app = await runTestApp([HealthModule, getTestConfigModule(getTestConfig())]);
+        listeningServer = app.get<Server>(Server);
     });
 
     afterEach(() => {

@@ -1,8 +1,10 @@
 import { Client } from 'pg';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 
-import { getConnectedPostgresClient } from '../../../getConnectedPostgresClient';
+import { getConnectedPostgresClient } from '../../../database/getConnectedPostgresClient';
 import { migrate, rollback } from '../../../migrations/migration';
+
+jest.setTimeout(15000);
 
 describe('migrate test', () => {
   let container: StartedPostgreSqlContainer;
@@ -27,10 +29,10 @@ describe('migrate test', () => {
   });
 
   it('migration test', async () => {
-    expect(await migrate(client)).toBeUndefined();
+    await expect(migrate(client)).resolves.not.toThrow();
   });
 
   it('rollback test', async () => {
-    expect(await rollback(client)).toBeUndefined();
+    await expect(rollback(client)).resolves.not.toThrow();
   })
 })

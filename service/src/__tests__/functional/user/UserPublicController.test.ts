@@ -2,15 +2,16 @@ import { Server } from 'node:http';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import request from 'supertest';
 
-import { getHttpServer } from '../../../http/getHttpServer';
 import { AppModule } from '../../../AppModule';
 import { Application } from '../../../Application';
-import { getGlobalContainer } from '../../../di/globalContainer';
-import { Router } from '../../../http/router/Router';
 import { getTestConfig } from '../../../nodejs/getTestConfig';
-import { getAnonymousModule } from '../../../getAnonymousModule';
-import { getConfigValue } from '../../../ConfigService';
 import { USER_REPOSITORY, UserRepository } from '../../../user/UserRepository';
+import { runTestApp } from '../runTestApp';
+import { getTestConfigModule } from '../getTestConfigModule';
+import { Container } from '../../../di/Container';
+import { Client } from 'pg';
+
+jest.setTimeout(15000);
 
 describe('UserPublicController', () => {
   let listeningServer: Server;
@@ -29,7 +30,7 @@ describe('UserPublicController', () => {
   beforeAll(async () => {
     const postgresContainer = new PostgreSqlContainer();
     container = await postgresContainer.start();
-    const config = getTestConfig({
+    app = await runTestApp([...AppModule, getTestConfigModule(getTestConfig({
       postgresConfig: {
         host: container.getHost(),
         port: container.getMappedPort(5432),
@@ -38,17 +39,21 @@ describe('UserPublicController', () => {
         database: container.getDatabase(),
       },
       withMigration: true,
-    });
-    app = new Application(getGlobalContainer(), new Router(), [...AppModule, getAnonymousModule(undefined, [getConfigValue(config)])], config);
-
-    const server = await app.init(getHttpServer);
+    }))]);
+    listeningServer = app.get<Server>(Server);
     userRepository = app.get<UserRepository>(USER_REPOSITORY);
-    listeningServer = server.listen(0);
   });
 
   afterAll(async () => {
     await Promise.all([
-      app.gracefulShutdown(),
+      app.gracefulShutdown(async (container: Container) => {
+        const client: Client = container.resolve<Client>(Client);
+        const server: Server = container.resolve<Server>(Server);
+        await Promise.all([
+          client.end(),
+          server.close(),
+        ])
+      }),
       container.stop(),
     ]);
   });

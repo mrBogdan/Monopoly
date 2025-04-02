@@ -1,5 +1,4 @@
-import { Inject } from './di/Inject';
-import { getConfig } from './nodejs/getConfig';
+import { Inject } from '../di/Inject';
 import { ServiceConfiguration } from './ServiceConfiguration';
 
 export const CONFIG = Symbol('Config');
@@ -13,7 +12,7 @@ export class ConfigService {
   }
 }
 
-export const getConfigValue = (config: ServiceConfiguration = getConfig()) => ({
+export const getConfigValue = (config: ServiceConfiguration) => ({
   param: CONFIG,
   useValue: config,
 });

@@ -1,18 +1,20 @@
 import request from 'superwstest';
 import { Server } from 'node:http';
 
-import { getHttpServer } from '../../http/getHttpServer';
 import { mapTiles } from '../../tiles/tiles';
-import { getTestContainer } from '../../di/globalContainer';
-import { Router } from '../../http/router/Router';
+import { HttpServerModule } from '../../http/HttpServerModule';
+import { WebSocketServerModule } from '../../wss/WebSocketServerModule';
+import { runTestApp } from './runTestApp';
+import { getTestConfigModule } from './getTestConfigModule';
+import { getTestConfig } from '../../nodejs/getTestConfig';
 
 
 describe('game:getTiles', () => {
     let listeningServer: Server;
 
     beforeEach(async () => {
-        const server = getHttpServer(new Router(), await getTestContainer([]));
-        listeningServer = server.listen(0);
+        const app = await runTestApp([HttpServerModule, WebSocketServerModule, getTestConfigModule(getTestConfig())]);
+        listeningServer = app.get<Server>(Server);
     });
 
     afterEach(() => {

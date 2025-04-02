@@ -1,7 +1,7 @@
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { Client } from 'pg';
 
-import { getConnectedPostgresClient } from '../../getConnectedPostgresClient';
+import { getConnectedPostgresClient } from '../../database/getConnectedPostgresClient';
 import { migrate } from '../../migrations/migration';
 
 export class TestDatabase {

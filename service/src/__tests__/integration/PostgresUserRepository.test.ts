@@ -5,7 +5,7 @@ import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 import { UserNotFoundError } from '../../user/UserNotFoundError';
 import { migrate } from '../../migrations/migration';
-import { getConnectedPostgresClient } from '../../getConnectedPostgresClient';
+import { getConnectedPostgresClient } from '../../database/getConnectedPostgresClient';
 
 jest.setTimeout(15000);
 

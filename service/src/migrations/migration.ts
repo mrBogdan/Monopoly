@@ -1,8 +1,9 @@
-import { readFile, access } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { Client } from 'pg';
 
 import agendaJson from './migration-agenda.json';
+import { isFileExists } from '../nodejs/isFileExists';
 
 type Migration = {
   up: string,
@@ -15,19 +16,10 @@ type MigrationAgenda = {
   migrations: Migration[]
 }
 
-const isFileExists = async (filePath: string): Promise<boolean> => {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 const toSqlExt = (fileName: string): string => (`${fileName}.sql`);
 
 const readMigrationFile = async (migrationName: string): Promise<string> => {
-  const filePath = path.join(process.cwd(), 'src', 'migrations', toSqlExt(migrationName));
+  const filePath = path.join(process.cwd(), 'src', 'migrations', 'sqls', toSqlExt(migrationName));
 
   if (!await isFileExists(filePath)) {
     return '';

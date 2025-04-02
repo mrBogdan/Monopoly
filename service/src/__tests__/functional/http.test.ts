@@ -1,7 +1,6 @@
 import { Server } from 'node:http';
 import request from 'supertest';
 
-import { getHttpServer } from '../../http/getHttpServer';
 import { Module } from '../../decorators/Module';
 import { Controller } from '../../decorators/Controller';
 import { Get } from '../../decorators/Get';
@@ -11,8 +10,9 @@ import { BadRequestError } from '../../errors/BadRequestError';
 import { QueryParam } from '../../decorators/QueryParam';
 import { Post } from '../../decorators/Post';
 import { RequestBody } from '../../decorators/RequestBody';
-import { getTestContainer } from '../../di/globalContainer';
-import { Router } from '../../http/router/Router';
+import { runTestApp } from './runTestApp';
+import { getTestConfigModule } from './getTestConfigModule';
+import { getTestConfig } from '../../nodejs/getTestConfig';
 
 const USER_1 = 'USER_1';
 
@@ -86,9 +86,8 @@ describe('Http server framework tests', () => {
   let listeningServer: Server;
 
   beforeEach(async () => {
-    const container = await getTestContainer([TestModule]);
-    const server = getHttpServer(new Router(), container);
-    listeningServer = server.listen(0);
+    const app = await runTestApp([TestModule, getTestConfigModule(getTestConfig())]);
+    listeningServer = app.get<Server>(Server);
   });
 
   afterEach(() => {
