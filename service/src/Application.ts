@@ -27,6 +27,7 @@ export class Application {
     return this.diContainer.resolve(token);
   }
 
-  async gracefulShutdown() {
+  async gracefulShutdown(gracefulShutdown: (container: Container) => Promise<void>): Promise<void> {
+    await gracefulShutdown(this.diContainer);
   }
 }

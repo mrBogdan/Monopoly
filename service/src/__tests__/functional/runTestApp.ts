@@ -34,5 +34,6 @@ export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Appli
     server.listen(config.get('httpPort'), () => console.log(`Listening on ${config.get('httpPort')}`));
   });
 
+
   return app;
 };

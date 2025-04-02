@@ -8,6 +8,8 @@ import { getTestConfig } from '../../../nodejs/getTestConfig';
 import { USER_REPOSITORY, UserRepository } from '../../../user/UserRepository';
 import { runTestApp } from '../runTestApp';
 import { getTestConfigModule } from '../getTestConfigModule';
+import { Container } from '../../../di/Container';
+import { Client } from 'pg';
 
 jest.setTimeout(15000);
 
@@ -44,7 +46,14 @@ describe('UserPublicController', () => {
 
   afterAll(async () => {
     await Promise.all([
-      app.gracefulShutdown(),
+      app.gracefulShutdown(async (container: Container) => {
+        const client: Client = container.resolve<Client>(Client);
+        const server: Server = container.resolve<Server>(Server);
+        await Promise.all([
+          client.end(),
+          server.close(),
+        ])
+      }),
       container.stop(),
     ]);
   });
