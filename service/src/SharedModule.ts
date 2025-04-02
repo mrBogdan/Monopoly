@@ -1,9 +1,8 @@
 import { Module } from './decorators/Module';
-import { ConfigService } from './ConfigService';
-import { Database } from './Database';
+import { Database } from './database/Database';
 
 @Module({
-  services: [ConfigService, Database],
+  services: [Database],
 })
 export class SharedModule {
 }

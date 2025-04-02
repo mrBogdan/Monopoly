@@ -8,7 +8,7 @@ import {
   getServiceType,
   ServiceType,
 } from '../decorators/Module';
-import { Stack } from '../Stack';
+import { Stack } from './Stack';
 import { isEmpty } from '../nodejs/isEmpty';
 import { getInjectParams } from './Inject';
 

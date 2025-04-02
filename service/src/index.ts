@@ -1,20 +1,21 @@
-import { getHttpServer } from './http/getHttpServer';
-import { getConfig } from './nodejs/getConfig';
 import { AppModule } from './AppModule';
 import { getGlobalContainer } from './di/globalContainer';
 import { Application } from './Application';
-import { Router } from './http/router/Router';
-import { isProduction } from './nodejs/getEnv';
+import { isDevelopment, isProduction } from './nodejs/getEnv';
+import { runServer } from './runServer';
 
-if (isProduction()) {
-  const application = new Application(
-    getGlobalContainer(),
-    new Router(),
-    AppModule,
-    getConfig(),
-  );
+const main = async () => {
+  if (isProduction() || isDevelopment()) {
+    const app = new Application(
+      getGlobalContainer(),
+      AppModule,
+    );
 
-  process.on('uncaughtException', console.error);
+    process.on('uncaughtException', console.error);
 
-  application.init(getHttpServer);
-}
+    await app.init();
+    await app.run(runServer);
+  }
+};
+
+main();
