@@ -1,10 +1,22 @@
-import React from 'react';
-import CornerTile from './CornerTile';
-import PropertyTile from './PropertyTile';
-import Tile from './Tile';
+import React, {useEffect} from 'react';
+import CornerTile from './Tile/CornerTile';
+import PropertyTile from './Tile/PropertyTile';
+import Tile from './Tile/Tile';
 import '../styles/Board.css';
 
 const Board = () => {
+    useEffect(() => {
+        const ws = new WebSocket('ws://127.0.0.1:8080/ws');
+
+        ws.addEventListener('open', () => {
+            ws.send(JSON.stringify({type: 'ping'}));
+        })
+
+        ws.addEventListener('message', (event) => {
+            console.log({event: JSON.parse(event.data)});
+        });
+    }, []);
+
   return (
     <div className="board">
       {/* corner tiles */}

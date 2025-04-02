@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Tile.css';
+import '../../styles/Tile.css';
 
 const Tile = ({ id, children, className = '' }) => {
   return (
