@@ -1,6 +1,7 @@
+import { Server } from 'node:http';
+
 import { Module } from '../decorators/Module';
 import { Router } from './router/Router';
-import { Server } from 'node:http';
 import { getHttpServer } from './getHttpServer';
 
 @Module({

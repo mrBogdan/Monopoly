@@ -1,5 +1,6 @@
-import { Module } from '../decorators/Module';
 import { Client } from 'pg';
+
+import { Module } from '../decorators/Module';
 import { migrate } from './migration';
 import { ServiceConfiguration } from '../config/ServiceConfiguration';
 import { CONFIG } from '../config/ConfigService';

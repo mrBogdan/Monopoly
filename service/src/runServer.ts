@@ -1,6 +1,7 @@
-import { Container } from './di/Container';
 import { Server } from 'node:http';
 import { WebSocketServer } from 'ws';
+
+import { Container } from './di/Container';
 import { Router } from './http/router/Router';
 import { ConfigService } from './config/ConfigService';
 import { requestHandler } from './http/requestHandler';
