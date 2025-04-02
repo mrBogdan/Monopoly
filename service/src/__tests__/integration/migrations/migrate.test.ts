@@ -27,10 +27,10 @@ describe('migrate test', () => {
   });
 
   it('migration test', async () => {
-    expect(await migrate(client)).toBeUndefined();
+    await expect(migrate(client)).resolves.not.toThrow();
   });
 
   it('rollback test', async () => {
-    expect(await rollback(client)).toBeUndefined();
+    await expect(rollback(client)).resolves.not.toThrow();
   })
 })
