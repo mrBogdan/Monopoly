@@ -1,34 +1,26 @@
-import { Server } from 'node:http';
-import { Client } from 'pg';
-
 import { Constructor, Container } from './di/Container';
-import { Router } from './http/router/Router';
-import { ServiceConfiguration } from './ServiceConfiguration';
-import { getConnectedPostgresClient } from './getConnectedPostgresClient';
-import { migrate } from './migrations/migration';
 
 export class Application {
-  private server: Server | null = null;
-  private client: Client | null = null;
+  private isInitialized = false;
 
   constructor(
     private readonly diContainer: Container,
-    private readonly router: Router,
     private readonly modules: Constructor<unknown>[],
-    private readonly config: ServiceConfiguration,
   ) {
   }
 
-  async init(getHttpServer: (router: Router, container: Container) => Server) {
+  async init() {
     await this.diContainer.init(this.modules);
-    this.client = await getConnectedPostgresClient(this.config.postgresConfig);
+    this.diContainer.register(Container, this.diContainer);
+    this.isInitialized = true;
+  }
 
-    if (this.config.withMigration) {
-      await migrate(this.client);
+  async run(startup: (container: Container) => Promise<void>): Promise<void> {
+    if (!this.isInitialized) {
+      throw new Error('Application not initialized. Please run Application::init()');
     }
 
-    this.server = getHttpServer(this.router, this.diContainer);
-    return this.server;
+    await startup(this.diContainer);
   }
 
   get<T>(token: Constructor<T> | string | symbol): T {
@@ -36,11 +28,5 @@ export class Application {
   }
 
   async gracefulShutdown() {
-    if (this.server) {
-      this.server.close();
-    }
-    if (this.client) {
-      await this.client.end();
-    }
   }
 }

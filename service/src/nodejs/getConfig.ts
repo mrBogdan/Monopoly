@@ -1,4 +1,4 @@
-import { ServiceConfiguration } from '../ServiceConfiguration';
+import { ServiceConfiguration } from '../config/ServiceConfiguration';
 import { isDevelopment } from './getEnv';
 import { toNumber } from './toNumber';
 import { toBoolean } from './toBoolean';

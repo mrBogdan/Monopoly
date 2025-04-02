@@ -1,8 +1,8 @@
-import { ServiceConfiguration } from '../ServiceConfiguration';
+import { ServiceConfiguration } from '../config/ServiceConfiguration';
 
 export const getTestConfig = (override = {}): ServiceConfiguration => ({
   withMigration: false,
-  httpPort: 8080,
+  httpPort: 0,
   postgresConfig: {
     database: 'test',
     host: 'localhost',
