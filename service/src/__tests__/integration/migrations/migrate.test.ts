@@ -4,6 +4,8 @@ import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers
 import { getConnectedPostgresClient } from '../../../database/getConnectedPostgresClient';
 import { migrate, rollback } from '../../../migrations/migration';
 
+jest.setTimeout(15000);
+
 describe('migrate test', () => {
   let container: StartedPostgreSqlContainer;
   let client: Client;
