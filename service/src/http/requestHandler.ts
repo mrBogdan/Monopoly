@@ -6,14 +6,14 @@ import { Router } from './router/Router';
 import { isMethodWithBody, Methods } from './Methods';
 import { Container } from '../di/Container';
 import { getErrorMapper } from '../decorators/UseErrorMapper';
-import { getParams } from '../decorators/Param';
-import { getQueryParams } from '../decorators/QueryParam';
+import { getParams } from './Param';
+import { getQueryParams } from './QueryParam';
 import { BadRequestError } from '../errors/BadRequestError';
 import { toJsonError } from '../errors/toJsonError';
 import { handleBusinessError } from '../errors/handleBusinessError';
 import { handleProtocolError } from '../errors/handleProtocolError';
 import { parseRequestBody } from './parseRequestBody';
-import { getRequestBodyParams } from '../decorators/RequestBody';
+import { getRequestBodyParams } from './RequestBody';
 
 type RequestContext = {
   body?: unknown;

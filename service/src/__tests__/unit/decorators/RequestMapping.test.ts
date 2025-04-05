@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { RequestMapping } from '../../../decorators/RequestMapping';
+import { RequestMapping } from '../../../http/RequestMapping';
 import { Methods } from '../../../http/Methods';
 import { METHOD_KEY, PATH_KEY } from '../../../decorators/constants';
 

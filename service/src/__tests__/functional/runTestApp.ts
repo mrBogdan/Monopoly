@@ -17,7 +17,6 @@ const SharedModules = [HttpServerModule, WebSocketServerModule]
 export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Application> => {
   const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService])]);
 
-  await app.init();
   await app.run(async (container) => {
     const server = container.resolve<Server>(Server);
     const router = container.resolve<Router>(Router);

@@ -1,21 +1,35 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import CornerTile from './Tile/CornerTile';
 import PropertyTile from './Tile/PropertyTile';
 import Tile from './Tile/Tile';
 import '../styles/Board.css';
 
 const Board = () => {
+    const [socket, setSocket] = useState(null);
+
     useEffect(() => {
         const ws = new WebSocket('ws://127.0.0.1:8080/ws');
 
         ws.addEventListener('open', () => {
-            ws.send(JSON.stringify({type: 'ping'}));
+            console.log('WebSocket Client Connected');
         })
 
         ws.addEventListener('message', (event) => {
-            console.log({event: JSON.parse(event.data)});
+            console.log(JSON.parse(event.data));
         });
+
+        setSocket(ws);
+
+        return () => {
+            ws.close();
+        }
     }, []);
+
+    const sendMessage = (message) => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(message));
+        }
+    }
 
   return (
     <div className="board">
@@ -105,6 +119,7 @@ const Board = () => {
       </Tile>
       <PropertyTile id="t35" name="Pepsi" price="Pay $100" />
       <PropertyTile id="t36" name="Fanta" price="$400" />
+        <button onClick={() => sendMessage({type: 'game:getTiles'})}>Send</button>
     </div>
   );
 };

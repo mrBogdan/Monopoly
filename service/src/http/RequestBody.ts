@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { REQUEST_BODY_KEY, UNKNOWN_TYPE } from './constants';
+import { REQUEST_BODY_KEY, UNKNOWN_TYPE } from '../decorators/constants';
 
 type RequestBodyParam = {
   index: number;

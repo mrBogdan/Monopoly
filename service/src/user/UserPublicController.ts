@@ -1,7 +1,7 @@
 import { UserService } from './UserService';
 import { Controller } from '../decorators/Controller';
-import { Post } from '../decorators/Post';
-import { RequestBody } from '../decorators/RequestBody';
+import { Post } from '../http/Post';
+import { RequestBody } from '../http/RequestBody';
 import { UserRegistrationDto } from './UserRegistrationDto';
 import { UseErrorMapper } from '../decorators/UseErrorMapper';
 import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';

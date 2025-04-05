@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { Methods } from '../http/Methods';
-import { METHOD_KEY, PATH_KEY } from './constants';
+import { Methods } from './Methods';
+import { METHOD_KEY, PATH_KEY } from '../decorators/constants';
 
 export function RequestMapping(path: string = '', method: Methods = Methods.GET) {
   return function (target: object, propertyKey: string) {

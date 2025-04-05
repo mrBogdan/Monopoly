@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Get } from '../../../decorators/Get';
+import { Get } from '../../../http/Get';
 import { METHOD_KEY, PATH_KEY } from '../../../decorators/constants';
 
 class Shape {

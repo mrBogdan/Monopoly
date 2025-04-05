@@ -3,7 +3,7 @@ import { Router } from '../../../../http/router/Router';
 import { Methods } from '../../../../http/Methods';
 import { Handler } from '../../../../http/router/Handler';
 import { Controller } from '../../../../decorators/Controller';
-import { Get } from '../../../../decorators/Get';
+import { Get } from '../../../../http/Get';
 
 @Controller('public/user')
 class UserController {

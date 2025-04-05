@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { PARAMS_KEY, UNKNOWN_TYPE } from './constants';
+import { PARAMS_KEY, UNKNOWN_TYPE } from '../decorators/constants';
 
 export type ParamInfo = {
     index: number;

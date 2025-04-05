@@ -3,13 +3,13 @@ import request from 'supertest';
 
 import { Module } from '../../decorators/Module';
 import { Controller } from '../../decorators/Controller';
-import { Get } from '../../decorators/Get';
-import { Param } from '../../decorators/Param';
+import { Get } from '../../http/Get';
+import { Param } from '../../http/Param';
 import { UseErrorMapper } from '../../decorators/UseErrorMapper';
 import { BadRequestError } from '../../errors/BadRequestError';
-import { QueryParam } from '../../decorators/QueryParam';
-import { Post } from '../../decorators/Post';
-import { RequestBody } from '../../decorators/RequestBody';
+import { QueryParam } from '../../http/QueryParam';
+import { Post } from '../../http/Post';
+import { RequestBody } from '../../http/RequestBody';
 import { runTestApp } from './runTestApp';
 import { getTestConfigModule } from './getTestConfigModule';
 import { getTestConfig } from '../../nodejs/getTestConfig';

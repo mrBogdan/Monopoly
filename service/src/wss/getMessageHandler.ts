@@ -1,6 +1,5 @@
 import { Action } from '../action/Action';
 import { BadRequestError } from '../errors/BadRequestError';
-import { actionFactory } from '../action/actionFactory';
 import { WebSocket } from 'ws';
 import { handleBusinessError } from '../errors/handleBusinessError';
 import { toJsonError } from '../errors/toJsonError';
@@ -26,7 +25,7 @@ const handleRequest = async (msg: string): Promise<object> => {
         return { type: 'ping', message: 'pong' };
     }
 
-    const handler = actionFactory(request.type);
+    const handler = async (request: Action) => ({ request });
     const response = await handler(request);
 
     return { data: response, type: request.type };
