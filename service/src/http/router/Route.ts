@@ -6,7 +6,6 @@ import { delimiter } from './constants';
 import { NotFoundError } from '../../errors/NotFoundError';
 
 export class Route {
-  private readonly _routeParams: Map<string, string> = new Map();
   private _handler: Handler | undefined;
   private readonly _routeNodes: RouteNode[] = [];
 
