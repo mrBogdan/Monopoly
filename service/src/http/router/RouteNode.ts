@@ -16,6 +16,8 @@ export abstract class RouteNode {
     ]);
   }
 
+  abstract isDynamic(): boolean;
+
   public static of<T extends RouteNode>(this: new (path: string, method: Methods, handler: Handler) => T, path: string, method: Methods, handler: Handler): T {
     return new this(path, method, handler);
   }
@@ -27,8 +29,6 @@ export abstract class RouteNode {
   public static isDynamicPath(path: string): boolean {
     return path.includes(dynamicPathToken);
   }
-
-  abstract isDynamic(): boolean;
 
   public hasMethod(method: Methods) {
     return this.methods.has(method) || this.methods.has(Methods.ANY);
