@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from 'react';
+
 import CornerTile from './Tile/CornerTile';
 import PropertyTile from './Tile/PropertyTile';
 import Tile from './Tile/Tile';
+import {Popup} from './Popup/Popup';
+import {Player} from './Player/Player';
+
 import '../styles/Board.css';
 
 const Board = () => {
     const [socket, setSocket] = useState(null);
+    const [popupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
         const ws = new WebSocket('ws://127.0.0.1:8080/ws');
@@ -33,6 +38,9 @@ const Board = () => {
 
   return (
     <div className="board">
+        <Player />
+        <Player />
+        <Player />
       {/* corner tiles */}
       <CornerTile id="jackpot" label="JACKPOT" />
       <CornerTile id="go-to-jail" label="GO TO JAIL" />
@@ -119,7 +127,8 @@ const Board = () => {
       </Tile>
       <PropertyTile id="t35" name="Pepsi" price="Pay $100" />
       <PropertyTile id="t36" name="Fanta" price="$400" />
-        <button onClick={() => sendMessage({type: 'game:getTiles'})}>Send</button>
+        <button onClick={() => setPopupVisible(true)}>Send</button>
+        <Popup show={popupVisible} onClose={() => setPopupVisible(false)} onConfirm={() => setPopupVisible(false)}/>
     </div>
   );
 };

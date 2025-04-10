@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { CONTROLLER_KEY, SERVICE_KEY } from './constants';
 import { isEmpty } from '../nodejs/isEmpty';
+import { Constructor } from '../di';
 
 export type FactoryParam = {
   param: unknown | string;
@@ -27,8 +28,8 @@ type ModuleParams = {
 }
 
 
-export function Module(module: ModuleParams) {
-  return function <T extends { new(...args: unknown[]): object }>(constructor: T) {
+export function Module(module: ModuleParams): ClassDecorator {
+  return function (constructor: object): undefined {
     if (isEmpty(module.services) && isEmpty(module.controllers)) {
       throw new Error('Module should have at least one service or controller');
     }
@@ -40,8 +41,6 @@ export function Module(module: ModuleParams) {
     if (module?.services?.length) {
       Reflect.defineMetadata(SERVICE_KEY, module.services, constructor);
     }
-
-    return constructor;
   };
 }
 

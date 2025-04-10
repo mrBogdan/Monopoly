@@ -13,7 +13,12 @@ import { isEmpty } from '../nodejs/isEmpty';
 import { getInjectParams } from './Inject';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Constructor<T = any> = new (...args: any[]) => T;
+// export type Constructor<T = any> = new (...args: any[]) => T;
+
+export interface Constructor<T = unknown> {
+  new (...args: unknown[]): T;
+  prototype: T;
+}
 
 const isToken = (tokenOrInstance?: unknown): boolean => (!!tokenOrInstance && typeof tokenOrInstance === 'string');
 const isInstance = (tokenOrInstance?: unknown): boolean => (!!tokenOrInstance && typeof tokenOrInstance === 'object');

@@ -1,4 +1,4 @@
-import { Inject } from '../di/Inject';
+import { Inject } from '../di';
 import { ServiceConfiguration } from './ServiceConfiguration';
 
 export const CONFIG = Symbol('Config');

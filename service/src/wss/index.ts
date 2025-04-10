@@ -5,3 +5,6 @@ export * from './Broadcast';
 export * from './Reply';
 export * from './injectWebSocketServer';
 export * from './getMessageHandler';
+export * from './WsRouter';
+export * from './ActionParam';
+export * from './ReplyAction';

@@ -1,126 +1,28 @@
-import { Broadcast, Hub, Subscribe } from '../wss';
-import { ReplyAction } from '../wss/ReplyAction';
-import { Dice } from './Dice';
+import { Broadcast, Hub, Subscribe, ReplyAction } from '../wss';
+import { GameService } from './GameService';
+import { MoveStrategyOutcomeDTO } from './Move';
 
-enum GameAction {
-  GO = 'go',
-  BUY = 'buy',
-  PAY = 'pay',
-}
-
-type PayPayload = {
-  playerId: string;
-  balance: number;
-}
-
-type BuyPayload = {
-
-}
-
-type GoPayload = {
-  playerId: string;
-  move: MoveStrategy;
-}
-
-enum MoveStrategyType {
-  TWO_DICE = 'two-dice',
-}
-
-interface TwoDiceOutcome {
-  first: number;
-  second: number;
-}
-
-interface MoveStrategyOutcomeDTO<T> {
-  strategy: MoveStrategyType;
-  outcome: T;
-}
-
-class TwoDiceStrategyOutcome implements MoveOutcome {
-  constructor(
-    private first: number,
-    private second: number
-  ) {}
-
-  toDTO(): MoveStrategyOutcomeDTO<TwoDiceOutcome> {
-    return {
-      strategy: MoveStrategyType.TWO_DICE,
-      outcome: {
-        first: this.first,
-        second: this.second,
-      }
-    }
-  }
-}
-
-interface MoveOutcome {
-  toDTO(): MoveStrategyOutcomeDTO<unknown>;
-}
-
-const createTwoDiceStrategyOutcome = (first: number, second: number): TwoDiceStrategyOutcome =>
-  new TwoDiceStrategyOutcome(first, second);
-
-class TwoDiceStrategy implements MoveStrategy {
-  constructor(private readonly dice: Dice) {
-  }
-
-  moveOutcome(): TwoDiceStrategyOutcome {
-    const first = this.dice.roll();
-    const second = this.dice.roll();
-    return createTwoDiceStrategyOutcome(first, second);
-  }
-}
-
-interface MoveStrategy {
-  moveOutcome(): MoveOutcome;
-}
-
-interface MoveStrategyFactory {
-  createMoveStrategy(): MoveStrategy;
+type MovePayload = {
+  playerId: number;
+  moveOutcome: MoveStrategyOutcomeDTO<unknown>;
 }
 
 @Hub('game')
-class GameHub {
-  constructor(private moveStrategyFactory: MoveStrategyFactory) {
+export class GameHub {
+  constructor(private readonly gameService: GameService) {
   }
 
-  @Subscribe(GameAction.GO)
-  go(playerId: string, roomId: string): Broadcast<unknown> {
-    const moveStrategy = this.moveStrategyFactory.createMoveStrategy();
-    const moveOutcome = moveStrategy.moveOutcome();
+  @Subscribe(GameAction.MOVE)
+  async go(gameId: string, playerId: number): Promise<Broadcast<MovePayload>> {
+    const moveOutcome = await this.gameService.move(gameId, playerId);
+
     return {
-      roomId,
-      type: GameAction.GO,
+      roomId: gameId,
+      type: GameAction.MOVE,
       action: ReplyAction.BROADCAST,
       data: {
         playerId,
         moveOutcome: moveOutcome.toDTO(),
-      }
-    }
-  }
-
-  @Subscribe(GameAction.BUY)
-  buy(playerId: string, roomId: string) {
-    return {
-      roomId,
-      type: GameAction.BUY,
-      action: ReplyAction.BROADCAST,
-      data: {
-        playerId,
-        balance: 4500,
-      }
-    }
-  }
-
-  @Subscribe(GameAction.PAY)
-  pay(playerId: string, roomId: string): Broadcast<PayPayload> {
-    return {
-      roomId,
-      action: ReplyAction.BROADCAST,
-      type: GameAction.PAY,
-      data: {
-        playerId,
-        balance: 4500,
       }
     }
   }

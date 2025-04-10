@@ -1,0 +1,38 @@
+:root {
+    --player-size: 40px;
+}
+
+.player-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid;
+    border-radius: 50%;
+    width: var(--player-size);
+    height: var(--player-size);
+    font-family: sans-serif;
+    justify-content: center;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 8px;
+    transition: transform 0.2s;
+}
+
+.player-icon:hover {
+    transform: scale(1.05);
+}
+
+.player-emoji {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.player-name {
+    font-size: 12px;
+    text-align: center;
+    color: #333;
+}

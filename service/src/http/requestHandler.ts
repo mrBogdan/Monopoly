@@ -4,14 +4,16 @@ import { parse } from 'node:url';
 import { Headers } from './headers';
 import { Router } from './router/Router';
 import { isMethodWithBody, Methods } from './Methods';
-import { Container } from '../di/Container';
+import { Container } from '../di';
 import { getErrorMapper } from '../decorators/UseErrorMapper';
 import { getParams } from './Param';
 import { getQueryParams } from './QueryParam';
-import { BadRequestError } from '../errors/BadRequestError';
-import { toJsonError } from '../errors/toJsonError';
-import { handleBusinessError } from '../errors/handleBusinessError';
-import { handleProtocolError } from '../errors/handleProtocolError';
+import {
+  BadRequestError,
+  handleBusinessError,
+  toJsonError,
+  handleProtocolError,
+} from '../errors';
 import { parseRequestBody } from './parseRequestBody';
 import { getRequestBodyParams } from './RequestBody';
 
@@ -22,7 +24,7 @@ type RequestContext = {
   headers?: Record<string, string>;
 };
 
-type ClassInstance = {[key: string]: CallableFunction};
+export type ClassInstance = { [key: string]: CallableFunction };
 
 export const requestHandler = (router: Router, diContainer: Container) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
   let handler;
