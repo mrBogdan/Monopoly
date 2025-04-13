@@ -16,6 +16,7 @@ import { parseRequestBody } from './parseRequestBody';
 import { getRequestBodyParams } from '../decorators/RequestBody';
 import { getHeaderParams } from '../decorators/Header';
 import { Response } from './Response';
+import { getCookieParams } from '../decorators/Cookie';
 
 type RequestContext = {
   body?: unknown;
@@ -67,6 +68,7 @@ const executeHandler = async (instance: ClassInstance, method: string, requestCo
   const queryParams = getQueryParams(instance, method);
   const requestBodyParams = getRequestBodyParams(instance, method);
   const headerParams = getHeaderParams(instance, method);
+  const cookieParams = getCookieParams(instance, method);
 
   const args = [];
 
@@ -123,6 +125,18 @@ const executeHandler = async (instance: ClassInstance, method: string, requestCo
       }
 
       args[headerParam.index] = castToType(headerValue, headerParam.type);
+    }
+  }
+
+  if (cookieParams) {
+    for (const cookieParam of cookieParams) {
+      const cookieValue = requestContext?.headers?.cookie?.split('; ').find(cookie => cookie.startsWith(cookieParam.param))?.split('=')[1];
+
+      if (!cookieValue) {
+        throw new BadRequestError(`Missing cookie: ${cookieParam.param}`);
+      }
+
+      args[cookieParam.index] = castToType(cookieValue, cookieParam.type);
     }
   }
 
