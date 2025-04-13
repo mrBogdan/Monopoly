@@ -14,7 +14,7 @@ import { Header } from '../../decorators/Header';
 import { runTestApp } from './runTestApp';
 import { getTestConfigModule } from './getTestConfigModule';
 import { getTestConfig } from '../../nodejs/getTestConfig';
-import {Response} from '../../http/Response';
+import { Response } from '../../http/Response';
 
 const USER_1 = 'USER_1';
 
@@ -64,7 +64,7 @@ class UserController {
 
   @Get('query-param-and-path-param/@id')
   getQueryParamAndPathParam(@QueryParam('query') query: string, @Param('id') id: string) {
-    return { query, id };
+    return {query, id};
   }
 
   @Post()
@@ -74,7 +74,7 @@ class UserController {
 
   @Post('/set-age')
   createUserWithParam(@RequestBody('age') age: number) {
-    return { age };
+    return {age};
   }
 
   @Get('/header')
@@ -86,7 +86,7 @@ class UserController {
   getResponseTest(): Response {
     return Response.builder()
       .setStatusCode(301)
-      .setBody({ message: 'Redirecting' })
+      .setBody({message: 'Redirecting'})
       .setCookie('cookieName', 'cookieValue')
       .setHeader('Location', 'http://example.com')
       .setHeader('Content-Type', 'application/json')
@@ -98,7 +98,8 @@ class UserController {
   controllers: [UserController],
   services: [UserService],
 })
-class TestModule {}
+class TestModule {
+}
 
 describe('Http server framework tests', () => {
   let listeningServer: Server;
@@ -121,7 +122,7 @@ describe('Http server framework tests', () => {
   it('should handle error with error mapper', async () => {
     const response = await request(listeningServer).get('/user/business-error');
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ message: 'Bad Request', reason: 'Some business error', status: 400 });
+    expect(response.body).toEqual({message: 'Bad Request', reason: 'Some business error', status: 400});
   });
 
   it('should cast param to number', async () => {
@@ -140,24 +141,24 @@ describe('Http server framework tests', () => {
   it('should be possible to use query param and path param together', async () => {
     const response = await request(listeningServer).get('/user/query-param-and-path-param/some-id?query=hello');
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ query: 'hello', id: 'some-id' });
+    expect(response.body).toEqual({query: 'hello', id: 'some-id'});
   });
 
   it('should throw BadRequestError if query param is not passed', async () => {
     const response = await request(listeningServer).get('/user/query-param');
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing query parameter: query', status: 400 });
+    expect(response.body).toEqual({message: 'Bad Request', reason: 'Missing query parameter: query', status: 400});
   });
 
   it('should correctly handle POST request', async () => {
-    const expected = { id: 'USER_1' };
+    const expected = {id: 'USER_1'};
     const response = await request(listeningServer).post('/user').send(expected);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(expected);
   });
 
   it('should be possible to pick a param from request body', async () => {
-    const expected = { age: 25 };
+    const expected = {age: 25};
     const response = await request(listeningServer).post('/user/set-age').send(expected);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(expected);
@@ -173,15 +174,15 @@ describe('Http server framework tests', () => {
   it('should throw BadRequestError if header is not exists', async () => {
     const response = await request(listeningServer).get('/user/header').send();
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing header: Content-Type', status: 400 });
+    expect(response.body).toEqual({message: 'Bad Request', reason: 'Missing header: Content-Type', status: 400});
   });
 
   it('should be possible to set different status code and headers in response', async () => {
     const response = await request(listeningServer).get('/user/response-test');
     expect(response.status).toBe(301);
-    expect(response.body).toEqual({ message: 'Redirecting' });
+    expect(response.body).toEqual({message: 'Redirecting'});
     expect(response.headers['location']).toEqual('http://example.com');
     expect(response.headers['set-cookie']).toEqual(['cookieName=cookieValue']);
     expect(response.headers['content-type']).toEqual('application/json');
-  })
+  });
 });
