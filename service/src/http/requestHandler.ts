@@ -41,8 +41,9 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
       params: route.getParams(),
       headers: req.headers as Record<string, string>,
     });
+    const contentType = response.headers?.['Content-Type'] || Headers.ContentType.json['Content-Type'];
     res.writeHead(response.statusCode ?? 200, response.headers ?? Headers.ContentType.json);
-    res.end(JSON.stringify(response.body));
+    res.end(prepareResponseBody(response.body, contentType));
   } catch (error) {
     console.error(error);
 
@@ -149,3 +150,14 @@ const castToType = (value: unknown, type: string) => {
       return value;
   }
 };
+
+const prepareResponseBody = (body: unknown, contentType: string) => {
+  switch (contentType.toLowerCase()) {
+    case 'application/json':
+      return JSON.stringify(body);
+    case 'text/plain':
+      return String(body);
+    default:
+      return body;
+  }
+}
