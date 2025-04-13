@@ -10,3 +10,6 @@ export * from './Param';
 export * from './headers';
 export * from './RequestMapping';
 export * from './HttpServerModule';
+export * from './Cookie';
+export * from './Header';
+export * from './Response';

@@ -10,11 +10,7 @@ export type ParamInfo = {
 
 export function Param(param: string) {
     return (target: object, key: string, index: number) => {
-        if (!Reflect.hasMetadata(PARAMS_KEY, target, key)) {
-            Reflect.defineMetadata(PARAMS_KEY, [], target, key);
-        }
-
-        const existingParams = Reflect.getMetadata(PARAMS_KEY, target, key);
+        const existingParams = Reflect.getMetadata(PARAMS_KEY, target, key) || [];
 
         const paramTypes = Reflect.getMetadata("design:paramtypes", target, key);
         const type = paramTypes[index]?.name || UNKNOWN_TYPE;
