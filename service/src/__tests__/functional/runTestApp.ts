@@ -1,33 +1,28 @@
 import { Server } from 'node:http';
 import { WebSocketServer } from 'ws';
 
-import { Constructor, Container } from '../../di/Container';
-import { Router } from '../../http/router/Router';
+import { Constructor, Container } from '../../di';
 import { ConfigService } from '../../config/ConfigService';
-import { getMessageHandler } from '../../wss/getMessageHandler';
-import { injectWebSocketServer } from '../../wss/injectWebSocketServer';
-import { requestHandler } from '../../http/requestHandler';
+import { messageHandler, injectWebSocketServer, WebSocketServerModule } from '../../wss';
+import { requestHandler, HttpServerModule } from '../../http';
 import { Application } from '../../Application';
-import { HttpServerModule } from '../../http/HttpServerModule';
-import { WebSocketServerModule } from '../../wss/WebSocketServerModule';
 import { getAnonymousModule } from '../getAnonymousModule';
 
-const SharedModules = [HttpServerModule, WebSocketServerModule]
+const SharedModules = [HttpServerModule, WebSocketServerModule];
 
-export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Application> => {
+export const runTestApp = async (modules: Constructor[]): Promise<Application> => {
   const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService])]);
 
   await app.run(async (container) => {
     const server = container.resolve<Server>(Server);
-    const router = container.resolve<Router>(Router);
     const config: ConfigService = container.resolve<ConfigService>(ConfigService);
     const wss = container.resolve<WebSocketServer>(WebSocketServer);
     injectWebSocketServer(server, wss);
 
-    server.on('request', requestHandler(router, container));
+    server.on('request', requestHandler(container));
 
     wss.on('connection', ws => {
-      ws.on('message', getMessageHandler(ws));
+      ws.on('message', messageHandler(ws, container));
     });
 
     server.listen(config.get('httpPort'), () => console.log(`Listening on ${config.get('httpPort')}`));

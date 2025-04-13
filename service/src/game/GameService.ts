@@ -4,8 +4,7 @@ import { GameNotFoundError } from './GameNotFoundError';
 import { GameCandidate } from './GameCandidate';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 import { GameStatus } from './GameStatus';
-import { MoveOutcome } from './Move/MoveOutcome';
-import { MoveStrategyFactory } from './Move/MoveStrategyFactory';
+import { MoveOutcome, MoveStrategyFactory } from './Move';
 import { Clock } from '../clock';
 
 export class GameService {
@@ -13,8 +12,7 @@ export class GameService {
     private gameRepository: GameRepository,
     private moveStrategyFactory: MoveStrategyFactory,
     private clock: Clock,
-  ) {
-  }
+  ) {}
 
   create(gameCandidate: GameCandidate): Promise<Game> {
     const game = this.createGameInstance(gameCandidate);
@@ -34,9 +32,7 @@ export class GameService {
   async move(gameId: string, playerId: number): Promise<MoveOutcome<unknown>> {
     const game = await this.findRequiredGame(gameId);
     const moveStrategy = this.moveStrategyFactory.createMoveStrategy(game);
-    const moveOutcome = moveStrategy.moveOutcome();
-
-    const a = {playerId, moveOutcome};
+    return moveStrategy.moveOutcome();
   }
 
   private createGameInstance(candidate: GameCandidate): Game {

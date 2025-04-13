@@ -19,5 +19,3 @@ export function Hub(hub: string): ClassDecorator {
 export function getHubs(): Map<string, object> {
   return hubs;
 }
-
-

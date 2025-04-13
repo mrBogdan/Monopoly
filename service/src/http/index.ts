@@ -9,3 +9,4 @@ export * from './QueryParam';
 export * from './Param';
 export * from './headers';
 export * from './RequestMapping';
+export * from './HttpServerModule';

@@ -131,7 +131,7 @@ describe('Http server framework tests', () => {
     expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing query parameter: query', status: 400 });
   });
 
-  it('should correctly handle POST request', async () => {
+  it('gshould correctly handle POST request', async () => {
     const expected = { id: 'USER_1' };
     const response = await request(listeningServer).post('/user').send(expected);
     expect(response.status).toBe(200);

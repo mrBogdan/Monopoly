@@ -45,7 +45,7 @@ describe('Health', () => {
         await wsRequest(listeningServer)
             .ws('/ws')
             .sendJson({ type })
-            .expectJson({ message: 'Not Found', status: 404, reason: `Action "${type}" not found` })
+            .expectJson({ message: 'Not Found', status: 404, reason: `Hub "${type}" not found` })
             .close()
             .expectClosed();
     });

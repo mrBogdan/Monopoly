@@ -1,6 +1,9 @@
-import { Broadcast, Hub, Subscribe, ReplyAction } from '../wss';
+import { ActionParam, Broadcast, Hub, Reply, ReplyAction, Subscribe } from '../wss';
 import { GameService } from './GameService';
 import { MoveStrategyOutcomeDTO } from './Move';
+import { mapTiles } from '../tiles/tiles';
+import { MapTile } from '../tile/MapTile';
+import { GameAction } from './GameAction';
 
 type MovePayload = {
   playerId: number;
@@ -10,6 +13,16 @@ type MovePayload = {
 @Hub('game')
 export class GameHub {
   constructor(private readonly gameService: GameService) {
+  }
+
+  @Subscribe('getTiles')
+  async getTiles(@ActionParam('userId') userId: string): Promise<Reply<MapTile[]>> {
+    return {
+      userId,
+      action: ReplyAction.REPLY,
+      type: 'game:getTiles',
+      data: mapTiles,
+    };
   }
 
   @Subscribe(GameAction.MOVE)

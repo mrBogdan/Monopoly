@@ -1,4 +1,4 @@
-import { Constructor, Container } from './di/Container';
+import { Constructor, Container } from './di';
 
 export class Application {
   constructor(

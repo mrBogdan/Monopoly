@@ -10,7 +10,7 @@ function RequestMapping(method: string, path: string) {
   // eslint-disable-next-line
   return function (target: object, propertyKey: string, descriptor: PropertyDescriptor) {
     Reflect.defineMetadata(PATH_KEY, path, target, propertyKey);
-    Reflect.defineMetadata(METHOD_KEY, Methods.GET, target, propertyKey);
+    Reflect.defineMetadata(METHOD_KEY, method, target, propertyKey);
     return target;
   }
 }

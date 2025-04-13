@@ -1,6 +1,7 @@
 import { Server } from 'node:http';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import request from 'supertest';
+import { Client } from 'pg';
 
 import { AppModule } from '../../../AppModule';
 import { Application } from '../../../Application';
@@ -8,8 +9,7 @@ import { getTestConfig } from '../../../nodejs/getTestConfig';
 import { USER_REPOSITORY, UserRepository } from '../../../user/UserRepository';
 import { runTestApp } from '../runTestApp';
 import { getTestConfigModule } from '../getTestConfigModule';
-import { Container } from '../../../di/Container';
-import { Client } from 'pg';
+import { Container } from '../../../di';
 
 jest.setTimeout(15000);
 

@@ -26,14 +26,15 @@ type RequestContext = {
 
 export type ClassInstance = { [key: string]: CallableFunction };
 
-export const requestHandler = (router: Router, diContainer: Container) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
-  let handler;
+export const requestHandler = (container: Container) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
+  const router = container.resolve<Router>(Router);
+
   try {
     const url = parse(req.url ?? '', true);
     const route = router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
 
-    handler = route.handler();
-    const instance = diContainer.resolve<ClassInstance>(handler.controller());
+    const handler = route.handler();
+    const instance = container.resolve<ClassInstance>(handler.controller());
     const body = isMethodWithBody(req.method?.toUpperCase() as Methods) ? await parseRequestBody(req) : undefined;
     const response = await executeHandler(instance, handler.action(), {
       body,
@@ -54,7 +55,9 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
       return;
     }
 
-    const responseError = handleBusinessError(error, getErrorMapper(handler?.controller()));
+    const url = parse(req.url ?? '', true);
+    const route = router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
+    const responseError = handleBusinessError(error, getErrorMapper(route.handler().controller()));
 
     res.writeHead(responseError.status, Headers.ContentType.json);
     res.end(toJsonError(responseError));
