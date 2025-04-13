@@ -13,6 +13,7 @@ import { RequestBody } from '../../decorators/RequestBody';
 import { runTestApp } from './runTestApp';
 import { getTestConfigModule } from './getTestConfigModule';
 import { getTestConfig } from '../../nodejs/getTestConfig';
+import { Header } from '../../decorators/Header';
 
 const USER_1 = 'USER_1';
 
@@ -73,6 +74,11 @@ class UserController {
   @Post('/set-age')
   createUserWithParam(@RequestBody('age') age: number) {
     return { age };
+  }
+
+  @Get('/header')
+  getHeader(@Header('Content-Type') contentType: string) {
+    return contentType;
   }
 }
 
@@ -141,6 +147,13 @@ describe('Http server framework tests', () => {
   it('should be possible to pick a param from request body', async () => {
     const expected = { age: 25 };
     const response = await request(listeningServer).post('/user/set-age').send(expected);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(expected);
+  });
+
+  it('should be possible to pick a header from request', async () => {
+    const expected = 'plain/text';
+    const response = await request(listeningServer).get('/user/header').set('Content-Type', expected).send();
     expect(response.status).toBe(200);
     expect(response.body).toEqual(expected);
   });

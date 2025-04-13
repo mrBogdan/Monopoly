@@ -14,6 +14,7 @@ import { handleBusinessError } from '../errors/handleBusinessError';
 import { handleProtocolError } from '../errors/handleProtocolError';
 import { parseRequestBody } from './parseRequestBody';
 import { getRequestBodyParams } from '../decorators/RequestBody';
+import { getHeaderParams } from '../decorators/Header';
 
 type RequestContext = {
   body?: unknown;
@@ -63,6 +64,7 @@ const executeHandler = (instance: ClassInstance, method: string, requestContext:
   const params = getParams(instance, method);
   const queryParams = getQueryParams(instance, method);
   const requestBodyParams = getRequestBodyParams(instance, method);
+  const headerParams = getHeaderParams(instance, method);
 
   const args = [];
 
@@ -107,6 +109,18 @@ const executeHandler = (instance: ClassInstance, method: string, requestContext:
       } else {
         args[param.index] = requestContext.body;
       }
+    }
+  }
+
+  if (headerParams) {
+    for (const headerParam of headerParams) {
+      const headerValue = requestContext?.headers?.[headerParam?.param?.toLowerCase()];
+
+      if (!headerValue) {
+        throw new BadRequestError(`Missing header parameter: ${headerParam.param}`);
+      }
+
+      args[headerParam.index] = castToType(headerValue, headerParam.type);
     }
   }
 
