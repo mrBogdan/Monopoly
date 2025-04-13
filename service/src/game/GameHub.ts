@@ -15,16 +15,6 @@ export class GameHub {
   constructor(private readonly gameService: GameService) {
   }
 
-  @Subscribe('getTiles')
-  async getTiles(@ActionParam('userId') userId: string): Promise<Reply<MapTile[]>> {
-    return {
-      userId,
-      action: ReplyAction.REPLY,
-      type: 'game:getTiles',
-      data: mapTiles,
-    };
-  }
-
   @Subscribe(GameAction.MOVE)
   async go(gameId: string, playerId: number): Promise<Broadcast<MovePayload>> {
     const moveOutcome = await this.gameService.move(gameId, playerId);
