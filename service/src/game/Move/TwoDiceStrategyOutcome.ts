@@ -3,7 +3,7 @@ import { MoveOutcome } from './MoveOutcome';
 import { MoveStrategyOutcomeDTO } from './MoveStrategyOutcomeDTO';
 import { TwoDiceOutcome } from './TwoDiceOutcome';
 
-export class TwoDiceStrategyOutcome implements MoveOutcome {
+export class TwoDiceStrategyOutcome implements MoveOutcome<TwoDiceOutcome> {
   constructor(
     private first: number,
     private second: number

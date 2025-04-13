@@ -1,12 +1,13 @@
 import { Dice } from '../Dice';
 import { createTwoDiceStrategyOutcome, TwoDiceStrategyOutcome } from './TwoDiceStrategyOutcome';
 import { MoveStrategy } from './MoveStrategy';
+import { MoveOutcome } from './MoveOutcome';
 
-class TwoDiceStrategy implements MoveStrategy {
+export class TwoDiceStrategy implements MoveStrategy {
   constructor(private readonly dice: Dice) {
   }
 
-  moveOutcome(): TwoDiceStrategyOutcome {
+  moveOutcome(): MoveOutcome<TwoDiceStrategyOutcome> {
     const first = this.dice.roll();
     const second = this.dice.roll();
     return createTwoDiceStrategyOutcome(first, second);
