@@ -80,6 +80,10 @@ export class ResponseBuilder {
                 return httpCookieOptionKey;
               }
 
+              if (cookieOptionKey === 'expires' && cookieOptionValue instanceof Date) {
+                return `${httpCookieOptionKey}=${cookieOptionValue.toUTCString()}`;
+              }
+
               return `${httpCookieOptionKey}=${cookieOptionValue}`;
             })
             .join('; ');
