@@ -1,5 +1,6 @@
 import { Response } from './Response';
 import { capitalize } from '../nodejs/capitalize';
+import { isBoolean } from '../nodejs/isBoolean';
 
 interface CookieParam {
   sameSite?: 'Strict' | 'Lax' | 'None';
@@ -73,10 +74,9 @@ export class ResponseBuilder {
           const cookieOptions = Object.entries(cookieParam)
             .filter(([, value]) => value !== undefined)
             .map(([cookieOptionKey, cookieOptionValue]) => {
-              const isBoolean = typeof cookieOptionValue === 'boolean';
               const httpCookieOptionKey = prepareCookieKey(cookieOptionKey);
 
-              if (isBoolean && cookieOptionValue) {
+              if (isBoolean(cookieOptionValue) && cookieOptionValue) {
                 return httpCookieOptionKey;
               }
 
