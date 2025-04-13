@@ -117,7 +117,7 @@ const executeHandler = (instance: ClassInstance, method: string, requestContext:
       const headerValue = requestContext?.headers?.[headerParam?.param?.toLowerCase()];
 
       if (!headerValue) {
-        throw new BadRequestError(`Missing header parameter: ${headerParam.param}`);
+        throw new BadRequestError(`Missing header: ${headerParam.param}`);
       }
 
       args[headerParam.index] = castToType(headerValue, headerParam.type);

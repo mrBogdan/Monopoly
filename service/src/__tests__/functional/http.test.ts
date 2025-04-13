@@ -157,4 +157,10 @@ describe('Http server framework tests', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(expected);
   });
+
+  it('should throw BadRequestError if header is not exists', async () => {
+    const response = await request(listeningServer).get('/user/header').send();
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing header: Content-Type', status: 400 });
+  });
 });
