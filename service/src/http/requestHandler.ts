@@ -15,6 +15,7 @@ import { handleProtocolError } from '../errors/handleProtocolError';
 import { parseRequestBody } from './parseRequestBody';
 import { getRequestBodyParams } from '../decorators/RequestBody';
 import { getHeaderParams } from '../decorators/Header';
+import { Response } from './Response';
 
 type RequestContext = {
   body?: unknown;
@@ -40,8 +41,8 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
       params: route.getParams(),
       headers: req.headers as Record<string, string>,
     });
-    res.writeHead(200, Headers.ContentType.json);
-    res.end(JSON.stringify(response));
+    res.writeHead(response.statusCode ?? 200, response.headers ?? Headers.ContentType.json);
+    res.end(JSON.stringify(response.body));
   } catch (error) {
     console.error(error);
 
@@ -60,7 +61,7 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
   }
 };
 
-const executeHandler = (instance: ClassInstance, method: string, requestContext: RequestContext): Promise<object> => {
+const executeHandler = async (instance: ClassInstance, method: string, requestContext: RequestContext): Promise<Response> => {
   const params = getParams(instance, method);
   const queryParams = getQueryParams(instance, method);
   const requestBodyParams = getRequestBodyParams(instance, method);
@@ -124,7 +125,16 @@ const executeHandler = (instance: ClassInstance, method: string, requestContext:
     }
   }
 
-  return instance[method](...args);
+  const response = await instance[method](...args);
+
+  if (response instanceof Response) {
+    return response;
+  }
+
+  return Response.builder()
+    .setBody(response)
+    .setStatusCode(200)
+    .build();
 };
 
 const castToType = (value: unknown, type: string) => {
