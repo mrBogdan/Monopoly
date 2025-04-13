@@ -1,8 +1,8 @@
-import { UserService } from '../../user/UserService';
+import { UserSignUpService } from '../../user/SignUpFeature/UserSignUpService';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { Hasher } from '../../hasher/Hasher';
-import { UserRegistrationDto } from '../../user/UserRegistrationDto';
+import { UserSignUpDto } from '../../user/SignUpFeature/UserSignUpDto';
 import { UserEmailAlreadyExistsError } from '../../user/UserEmailAlreadyExistsError';
 import { UserRepeatedPasswordWrongError } from '../../user/UserRepeatedPasswordWrongError';
 import { TestDatabase } from './TestDatabase';
@@ -11,7 +11,7 @@ import { UserResponse } from '../../user/UserResponse';
 jest.setTimeout(15000);
 
 describe('UserService Integration Tests (Real Database)', () => {
-  let userService: UserService;
+  let userService: UserSignUpService;
   let userRepository: PostgresUserRepository;
   let testEmail: string;
   let testDb: TestDatabase;
@@ -20,7 +20,7 @@ describe('UserService Integration Tests (Real Database)', () => {
     testDb = await TestDatabase.create();
 
     userRepository = new PostgresUserRepository(testDb.getClient());
-    userService = new UserService(
+    userService = new UserSignUpService(
       new IdGenerator(),
       userRepository,
       new Hasher(),
@@ -39,7 +39,7 @@ describe('UserService Integration Tests (Real Database)', () => {
   beforeEach(truncateUsersTable);
 
   it('should register a new user in the database', async () => {
-    const userData: UserRegistrationDto = {
+    const userData: UserSignUpDto = {
       name: 'Integration Test User',
       email: testEmail,
       password: 'securePassword123!',

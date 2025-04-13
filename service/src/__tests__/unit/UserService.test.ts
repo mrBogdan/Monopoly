@@ -1,17 +1,17 @@
-import { UserService } from '../../user/UserService';
+import { UserSignUpService } from '../../user/SignUpFeature/UserSignUpService';
 import { UserRepository } from '../../user/UserRepository';
 import { User } from '../../user/User';
 import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { Hasher } from '../../hasher/Hasher';
-import { UserRegistrationDto } from '../../user/UserRegistrationDto';
+import { UserSignUpDto } from '../../user/SignUpFeature/UserSignUpDto';
 
 describe('UserService', () => {
   let userRepository: jest.Mocked<UserRepository>;
   let userIdGenerator: jest.Mocked<IdGenerator>;
   let userPasswordHasher: jest.Mocked<Hasher>;
-  let userService: UserService;
+  let userService: UserSignUpService;
 
-  const userRegistrationDto: UserRegistrationDto = {
+  const userRegistrationDto: UserSignUpDto = {
     name: 'John Doe',
     email: 'test@gmail.com',
     password: 'password',
@@ -32,7 +32,7 @@ describe('UserService', () => {
       hash: jest.fn().mockReturnValue('hashed-password'),
     } as unknown as jest.Mocked<Hasher>;
 
-    userService = new UserService(userIdGenerator, userRepository, userPasswordHasher);
+    userService = new UserSignUpService(userIdGenerator, userRepository, userPasswordHasher);
   });
 
   it('should register a new user', async () => {
