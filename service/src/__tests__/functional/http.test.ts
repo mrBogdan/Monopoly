@@ -10,10 +10,11 @@ import { BadRequestError } from '../../errors/BadRequestError';
 import { QueryParam } from '../../decorators/QueryParam';
 import { Post } from '../../decorators/Post';
 import { RequestBody } from '../../decorators/RequestBody';
+import { Header } from '../../decorators/Header';
 import { runTestApp } from './runTestApp';
 import { getTestConfigModule } from './getTestConfigModule';
 import { getTestConfig } from '../../nodejs/getTestConfig';
-import { Header } from '../../decorators/Header';
+import {Response} from '../../http/Response';
 
 const USER_1 = 'USER_1';
 
@@ -79,6 +80,17 @@ class UserController {
   @Get('/header')
   getHeader(@Header('Content-Type') contentType: string) {
     return contentType;
+  }
+
+  @Get('/response-test')
+  getResponseTest(): Response {
+    return Response.builder()
+      .setStatusCode(301)
+      .setBody({ message: 'Redirecting' })
+      .setCookie('cookieName', 'cookieValue')
+      .setHeader('Location', 'http://example.com')
+      .setHeader('Content-Type', 'application/json')
+      .build();
   }
 }
 
@@ -163,4 +175,13 @@ describe('Http server framework tests', () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({ message: 'Bad Request', reason: 'Missing header: Content-Type', status: 400 });
   });
+
+  it('should be possible to set different status code and headers in response', async () => {
+    const response = await request(listeningServer).get('/user/response-test');
+    expect(response.status).toBe(301);
+    expect(response.body).toEqual({ message: 'Redirecting' });
+    expect(response.headers['location']).toEqual('http://example.com');
+    expect(response.headers['set-cookie']).toEqual(['cookieName=cookieValue']);
+    expect(response.headers['content-type']).toEqual('application/json');
+  })
 });
