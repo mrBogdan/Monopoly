@@ -14,6 +14,9 @@ import { handleBusinessError } from '../errors/handleBusinessError';
 import { handleProtocolError } from '../errors/handleProtocolError';
 import { parseRequestBody } from './parseRequestBody';
 import { getRequestBodyParams } from '../decorators/RequestBody';
+import { getHeaderParams } from '../decorators/Header';
+import { Response } from './Response';
+import { getCookieParams } from '../decorators/Cookie';
 
 type RequestContext = {
   body?: unknown;
@@ -39,8 +42,9 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
       params: route.getParams(),
       headers: req.headers as Record<string, string>,
     });
-    res.writeHead(200, Headers.ContentType.json);
-    res.end(JSON.stringify(response));
+    const contentType = response.headers?.['Content-Type'] || Headers.ContentType.json['Content-Type'];
+    res.writeHead(response.statusCode ?? 200, response.headers ?? Headers.ContentType.json);
+    res.end(prepareResponseBody(response.body, contentType));
   } catch (error) {
     console.error(error);
 
@@ -59,10 +63,12 @@ export const requestHandler = (router: Router, diContainer: Container) => async 
   }
 };
 
-const executeHandler = (instance: ClassInstance, method: string, requestContext: RequestContext): Promise<object> => {
+const executeHandler = async (instance: ClassInstance, method: string, requestContext: RequestContext): Promise<Response> => {
   const params = getParams(instance, method);
   const queryParams = getQueryParams(instance, method);
   const requestBodyParams = getRequestBodyParams(instance, method);
+  const headerParams = getHeaderParams(instance, method);
+  const cookieParams = getCookieParams(instance, method);
 
   const args = [];
 
@@ -110,7 +116,40 @@ const executeHandler = (instance: ClassInstance, method: string, requestContext:
     }
   }
 
-  return instance[method](...args);
+  if (headerParams) {
+    for (const headerParam of headerParams) {
+      const headerValue = requestContext?.headers?.[headerParam?.param?.toLowerCase()];
+
+      if (!headerValue) {
+        throw new BadRequestError(`Missing header: ${headerParam.param}`);
+      }
+
+      args[headerParam.index] = castToType(headerValue, headerParam.type);
+    }
+  }
+
+  if (cookieParams) {
+    for (const cookieParam of cookieParams) {
+      const cookieValue = requestContext?.headers?.cookie?.split('; ').find(cookie => cookie.startsWith(cookieParam.param))?.split('=')[1];
+
+      if (!cookieValue) {
+        throw new BadRequestError(`Missing cookie: ${cookieParam.param}`);
+      }
+
+      args[cookieParam.index] = castToType(cookieValue, cookieParam.type);
+    }
+  }
+
+  const response = await instance[method](...args);
+
+  if (response instanceof Response) {
+    return response;
+  }
+
+  return Response.builder()
+    .setBody(response)
+    .setStatusCode(200)
+    .build();
 };
 
 const castToType = (value: unknown, type: string) => {
@@ -125,3 +164,14 @@ const castToType = (value: unknown, type: string) => {
       return value;
   }
 };
+
+const prepareResponseBody = (body: unknown, contentType: string) => {
+  switch (contentType.toLowerCase()) {
+    case 'application/json':
+      return JSON.stringify(body);
+    case 'text/plain':
+      return String(body);
+    default:
+      return body;
+  }
+}
