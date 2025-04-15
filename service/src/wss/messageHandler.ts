@@ -10,7 +10,7 @@ import {
 import { Container } from '../di';
 import { WsRouter } from './WsRouter';
 import { ClassInstance } from '../http';
-import { getActionParams } from './ActionParam';
+import { getActionParams } from './EventParam';
 
 export const messageHandler = (ws: WebSocket, container: Container) => async (msg: string) => {
   try {

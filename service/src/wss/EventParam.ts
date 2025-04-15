@@ -3,7 +3,7 @@ import { ClassInstance, ParamInfo } from '../http';
 
 const PARAMS_KEY = Symbol('ActionParams');
 
-export function ActionParam(param: string) {
+export function EventParam(param: string) {
   return function (target: object, key: string | symbol, index: number) {
     const existingParams = Reflect.getMetadata(PARAMS_KEY, target, key) || [];
 

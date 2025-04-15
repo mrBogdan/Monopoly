@@ -1,8 +1,8 @@
-import { ReplyAction } from './ReplyAction';
-
-export interface Reply<T> {
-  action: ReplyAction.REPLY;
-  type: string;
-  userId: string;
-  data: T;
+export class Reply<T> {
+  constructor(
+    public roomId: string,
+    public userId: string,
+    public data: T,
+  ) {
+  }
 }

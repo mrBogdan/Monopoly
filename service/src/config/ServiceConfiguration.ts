@@ -7,5 +7,6 @@ export interface ServiceConfiguration {
         user: string;
         password: string;
         database: string;
-    }
+    },
+    jwtSecret: string;
 }

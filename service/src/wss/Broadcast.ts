@@ -1,8 +1,7 @@
-import { ReplyAction } from './ReplyAction';
-
-export interface Broadcast<T> {
-  action: ReplyAction.BROADCAST;
-  type: string;
-  roomId: string;
-  data: T;
+export class Broadcast<T> {
+  constructor(
+    public type: string,
+    public roomId: string,
+    public data: T,
+  ) {}
 }

@@ -7,5 +7,5 @@ export * from './injectWebSocketServer';
 export * from './messageHandler';
 export * from './WebSocketServerModule';
 export * from './WsRouter';
-export * from './ActionParam';
+export * from './EventParam';
 export * from './ReplyAction';

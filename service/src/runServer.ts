@@ -14,7 +14,7 @@ export const runServer = async (container: Container) => {
   injectWebSocketServer(server, wss);
 
   server.on('request', requestHandler(container));
-  wss.on('connection', ws => {
+  wss.on('connection', (ws) => {
     ws.on('message', messageHandler(ws, container));
   });
 
