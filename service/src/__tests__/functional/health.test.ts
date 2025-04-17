@@ -1,11 +1,14 @@
-import request from 'supertest';
 import { Server } from 'node:http';
+
+import request from 'supertest';
 import wsRequest from 'superwstest';
 
 import { HealthModule } from '../../health/HealthModule';
-import { runTestApp } from './runTestApp';
-import { getTestConfigModule } from './getTestConfigModule';
 import { getTestConfig } from '../../nodejs/getTestConfig';
+
+import { getTestConfigModule } from './getTestConfigModule';
+import { runTestApp } from './runTestApp';
+
 
 describe('Health', () => {
     let listeningServer: Server;

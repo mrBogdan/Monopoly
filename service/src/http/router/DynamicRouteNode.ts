@@ -1,4 +1,5 @@
 import { Methods } from '../Methods';
+
 import { Handler } from './Handler';
 import { ParametrizedRoute } from './ParametrizedRoute';
 import { RouteNode } from './RouteNode';

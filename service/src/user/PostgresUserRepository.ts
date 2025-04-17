@@ -1,9 +1,11 @@
 import { Client } from 'pg';
 
-import { USER_REPOSITORY, UserRepository } from './UserRepository';
+import { Injectable } from '../di/Injectable';
+
 import { User } from './User';
 import { UserNotFoundError } from './UserNotFoundError';
-import { Injectable } from '../di/Injectable';
+import { USER_REPOSITORY, UserRepository } from './UserRepository';
+
 
 @Injectable()
 export class PostgresUserRepository implements UserRepository {

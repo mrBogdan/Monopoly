@@ -1,7 +1,7 @@
-import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
-import { TileType } from '../../tile/TileType';
 import { Monopoly } from '../../tile/Monopoly';
 import { createMonopolyReward } from '../../tile/MonopolyReward';
+import { TileType } from '../../tile/TileType';
+import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
 
 export const americanAirlines: UpgradableMonopolyTile = {
     id: 'american-airlines',

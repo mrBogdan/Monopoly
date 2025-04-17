@@ -1,7 +1,7 @@
-import { TileType } from '../../tile/TileType';
-import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
 import { Monopoly } from '../../tile/Monopoly';
 import { RewardType } from '../../tile/RewardType';
+import { TileType } from '../../tile/TileType';
+import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
 
 export const boss: UpgradableMonopolyTile = {
   id: 'Boss',

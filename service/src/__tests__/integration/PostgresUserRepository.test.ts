@@ -1,11 +1,11 @@
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { Client } from 'pg';
 
+import { getConnectedPostgresClient } from '../../database/getConnectedPostgresClient';
+import { migrate } from '../../migrations/migration';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { User } from '../../user/User';
 import { UserNotFoundError } from '../../user/UserNotFoundError';
-import { migrate } from '../../migrations/migration';
-import { getConnectedPostgresClient } from '../../database/getConnectedPostgresClient';
 
 jest.setTimeout(15000);
 

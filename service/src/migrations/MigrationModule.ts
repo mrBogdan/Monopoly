@@ -1,9 +1,10 @@
 import { Client } from 'pg';
 
-import { Module } from '../decorators/Module';
-import { migrate } from './migration';
-import { ServiceConfiguration } from '../config/ServiceConfiguration';
 import { CONFIG } from '../config/ConfigService';
+import { ServiceConfiguration } from '../config/ServiceConfiguration';
+import { Module } from '../decorators/Module';
+
+import { migrate } from './migration';
 
 export const Migration = Symbol('migration');
 

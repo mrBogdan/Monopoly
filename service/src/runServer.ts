@@ -1,12 +1,14 @@
 import { Server } from 'node:http';
+
 import { WebSocketServer } from 'ws';
 
-import { Container } from './di/Container';
-import { Router } from './http/router/Router';
 import { ConfigService } from './config/ConfigService';
+import { Container } from './di/Container';
 import { requestHandler } from './http/requestHandler';
+import { Router } from './http/router/Router';
 import { getMessageHandler } from './wss/getMessageHandler';
 import { injectWebSocketServer } from './wss/injectWebSocketServer';
+
 
 export const runServer = async (container: Container) => {
   const server = container.resolve<Server>(Server);

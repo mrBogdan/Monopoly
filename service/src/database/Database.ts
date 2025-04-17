@@ -1,4 +1,5 @@
 import { Client, ClientConfig } from 'pg';
+
 import { ConfigService } from '../config/ConfigService';
 
 export const Database = {

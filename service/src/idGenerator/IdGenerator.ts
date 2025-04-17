@@ -1,4 +1,4 @@
-import {randomUUID, UUID} from "crypto";
+import {randomUUID, UUID} from 'crypto';
 
 export class IdGenerator
 {

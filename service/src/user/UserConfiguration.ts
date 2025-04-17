@@ -1,7 +1,7 @@
 import { Client } from 'pg';
 
-import { UserRepository } from './UserRepository';
 import { PostgresUserRepository } from './PostgresUserRepository';
+import { UserRepository } from './UserRepository';
 
 export class UserConfiguration {
     constructor(private readonly dbConnection: Client) {

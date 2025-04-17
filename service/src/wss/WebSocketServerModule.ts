@@ -1,6 +1,7 @@
 import { WebSocketServer } from 'ws';
 
 import { Module } from '../decorators/Module';
+
 import { getWebSocketServer } from './getWebSocketServer';
 
 @Module({

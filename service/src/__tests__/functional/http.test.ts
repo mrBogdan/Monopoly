@@ -1,21 +1,24 @@
 import { Server } from 'node:http';
+
 import request from 'supertest';
 
-import { Module } from '../../decorators/Module';
 import { Controller } from '../../decorators/Controller';
+import { Cookie } from '../../decorators/Cookie';
 import { Get } from '../../decorators/Get';
+import { Header } from '../../decorators/Header';
+import { Module } from '../../decorators/Module';
 import { Param } from '../../decorators/Param';
+import { Post } from '../../decorators/Post';
+import { QueryParam } from '../../decorators/QueryParam';
+import { RequestBody } from '../../decorators/RequestBody';
 import { UseErrorMapper } from '../../decorators/UseErrorMapper';
 import { BadRequestError } from '../../errors/BadRequestError';
-import { QueryParam } from '../../decorators/QueryParam';
-import { Post } from '../../decorators/Post';
-import { RequestBody } from '../../decorators/RequestBody';
-import { Header } from '../../decorators/Header';
-import { runTestApp } from './runTestApp';
-import { getTestConfigModule } from './getTestConfigModule';
-import { getTestConfig } from '../../nodejs/getTestConfig';
 import { Response } from '../../http/Response';
-import { Cookie } from '../../decorators/Cookie';
+import { getTestConfig } from '../../nodejs/getTestConfig';
+
+import { getTestConfigModule } from './getTestConfigModule';
+import { runTestApp } from './runTestApp';
+
 
 const USER_1 = 'USER_1';
 

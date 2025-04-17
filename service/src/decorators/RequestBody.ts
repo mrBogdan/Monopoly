@@ -16,7 +16,7 @@ export function RequestBody(param?: string) {
 
     const existingParams = Reflect.getMetadata(REQUEST_BODY_KEY, target, key);
 
-    const paramTypes = Reflect.getMetadata("design:paramtypes", target, key);
+    const paramTypes = Reflect.getMetadata('design:paramtypes', target, key);
     const type = paramTypes[index]?.name || UNKNOWN_TYPE;
 
     existingParams.push({index, param, type});
