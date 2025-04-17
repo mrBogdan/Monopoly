@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { Controller, getControllers } from '../../../decorators/Controller';
 import { PATH_KEY } from '../../../decorators/constants';
+import { Controller, getControllers } from '../../../decorators/Controller';
 
 @Controller('/shape')
 class Shape {}

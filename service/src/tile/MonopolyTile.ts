@@ -1,6 +1,6 @@
-import { Tile } from './Tile';
-import { Reward } from './Reward';
 import { Monopoly } from './Monopoly';
+import { Reward } from './Reward';
+import { Tile } from './Tile';
 
 /**
  * Player can

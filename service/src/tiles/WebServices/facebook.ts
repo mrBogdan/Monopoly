@@ -1,7 +1,7 @@
-import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
 import { Monopoly } from '../../tile/Monopoly';
-import { TileType } from '../../tile/TileType';
 import { RewardType } from '../../tile/RewardType';
+import { TileType } from '../../tile/TileType';
+import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
 
 export const facebook: UpgradableMonopolyTile = {
   id: 'facebook',

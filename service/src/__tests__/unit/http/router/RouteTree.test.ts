@@ -1,11 +1,11 @@
-import { Methods } from '../../../../http/Methods';
-import { RouteTree } from '../../../../http/router/RouteTree';
-import { NotFoundError } from '../../../../errors/NotFoundError';
 import { MethodNotAllowedError } from '../../../../errors/MethodNotAllowedError';
-import { Route } from '../../../../http/router/Route';
-import { Handler } from '../../../../http/router/Handler';
+import { NotFoundError } from '../../../../errors/NotFoundError';
+import { Methods } from '../../../../http/Methods';
 import { BadRouteError } from '../../../../http/router/BadRouteError';
+import { Handler } from '../../../../http/router/Handler';
+import { Route } from '../../../../http/router/Route';
 import { RouteHandler } from '../../../../http/router/RouteHandler';
+import { RouteTree } from '../../../../http/router/RouteTree';
 
 describe('Route Tree tests', () => {
   const _verifyRoute = (route: Route, path: string, method: Methods, handler: Handler, withParameters?: {param: string, value: string}[]) => {

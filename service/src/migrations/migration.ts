@@ -1,9 +1,14 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+
 import { Client } from 'pg';
 
-import agendaJson from './migration-agenda.json';
 import { isFileExists } from '../nodejs/isFileExists';
+
+import agendaJson from './migration-agenda.json';
+
+
+
 
 type Migration = {
   up: string,

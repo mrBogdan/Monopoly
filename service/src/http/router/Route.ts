@@ -1,9 +1,11 @@
-import { Handler } from './Handler';
-import { Methods } from '../Methods';
-import { RouteNode } from './RouteNode';
-import { DynamicRouteNode } from './DynamicRouteNode';
-import { delimiter } from './constants';
 import { NotFoundError } from '../../errors/NotFoundError';
+import { Methods } from '../Methods';
+
+import { delimiter } from './constants';
+import { DynamicRouteNode } from './DynamicRouteNode';
+import { Handler } from './Handler';
+import { RouteNode } from './RouteNode';
+
 
 export class Route {
   private _handler: Handler | undefined;

@@ -5,7 +5,7 @@ export function Header(header: string) {
   return function (target: object, key: string, index: number) {
     const existingParams: ParamInfo[] = Reflect.getMetadata(HEADER_KEY, target, key) || [];
 
-    const paramTypes = Reflect.getMetadata("design:paramtypes", target, key);
+    const paramTypes = Reflect.getMetadata('design:paramtypes', target, key);
     const type = paramTypes[index]?.name || UNKNOWN_TYPE;
 
     existingParams.push({index, param: header, type});

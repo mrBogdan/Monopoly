@@ -1,7 +1,8 @@
 import 'reflect-metadata';
-import { CONTROLLER_KEY, SERVICE_KEY } from './constants';
 import { isEmpty } from '../nodejs/isEmpty';
 import { Constructor } from '../di';
+
+import { CONTROLLER_KEY, SERVICE_KEY } from './constants';
 
 export type FactoryParam = {
   param: unknown | string;

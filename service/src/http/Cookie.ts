@@ -5,7 +5,7 @@ export function Cookie(cookie: string) {
   return function (target: object, key: string, index: number) {
     const existingCookies: ParamInfo[] = Reflect.getMetadata(COOKIES_KEY, target, key) || [];
 
-    const cookieTypes = Reflect.getMetadata("design:paramtypes", target, key);
+    const cookieTypes = Reflect.getMetadata('design:paramtypes', target, key);
     const type = cookieTypes[index]?.name || UNKNOWN_TYPE;
 
     existingCookies.push({ index, param: cookie, type });

@@ -1,4 +1,4 @@
-import {IdGenerator} from "../../idGenerator/IdGenerator";
+import {IdGenerator} from '../../idGenerator/IdGenerator';
 
 describe('IdGenerator', () => {
   let idGenerator: IdGenerator;

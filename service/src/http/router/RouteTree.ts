@@ -1,14 +1,15 @@
-import { Methods } from '../Methods';
-import { StaticRouteNode } from './StaticRouteNode';
-import { rootPath } from './constants';
-import { RouteParticle } from './RouteParticle';
-import { Handler } from './Handler';
-import { NotFoundError } from '../../errors/NotFoundError';
 import { MethodNotAllowedError } from '../../errors/MethodNotAllowedError';
-import { DynamicRouteNode } from './DynamicRouteNode';
-import { RouteNodeFactory } from './RouteNodeFactory';
-import { Route } from './Route';
+import { NotFoundError } from '../../errors/NotFoundError';
+import { Methods } from '../Methods';
+
 import { BadRouteError } from './BadRouteError';
+import { rootPath } from './constants';
+import { DynamicRouteNode } from './DynamicRouteNode';
+import { Handler } from './Handler';
+import { Route } from './Route';
+import { RouteNodeFactory } from './RouteNodeFactory';
+import { RouteParticle } from './RouteParticle';
+import { StaticRouteNode } from './StaticRouteNode';
 
 const isLast = (index: number, array: string[]) => index === array.length - 1;
 

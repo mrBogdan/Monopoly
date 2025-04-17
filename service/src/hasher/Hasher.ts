@@ -1,4 +1,4 @@
-import {hash} from "node:crypto";
+import {hash} from 'node:crypto';
 
 export class Hasher
 {

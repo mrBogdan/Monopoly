@@ -1,6 +1,7 @@
 import { Methods } from '../Methods';
-import { Handler } from './Handler';
+
 import { dynamicPathToken } from './constants';
+import { Handler } from './Handler';
 import { RouteHandler } from './RouteHandler';
 
 export abstract class RouteNode {

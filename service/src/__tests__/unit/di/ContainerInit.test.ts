@@ -1,5 +1,5 @@
-import { Container } from '../../../di/Container';
 import { Module } from '../../../decorators/Module';
+import { Container } from '../../../di/Container';
 import { Inject } from '../../../di/Inject';
 import { Injectable } from '../../../di/Injectable';
 

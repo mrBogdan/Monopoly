@@ -8,9 +8,10 @@ import {
   getServiceType,
   ServiceType,
 } from '../decorators/Module';
-import { Stack } from './Stack';
 import { isEmpty } from '../nodejs/isEmpty';
+
 import { getInjectParams } from './Inject';
+import { Stack } from './Stack';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Constructor<T = any> = new (...args: any[]) => T;
