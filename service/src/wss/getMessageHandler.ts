@@ -1,10 +1,11 @@
-import { Action } from '../action/Action';
-import { BadRequestError } from '../errors/BadRequestError';
-import { actionFactory } from '../action/actionFactory';
 import { WebSocket } from 'ws';
+
+import { Action } from '../action/Action';
+import { actionFactory } from '../action/actionFactory';
+import { BadRequestError } from '../errors/BadRequestError';
 import { handleBusinessError } from '../errors/handleBusinessError';
-import { toJsonError } from '../errors/toJsonError';
 import { handleProtocolError } from '../errors/handleProtocolError';
+import { toJsonError } from '../errors/toJsonError';
 
 const parseRequest = (requestMessage: string): Action => {
     try {

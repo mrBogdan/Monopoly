@@ -1,7 +1,7 @@
-import { GameRepository } from './GameRepository';
 import { Game } from './Game';
-import { GameNotFoundError } from './GameNotFoundError';
 import { GameCandidate } from './GameCandidate';
+import { GameNotFoundError } from './GameNotFoundError';
+import { GameRepository } from './GameRepository';
 
 export class GameService {
   constructor(private gameRepository: GameRepository) {

@@ -1,9 +1,12 @@
-import { RouteTree } from './RouteTree';
-import { Handler } from './Handler';
-import { Methods } from '../Methods';
-import { RouteHandler } from './RouteHandler';
-import { Route } from './Route';
 import { buildRoutes } from '../../decorators/buildRoutes';
+import { Methods } from '../Methods';
+
+import { Handler } from './Handler';
+import { Route } from './Route';
+import { RouteHandler } from './RouteHandler';
+import { RouteTree } from './RouteTree';
+
+
 
 export class Router {
   private _routeTree: RouteTree = new RouteTree();

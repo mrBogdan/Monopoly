@@ -1,15 +1,17 @@
 import { Server } from 'node:http';
+
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { Client } from 'pg';
 import request from 'supertest';
 
-import { AppModule } from '../../../AppModule';
 import { Application } from '../../../Application';
+import { AppModule } from '../../../AppModule';
+import { Container } from '../../../di/Container';
 import { getTestConfig } from '../../../nodejs/getTestConfig';
 import { USER_REPOSITORY, UserRepository } from '../../../user/UserRepository';
-import { runTestApp } from '../runTestApp';
 import { getTestConfigModule } from '../getTestConfigModule';
-import { Container } from '../../../di/Container';
-import { Client } from 'pg';
+import { runTestApp } from '../runTestApp';
+
 
 jest.setTimeout(15000);
 
@@ -68,7 +70,7 @@ describe('UserPublicController', () => {
     it('should register user', async () => {
       const user = {
         name: 'Test User',
-        email: `test@example.com`,
+        email: 'test@example.com',
         password: 'securePassword123!',
         repeatedPassword: 'securePassword123!',
       };

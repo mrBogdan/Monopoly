@@ -1,9 +1,11 @@
 import { Module } from '../decorators/Module';
+import { Hasher } from '../hasher/Hasher';
+import { IdGenerator } from '../idGenerator/IdGenerator';
+
+import { POSTGRES_USER_REPOSITORY } from './PostgresUserRepository';
 import { UserPublicController } from './UserPublicController';
 import { UserService } from './UserService';
-import { IdGenerator } from '../idGenerator/IdGenerator';
-import { Hasher } from '../hasher/Hasher';
-import { POSTGRES_USER_REPOSITORY } from './PostgresUserRepository';
+
 
 @Module({
   controllers: [UserPublicController],

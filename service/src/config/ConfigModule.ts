@@ -1,6 +1,7 @@
 import { Module } from '../decorators/Module';
-import { ConfigService, getConfigValue } from './ConfigService';
 import { getConfig } from '../nodejs/getConfig';
+
+import { ConfigService, getConfigValue } from './ConfigService';
 
 @Module({
   services: [ConfigService, getConfigValue(getConfig())]

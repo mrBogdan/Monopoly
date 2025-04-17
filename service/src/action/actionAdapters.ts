@@ -1,6 +1,6 @@
 import { createGameAdapter } from '../game/GameAdapter';
-import { createGameService } from '../game/GameService';
 import { GameRepository } from '../game/GameRepository';
+import { createGameService } from '../game/GameService';
 
 export const actions = {
   Game: 'game',

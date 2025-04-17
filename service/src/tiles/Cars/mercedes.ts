@@ -1,6 +1,6 @@
+import { Monopoly } from '../../tile/Monopoly';
 import { MonopolyTile } from '../../tile/MonopolyTile';
 import { createQuadMonopolyReward, QuadMonopolyReward } from '../../tile/QuadMonopolyReward';
-import { Monopoly } from '../../tile/Monopoly';
 import { TileType } from '../../tile/TileType';
 
 export const mercedes: MonopolyTile<QuadMonopolyReward> = {

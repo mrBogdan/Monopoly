@@ -1,9 +1,10 @@
-import { RouteNode } from './RouteNode';
-import { DynamicRouteNode } from './DynamicRouteNode';
-import { StaticRouteNode } from './StaticRouteNode';
 import { Methods } from '../Methods';
+
+import { DynamicRouteNode } from './DynamicRouteNode';
 import { Handler } from './Handler';
 import { RouteHandler } from './RouteHandler';
+import { RouteNode } from './RouteNode';
+import { StaticRouteNode } from './StaticRouteNode';
 
 export class RouteNodeFactory {
   public static create(path: string, method: Methods, handler: Handler): RouteNode {

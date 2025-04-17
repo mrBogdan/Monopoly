@@ -1,6 +1,6 @@
-import { MonopolyTile } from '../../tile/MonopolyTile';
 import { createDuoMonopolyReward, DuoMonopolyReward } from '../../tile/DuoMonopolyReward';
 import { Monopoly } from '../../tile/Monopoly';
+import { MonopolyTile } from '../../tile/MonopolyTile';
 import { TileType } from '../../tile/TileType';
 
 export const rovio: MonopolyTile<DuoMonopolyReward> = {

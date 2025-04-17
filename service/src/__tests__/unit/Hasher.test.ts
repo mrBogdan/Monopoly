@@ -1,4 +1,4 @@
-import {Hasher} from "../../hasher/Hasher";
+import {Hasher} from '../../hasher/Hasher';
 
 describe('Hasher', () => {
   let hasher: Hasher;

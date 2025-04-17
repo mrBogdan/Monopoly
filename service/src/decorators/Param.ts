@@ -12,7 +12,7 @@ export function Param(param: string) {
     return (target: object, key: string, index: number) => {
         const existingParams = Reflect.getMetadata(PARAMS_KEY, target, key) || [];
 
-        const paramTypes = Reflect.getMetadata("design:paramtypes", target, key);
+        const paramTypes = Reflect.getMetadata('design:paramtypes', target, key);
         const type = paramTypes[index]?.name || UNKNOWN_TYPE;
 
         existingParams.push({index, param, type});
