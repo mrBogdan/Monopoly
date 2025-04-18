@@ -1,5 +1,5 @@
 import { Controller } from '../decorators/Controller';
-import { Get } from '../decorators/Get';
+import { Get } from '../http/Get';
 
 @Controller('health')
 export class HealthController {

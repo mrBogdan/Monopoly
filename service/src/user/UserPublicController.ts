@@ -1,8 +1,8 @@
 import { Controller } from '../decorators/Controller';
-import { Post } from '../decorators/Post';
-import { RequestBody } from '../decorators/RequestBody';
 import { UseErrorMapper } from '../decorators/UseErrorMapper';
 import { BadRequestError } from '../errors/BadRequestError';
+import { Post } from '../http/Post';
+import { RequestBody } from '../http/RequestBody';
 
 import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
 import { UserRegistrationDto } from './UserRegistrationDto';

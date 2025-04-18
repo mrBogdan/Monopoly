@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
-import { ErrorMap } from '../errors/handleBusinessError';
+import { Constructor } from '../di';
+import { ErrorMap } from '../errors';
 
 import { ERRORS_MAP_KEY } from './constants';
 
@@ -11,4 +12,4 @@ export function UseErrorMapper(errorsMap: ErrorMap) {
     };
 }
 
-export const getErrorMapper = (target: object): ErrorMap => Reflect.getMetadata(ERRORS_MAP_KEY, target) || new Map();
+export const getErrorMapper = (target: Constructor): ErrorMap => Reflect.getMetadata(ERRORS_MAP_KEY, target) || new Map();

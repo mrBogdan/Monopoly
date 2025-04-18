@@ -2,18 +2,9 @@ import { Server } from 'node:http';
 
 import request from 'supertest';
 
-import { Controller } from '../../decorators/Controller';
-import { Cookie } from '../../decorators/Cookie';
-import { Get } from '../../decorators/Get';
-import { Header } from '../../decorators/Header';
-import { Module } from '../../decorators/Module';
-import { Param } from '../../decorators/Param';
-import { Post } from '../../decorators/Post';
-import { QueryParam } from '../../decorators/QueryParam';
-import { RequestBody } from '../../decorators/RequestBody';
-import { UseErrorMapper } from '../../decorators/UseErrorMapper';
-import { BadRequestError } from '../../errors/BadRequestError';
-import { Response } from '../../http/Response';
+import { Controller, Module, UseErrorMapper } from '../../decorators';
+import { BadRequestError } from '../../errors';
+import { Cookie, Get, Header, Param, Post, QueryParam, RequestBody, Response } from '../../http';
 import { getTestConfig } from '../../nodejs/getTestConfig';
 
 import { getTestConfigModule } from './getTestConfigModule';

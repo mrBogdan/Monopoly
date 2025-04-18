@@ -1,4 +1,4 @@
-import { Methods } from '../http/Methods';
+import { Methods } from '../http';
 import { delimiter } from '../http/router/constants';
 
 import { METHOD_KEY, PATH_KEY } from './constants';
@@ -9,8 +9,8 @@ export const buildRoutes = (callback: (path: string, method: Methods, Class: unk
 
   controllers.forEach((Controller, path) => {
     Reflect.ownKeys(Controller.prototype).forEach((action) => {
-      const route = Reflect.getMetadata(PATH_KEY, Controller.prototype, action.toString());
-      const method = Reflect.getMetadata(METHOD_KEY, Controller.prototype, action.toString());
+      const route: string = Reflect.getMetadata(PATH_KEY, Controller.prototype, action.toString());
+      const method: Methods = Reflect.getMetadata(METHOD_KEY, Controller.prototype, action.toString());
 
       if (route !== undefined && method !== undefined) {
         callback([path, route].join(delimiter), method, Controller, action.toString());

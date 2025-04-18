@@ -1,19 +1,28 @@
-import { Game } from './Game';
+import { Clock } from '../clock';
+import { IdGenerator } from '../idGenerator/IdGenerator';
+
+import { createGame, Game } from './Game';
 import { GameCandidate } from './GameCandidate';
 import { GameNotFoundError } from './GameNotFoundError';
 import { GameRepository } from './GameRepository';
+import { GameStatus } from './GameStatus';
+import { MoveOutcome, MoveStrategyFactory } from './Move';
+
 
 export class GameService {
-  constructor(private gameRepository: GameRepository) {
-  }
+  constructor(
+    private gameRepository: GameRepository,
+    private moveStrategyFactory: MoveStrategyFactory,
+    private clock: Clock,
+  ) {}
 
-  createGame(gameCandidate: GameCandidate): Promise<Game> {
-    const game = Game.createGame(gameCandidate);
+  create(gameCandidate: GameCandidate): Promise<Game> {
+    const game = this.createGameInstance(gameCandidate);
     return this.gameRepository.create(game);
   }
 
   async findRequiredGame(gameId: string): Promise<Game> {
-    const game = await this.gameRepository.findGameById(gameId);
+    const game = await this.gameRepository.findRequiredGameById(gameId);
 
     if (!game) {
       throw new GameNotFoundError(gameId);
@@ -21,8 +30,21 @@ export class GameService {
 
     return game;
   }
-}
 
-export const createGameService = (gameRepository: GameRepository) => {
-  return new GameService(gameRepository);
+  async move(gameId: string, playerId: number): Promise<MoveOutcome<unknown>> {
+    const game = await this.findRequiredGame(gameId);
+    const moveStrategy = this.moveStrategyFactory.createMoveStrategy(game);
+    return moveStrategy.moveOutcome();
+  }
+
+  private createGameInstance(candidate: GameCandidate): Game {
+    const idGenerator = new IdGenerator();
+    return createGame(
+      idGenerator.generateUUID(),
+      candidate.gameType,
+      candidate.gameOwner,
+      GameStatus.ROOM,
+      candidate.players,
+      this.clock.now());
+  }
 }

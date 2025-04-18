@@ -1,3 +1,5 @@
+* Platform and framework agnostic
+
 ```mermaid
 sequenceDiagram
     Client->>Service: WebSocket Action

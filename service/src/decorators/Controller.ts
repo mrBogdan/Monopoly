@@ -2,11 +2,10 @@ import { PATH_KEY } from './constants';
 
 const controllers = new Map();
 
-export function Controller(path: string) {
-  return function <T extends { new(...args: never[]): object }>(constructor: T) {
+export function Controller(path: string): ClassDecorator {
+  return function (constructor: object) {
     Reflect.defineMetadata(PATH_KEY, path, constructor);
     controllers.set(path, constructor);
-    return constructor;
   };
 }
 
