@@ -34,7 +34,8 @@ export const getWebSocketServer = (server: Server, secure: Secure): WebSocketSer
     const token = url.query.token as string;
 
     if (!token) {
-      ws.close(4000, 'Token not provided');
+      const PolicyViolationCode = 1008;
+      ws.close(PolicyViolationCode, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
       return;
     }
 

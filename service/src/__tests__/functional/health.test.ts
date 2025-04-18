@@ -60,4 +60,12 @@ describe('Health', () => {
       .close()
       .expectClosed();
   });
+
+  it('should reject ws connection without token', async () => {
+    await wsRequest(listeningServer)
+      .ws('/ws')
+      .expectClosed(1008, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}))
+      .close()
+      .expectClosed();
+  })
 });
