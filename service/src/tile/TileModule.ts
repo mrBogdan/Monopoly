@@ -1,8 +1,9 @@
 import { Module } from '../decorators/Module';
-import { TilePublicController } from './TilePublicController';
-import { TileService } from './TileService';
-import { TILE_REPOSITORY } from './TileRepository';
+
 import { MemoryTileRepository } from './MemoryTileRepository';
+import { TilePublicController } from './TilePublicController';
+import { TILE_REPOSITORY } from './TileRepository';
+import { TileService } from './TileService';
 
 @Module({
   controllers: [TilePublicController],

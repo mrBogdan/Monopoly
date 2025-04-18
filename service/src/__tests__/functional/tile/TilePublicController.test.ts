@@ -1,13 +1,14 @@
 import { Server } from 'node:http';
+
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import request from 'supertest';
 
-import { runTestApp } from '../runTestApp';
 import { Application } from '../../../Application';
 import { AppModule } from '../../../AppModule';
-import { getTestConfigModule } from '../getTestConfigModule';
 import { getTestConfig } from '../../../nodejs/getTestConfig';
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { mapTiles } from '../../../tiles/tiles';
+import { getTestConfigModule } from '../getTestConfigModule';
+import { runTestApp } from '../runTestApp';
 
 describe('TilePublicController', () => {
   let app: Application;

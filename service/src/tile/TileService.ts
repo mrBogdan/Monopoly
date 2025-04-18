@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '../di';
-import { TILE_REPOSITORY, TileRepository } from './TileRepository';
+
 import { MapTile } from './MapTile';
+import { TILE_REPOSITORY, TileRepository } from './TileRepository';
 
 @Injectable()
 export class TileService {

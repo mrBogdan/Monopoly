@@ -1,11 +1,13 @@
-import { GameRepository } from './GameRepository';
-import { createGame, Game } from './Game';
-import { GameNotFoundError } from './GameNotFoundError';
-import { GameCandidate } from './GameCandidate';
+import { Clock } from '../clock';
 import { IdGenerator } from '../idGenerator/IdGenerator';
+
+import { createGame, Game } from './Game';
+import { GameCandidate } from './GameCandidate';
+import { GameNotFoundError } from './GameNotFoundError';
+import { GameRepository } from './GameRepository';
 import { GameStatus } from './GameStatus';
 import { MoveOutcome, MoveStrategyFactory } from './Move';
-import { Clock } from '../clock';
+
 
 export class GameService {
   constructor(

@@ -1,5 +1,5 @@
-import { Secure } from '../../../secure';
 import { ServiceConfiguration } from '../../../config/ServiceConfiguration';
+import { Secure } from '../../../secure';
 
 describe('Secure test', () => {
   const secure = new Secure({ jwtSecret: '123' } as ServiceConfiguration);

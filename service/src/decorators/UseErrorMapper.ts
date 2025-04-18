@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 
-import { ERRORS_MAP_KEY } from './constants';
-import { ErrorMap } from '../errors';
 import { Constructor } from '../di';
+import { ErrorMap } from '../errors';
+
+import { ERRORS_MAP_KEY } from './constants';
 
 export function UseErrorMapper(errorsMap: ErrorMap) {
     return <T extends { new(...args: never[]): object }>(constructor: T) => {

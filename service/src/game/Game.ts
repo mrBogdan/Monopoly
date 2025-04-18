@@ -1,6 +1,6 @@
 import { GameStatus } from './GameStatus';
-import { Player } from './Player';
 import { GameType } from './GameType';
+import { Player } from './Player';
 import { PlayerNotFoundError } from './PlayerNotFoundError';
 
 export class Game {

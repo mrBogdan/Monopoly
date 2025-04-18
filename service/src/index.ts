@@ -1,11 +1,12 @@
 import { Server } from 'node:http';
+
 import { Client } from 'pg';
 
-import { AppModule } from './AppModule';
 import { Application } from './Application';
+import { AppModule } from './AppModule';
+import { Container } from './di/Container';
 import { isDevelopment, isProduction } from './nodejs/getEnv';
 import { runServer } from './runServer';
-import { Container } from './di/Container';
 
 const main = async () => {
   if (isProduction() || isDevelopment()) {

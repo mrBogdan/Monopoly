@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 
-import { Inject, Injectable } from '../di';
 import { CONFIG } from '../config/ConfigService';
 import { ServiceConfiguration } from '../config/ServiceConfiguration';
+import { Inject, Injectable } from '../di';
 
 @Injectable()
 export class Secure {

@@ -1,16 +1,17 @@
 import { WebSocket } from 'ws';
 
 import { Action } from '../action/Action';
+import { Container } from '../di';
 import {
   BadRequestError,
   handleBusinessError,
   toJsonError,
   handleProtocolError,
 } from '../errors';
-import { Container } from '../di';
-import { WsRouter } from './WsRouter';
 import { ClassInstance } from '../http';
+
 import { getActionParams } from './EventParam';
+import { WsRouter } from './WsRouter';
 
 export const messageHandler = (ws: WebSocket, container: Container) => async (msg: string) => {
   try {

@@ -1,6 +1,6 @@
-import { Module } from './decorators';
-import { Database } from './database/Database';
 import { Clock } from './clock';
+import { Database } from './database/Database';
+import { Module } from './decorators';
 import { Secure } from './secure';
 
 @Module({

@@ -1,7 +1,8 @@
 import { Dice } from '../Dice';
-import { createTwoDiceStrategyOutcome, TwoDiceStrategyOutcome } from './TwoDiceStrategyOutcome';
-import { MoveStrategy } from './MoveStrategy';
+
 import { MoveOutcome } from './MoveOutcome';
+import { MoveStrategy } from './MoveStrategy';
+import { createTwoDiceStrategyOutcome, TwoDiceStrategyOutcome } from './TwoDiceStrategyOutcome';
 
 export class TwoDiceStrategy implements MoveStrategy {
   constructor(private readonly dice: Dice) {

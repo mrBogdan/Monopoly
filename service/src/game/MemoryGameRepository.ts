@@ -1,6 +1,7 @@
-import { GAME_REPOSITORY, GameRepository } from './GameRepository';
-import { Game } from './Game';
 import { Injectable } from '../di';
+
+import { Game } from './Game';
+import { GAME_REPOSITORY, GameRepository } from './GameRepository';
 
 @Injectable()
 export class MemoryGameRepository implements GameRepository {

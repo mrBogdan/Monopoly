@@ -1,7 +1,8 @@
 import { Broadcast, Hub, ReplyAction, Subscribe } from '../wss';
+
+import { GameAction } from './GameAction';
 import { GameService } from './GameService';
 import { MoveStrategyOutcomeDTO } from './Move';
-import { GameAction } from './GameAction';
 
 type MovePayload = {
   playerId: number;

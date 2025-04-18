@@ -1,7 +1,8 @@
 import { Controller } from '../decorators';
-import { TileService } from './TileService';
 import { Get } from '../http';
+
 import { MapTile } from './MapTile';
+import { TileService } from './TileService';
 
 @Controller('public/tile')
 export class TilePublicController {

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
 import { QUERY_PARAM_KEY, UNKNOWN_TYPE } from '../decorators/constants';
+
 import { ParamInfo } from './Param';
 
 export function QueryParam(param: string) {

@@ -1,11 +1,11 @@
-import { HealthModule } from './health/HealthModule';
-import { UserModule } from './user/UserModule';
-import { SharedModule } from './SharedModule';
 import { ConfigModule } from './config/ConfigModule';
-import { MigrationModule } from './migrations/MigrationModule';
+import { HealthModule } from './health/HealthModule';
 import { HttpServerModule } from './http';
-import { WebSocketServerModule } from './wss';
+import { MigrationModule } from './migrations/MigrationModule';
+import { SharedModule } from './SharedModule';
 import { TileModule } from './tile/TileModule';
+import { UserModule } from './user/UserModule';
+import { WebSocketServerModule } from './wss';
 
 export const AppModule = [
   HealthModule,

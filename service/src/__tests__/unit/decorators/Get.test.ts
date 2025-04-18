@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { Get } from '../../../http/Get';
 import { METHOD_KEY, PATH_KEY } from '../../../decorators/constants';
+import { Get } from '../../../http/Get';
 
 class Shape {
   @Get('/color')

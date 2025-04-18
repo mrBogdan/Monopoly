@@ -10,5 +10,6 @@ export const getTestConfig = (override = {}): ServiceConfiguration => ({
     password: 'test',
     port: 5432,
   },
+  jwtSecret: 'test',
   ...override,
 })

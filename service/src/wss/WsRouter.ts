@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 
-import { getHubs, HubHandler } from './Hub';
 import { NotFoundError } from '../errors';
+
 import { SUBSCRIBE_METADATA_KEY } from './constants';
+import { getHubs, HubHandler } from './Hub';
 
 export class WsRouter {
   private hubs: Map<string, object> = new Map();

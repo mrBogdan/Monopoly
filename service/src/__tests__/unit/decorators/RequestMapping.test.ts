@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import { RequestMapping } from '../../../http/RequestMapping';
-import { Methods } from '../../../http/Methods';
 import { METHOD_KEY, PATH_KEY } from '../../../decorators/constants';
+import { Methods } from '../../../http/Methods';
+import { RequestMapping } from '../../../http/RequestMapping';
 
 class Shape {
   @RequestMapping('/color')

@@ -1,6 +1,6 @@
-import { MoveStrategyType } from './MoveStrategyType';
 import { MoveOutcome } from './MoveOutcome';
 import { MoveStrategyOutcomeDTO } from './MoveStrategyOutcomeDTO';
+import { MoveStrategyType } from './MoveStrategyType';
 import { TwoDiceOutcome } from './TwoDiceOutcome';
 
 export class TwoDiceStrategyOutcome implements MoveOutcome<TwoDiceOutcome> {

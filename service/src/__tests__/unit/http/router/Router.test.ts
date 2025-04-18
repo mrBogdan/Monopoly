@@ -1,9 +1,9 @@
-import { RouteHandler } from '../../../../http/router/RouteHandler';
-import { Router } from '../../../../http/router/Router';
-import { Methods } from '../../../../http/Methods';
-import { Handler } from '../../../../http/router/Handler';
 import { Controller } from '../../../../decorators/Controller';
 import { Get } from '../../../../http/Get';
+import { Methods } from '../../../../http/Methods';
+import { Handler } from '../../../../http/router/Handler';
+import { RouteHandler } from '../../../../http/router/RouteHandler';
+import { Router } from '../../../../http/router/Router';
 
 @Controller('public/user')
 class UserController {

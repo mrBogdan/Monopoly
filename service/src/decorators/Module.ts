@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { isEmpty } from '../nodejs/isEmpty';
 import { Constructor } from '../di';
+import { isEmpty } from '../nodejs/isEmpty';
 
 import { CONTROLLER_KEY, SERVICE_KEY } from './constants';
 

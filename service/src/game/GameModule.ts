@@ -1,8 +1,9 @@
 import { Module } from '../decorators/Module';
-import { GamePublicController } from './GamePublicController';
-import { memoryGameRepository } from './MemoryGameRepository';
+
 import { GameHub } from './GameHub';
+import { GamePublicController } from './GamePublicController';
 import { GameService } from './GameService';
+import { memoryGameRepository } from './MemoryGameRepository';
 
 @Module({
   controllers: [GamePublicController],

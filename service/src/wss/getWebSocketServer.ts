@@ -1,6 +1,7 @@
-import { WebSocketServer, WebSocket } from 'ws';
-import { parse } from 'node:url';
 import { Server } from 'node:http';
+import { parse } from 'node:url';
+
+import { WebSocketServer, WebSocket } from 'ws';
 
 import { Secure } from '../secure';
 
@@ -31,6 +32,12 @@ export const getWebSocketServer = (server: Server, secure: Secure): WebSocketSer
 
     const url = parse(request.url ?? '', true);
     const token = url.query.token as string;
+
+    if (!token) {
+      ws.close(4000, 'Token not provided');
+      return;
+    }
+
     const user = secure.verifyAndDecode(token);
 
     users.set(ws, user as WebSocketUser);
