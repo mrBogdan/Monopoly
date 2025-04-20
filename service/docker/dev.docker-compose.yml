@@ -9,6 +9,7 @@ services:
       - postgres
     ports:
       - "8080:8080"
+      - "9229:9229"
     environment:
       NODE_ENV: development
       PORT: 8080
@@ -16,6 +17,8 @@ services:
     volumes:
       - ../:/app
       - /app/node_modules
+    command: >
+      npx ts-node-dev --respawn --pretty --inspect=0.0.0.0:9229 src/index.ts
   postgres:
     container_name: monopoly-postgres
     image: postgres:latest
