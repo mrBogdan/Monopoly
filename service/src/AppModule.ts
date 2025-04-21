@@ -6,9 +6,11 @@ import { ConfigModule } from './config/ConfigModule';
 import { MigrationModule } from './migrations/MigrationModule';
 import { HttpServerModule } from './http/HttpServerModule';
 import { WebSocketServerModule } from './wss/WebSocketServerModule';
+import { SecurityModule } from "./security/SecurityModule";
 
 export const AppModule = [
   HealthModule,
+  SecurityModule,
   UserSignUpModule,
   UserSignInModule,
   SharedModule,

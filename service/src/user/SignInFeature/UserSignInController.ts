@@ -13,7 +13,6 @@ export class UserSignInController {
     }
 
     @Post()
-    @Security()
     async singIn(@RequestBody() userSignInDto: UserSignInDto): Promise<Response> {
         this.validateUserRegistrationDto(userSignInDto as unknown as Record<string, unknown>);
         const signInResult = await this.userService.signIn(userSignInDto);
