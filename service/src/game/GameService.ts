@@ -1,34 +1,33 @@
 import { Clock } from '../clock';
 import { IdGenerator } from '../idGenerator/IdGenerator';
+import { UserService } from '../user/UserService';
 
 import { createGame, Game } from './Game';
 import { GameCandidate } from './GameCandidate';
-import { GameNotFoundError } from './GameNotFoundError';
 import { GameRepository } from './GameRepository';
-import { GameStatus } from './GameStatus';
 import { MoveOutcome, MoveStrategyFactory } from './Move';
+import { Player } from './Player';
 
 
 export class GameService {
   constructor(
     private gameRepository: GameRepository,
+    private userService: UserService,
     private moveStrategyFactory: MoveStrategyFactory,
+    private idGenerator: IdGenerator,
     private clock: Clock,
   ) {}
 
-  create(gameCandidate: GameCandidate): Promise<Game> {
-    const game = this.createGameInstance(gameCandidate);
+  async create(gameCandidate: GameCandidate): Promise<Game> {
+    const user = await this.userService.getUser(gameCandidate.gameCreator);
+    const player = Player.of(user, 1);
+    const game = this.createGameInstance(gameCandidate, player);
+
     return this.gameRepository.create(game);
   }
 
   async findRequiredGame(gameId: string): Promise<Game> {
-    const game = await this.gameRepository.findRequiredGameById(gameId);
-
-    if (!game) {
-      throw new GameNotFoundError(gameId);
-    }
-
-    return game;
+    return this.gameRepository.getGameById(gameId);
   }
 
   async move(gameId: string, playerId: number): Promise<MoveOutcome<unknown>> {
@@ -37,14 +36,12 @@ export class GameService {
     return moveStrategy.moveOutcome();
   }
 
-  private createGameInstance(candidate: GameCandidate): Game {
-    const idGenerator = new IdGenerator();
+  private createGameInstance(candidate: GameCandidate, player: Player): Game {
     return createGame(
-      idGenerator.generateUUID(),
-      candidate.gameType,
-      candidate.gameOwner,
-      GameStatus.ROOM,
-      candidate.players,
+      this.idGenerator.generateUUID(),
+      candidate.gameSettings,
+      candidate.gameCreator,
+      [player],
       this.clock.now());
   }
 }

@@ -1,3 +1,5 @@
+import { User } from '../user/User';
+
 export class Player {
   public userId: string;
   public name: string;
@@ -7,5 +9,9 @@ export class Player {
     this.userId = userId;
     this.name = name;
     this.id = id;
+  }
+
+  public static of(user: User, index: number): Player {
+    return new Player(user.id, user.name, index);
   }
 }

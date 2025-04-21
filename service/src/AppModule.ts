@@ -5,7 +5,7 @@ import { MigrationModule } from './migrations/MigrationModule';
 import { SharedModule } from './SharedModule';
 import { TileModule } from './tile/TileModule';
 import { UserModule } from './user/UserModule';
-import { WebSocketServerModule } from './wss';
+import { RoomModule, UserSocketModule, WebSocketServerModule } from './wss';
 
 export const AppModule = [
   HealthModule,
@@ -16,4 +16,6 @@ export const AppModule = [
   HttpServerModule,
   WebSocketServerModule,
   TileModule,
+  UserSocketModule,
+  RoomModule
 ]

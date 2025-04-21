@@ -10,8 +10,13 @@ import {
 } from '../errors';
 import { ClassInstance } from '../http';
 
+import { Broadcast } from './Broadcast';
 import { getActionParams } from './EventParam';
+import { Reply } from './Reply';
+import { Void } from './Void';
 import { WsRouter } from './WsRouter';
+
+type WsResponse = Broadcast<unknown> | Reply<unknown> | Void | object;
 
 export const messageHandler = (ws: WebSocket, container: Container) => async (msg: string) => {
   try {
@@ -36,13 +41,13 @@ export const messageHandler = (ws: WebSocket, container: Container) => async (ms
   }
 };
 
-const executeHandler = async (instance: ClassInstance, method: string, action: Action) => {
+const executeHandler = async (instance: ClassInstance, method: string, action: Action): Promise<WsResponse> => {
   const args: unknown[] = [];
 
   const params = getActionParams(instance, method);
 
   if (params) {
-    for (const { index, param, type } of params) {
+    for (const {index, param, type} of params) {
 
       if (param === 'userId') {
         args[index] = action.userId;
@@ -55,7 +60,7 @@ const executeHandler = async (instance: ClassInstance, method: string, action: A
   }
 
   return instance[method](...args);
-}
+};
 
 const parseRequest = (requestMessage: string): Action => {
   try {
@@ -77,23 +82,3 @@ const castToType = (value: unknown, type: string) => {
       return value;
   }
 };
-
-
-
-// const handleRequest = async (msg: string): Promise<object> => {
-//   const request: Action = parseRequest(msg);
-//
-//   if (!('type' in request)) {
-//     console.warn('Bad request:', msg);
-//     throw new BadRequestError('Request type is absent or not supported');
-//   }
-//
-//   if (request.type === 'ping') {
-//     return {type: 'ping', message: 'pong'};
-//   }
-//
-//   const handler = async (request: Action) => ({request});
-//   const response = await handler(request);
-//
-//   return {data: response, type: request.type};
-// };

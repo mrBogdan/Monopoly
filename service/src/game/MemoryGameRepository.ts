@@ -1,6 +1,7 @@
 import { Injectable } from '../di';
 
 import { Game } from './Game';
+import { GameNotFoundError } from './GameNotFoundError';
 import { GAME_REPOSITORY, GameRepository } from './GameRepository';
 
 @Injectable()
@@ -11,22 +12,23 @@ export class MemoryGameRepository implements GameRepository {
     this.games = new Map<string, Game>();
   }
 
-  findRequiredGameById(gameId: string): Promise<Game> {
-    return new Promise((resolve, reject) => {
-      const game = this.games.get(gameId);
-      if (game) {
-        resolve(game);
-      } else {
-        reject(new Error('Game not found'));
-      }
-    });
+  async getGameById(gameId: string): Promise<Game> {
+    const game = this.games.get(gameId);
+
+    if (!game) {
+      throw new GameNotFoundError(gameId);
+    }
+
+    return game;
   }
 
-  create(game: Game): Promise<Game> {
-    return new Promise((resolve) => {
-      this.games.set(game.getId(), game);
-      resolve(game);
-    });
+  async create(game: Game): Promise<Game> {
+    this.games.set(game.getId(), game);
+    return game;
+  }
+
+  async deleteGame(gameId: string): Promise<void> {
+    this.games.delete(gameId);
   }
 }
 

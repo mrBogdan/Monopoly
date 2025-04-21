@@ -8,3 +8,6 @@ export * from './WebSocketServerModule';
 export * from './WsRouter';
 export * from './EventParam';
 export * from './ReplyAction';
+
+export * from './room';
+export * from './user-socket';

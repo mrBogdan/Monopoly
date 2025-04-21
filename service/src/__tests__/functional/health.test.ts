@@ -67,5 +67,14 @@ describe('Health', () => {
       .expectClosed(1008, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}))
       .close()
       .expectClosed();
-  })
+  });
+
+  it('should reject connection with invalid token', async () => {
+    const invalidToken = token.replace('e', 'k');
+    await wsRequest(listeningServer)
+      .ws(`/ws?token=${invalidToken}`)
+      .expectClosed(1008, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}))
+      .close()
+      .expectClosed();
+  });
 });

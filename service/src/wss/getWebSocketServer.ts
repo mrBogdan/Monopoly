@@ -5,13 +5,14 @@ import { WebSocketServer, WebSocket } from 'ws';
 
 import { Secure } from '../secure';
 
-class WebSocketUser {
-  constructor(public id: string) {}
+import { MemoryUserSocketRepository, UserSocket } from './user-socket';
+import { WsCloseCode } from './WsCloseCode';
+
+type UserInfo = {
+  userId: string;
 }
 
-const users: Map<WebSocket, WebSocketUser> = new Map();
-
-export const getWebSocketServer = (server: Server, secure: Secure): WebSocketServer => {
+export const getWebSocketServer = (server: Server, secure: Secure, userSocketRepository: MemoryUserSocketRepository): WebSocketServer => {
   const wss = new WebSocketServer({noServer: true});
 
   server.on('upgrade', (request, socket, head) => {
@@ -34,26 +35,33 @@ export const getWebSocketServer = (server: Server, secure: Secure): WebSocketSer
     const token = url.query.token as string;
 
     if (!token) {
-      const PolicyViolationCode = 1008;
-      ws.close(PolicyViolationCode, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
+      ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
       return;
     }
 
-    const user = secure.verifyAndDecode(token);
+    let user: UserInfo;
 
-    users.set(ws, user as WebSocketUser);
+    try {
+      user = secure.verifyAndDecode(token) as UserInfo;
+    } catch {
+      ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
+      return;
+    }
+
+    const userSocket = new UserSocket(user.userId, ws);
+
+    userSocketRepository.addUserSocket(userSocket);
 
     ws.on('close', () => {
-      users.delete(ws);
+      userSocketRepository.removeUserSocket(ws);
     })
   });
 
   wss.on('close', () => {
     console.log('Server disconnected');
-    users.forEach((_, ws) => {
+    userSocketRepository.getAllUserSockets().forEach((ws) => {
       if (ws.readyState === WebSocket.CLOSED) {
-        users.delete(ws);
-        ws.close();
+        userSocketRepository.removeUserSocket(ws);
       }
     });
   });

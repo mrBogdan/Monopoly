@@ -1,4 +1,4 @@
-import { Inject } from '../di/Inject';
+import { Inject } from '../di';
 import { Hasher } from '../hasher/Hasher';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 
@@ -15,6 +15,10 @@ export class UserService {
     @Inject(USER_REPOSITORY) private userRepository: UserRepository,
     private userPasswordHasher: Hasher,
   ) {}
+
+  async getUser(id: string): Promise<User> {
+    return this.userRepository.getById(id);
+  }
 
   async register(userRegistrationDataDto: UserRegistrationDto): Promise<UserResponse> {
     const {name, email, password, repeatedPassword} = userRegistrationDataDto;
