@@ -9,4 +9,4 @@ import { POSTGRES_USER_REPOSITORY } from './PostgresUserRepository';
   controllers: [UserSignUpController],
   services: [UserSignUpService, IdGenerator, Hasher, POSTGRES_USER_REPOSITORY],
 })
-export class UserModule {}
+export class UserSignUpModule {}

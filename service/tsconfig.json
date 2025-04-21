@@ -11,6 +11,7 @@
     "removeComments": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
     "strict": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
