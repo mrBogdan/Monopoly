@@ -4,8 +4,8 @@ import { Client } from 'pg';
 
 import { Application } from './Application';
 import { AppModule } from './AppModule';
-import { Container } from './di/Container';
-import { isDevelopment, isProduction } from './nodejs/getEnv';
+import { Container } from './di';
+import { isDevelopment, isProduction } from './nodejs';
 import { runServer } from './runServer';
 
 const main = async () => {

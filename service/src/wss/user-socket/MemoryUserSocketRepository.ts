@@ -29,6 +29,13 @@ export class MemoryUserSocketRepository {
     this.sockets.delete(inputSocket);
   }
 
+  public getUserSockets(userIds: string[]): UserSocket[] {
+    return this.userSockets.entries()
+      .map(([userId, socket]) => UserSocket.of(userId, socket))
+      .filter(us => userIds.includes(us.userId))
+      .toArray();
+  }
+
   public getAllUserSockets(): Map<string, WebSocket> {
     return this.userSockets;
   }

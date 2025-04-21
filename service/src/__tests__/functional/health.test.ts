@@ -4,8 +4,8 @@ import request from 'supertest';
 import wsRequest from 'superwstest';
 
 import { HealthModule } from '../../health/HealthModule';
-import { getTestConfig } from '../../nodejs/getTestConfig';
 import { Secure } from '../../secure';
+import { getTestConfig } from '../getTestConfig';
 
 import { getTestConfigModule } from './getTestConfigModule';
 import { runTestApp } from './runTestApp';

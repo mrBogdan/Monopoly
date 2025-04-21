@@ -7,8 +7,8 @@ import request from 'supertest';
 import { Application } from '../../../Application';
 import { AppModule } from '../../../AppModule';
 import { Container } from '../../../di';
-import { getTestConfig } from '../../../nodejs/getTestConfig';
 import { USER_REPOSITORY, UserRepository } from '../../../user/UserRepository';
+import { getTestConfig } from '../../getTestConfig';
 import { getTestConfigModule } from '../getTestConfigModule';
 import { runTestApp } from '../runTestApp';
 

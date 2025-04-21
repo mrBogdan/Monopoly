@@ -18,4 +18,4 @@ export const AppModule = [
   TileModule,
   UserSocketModule,
   RoomModule
-]
+];

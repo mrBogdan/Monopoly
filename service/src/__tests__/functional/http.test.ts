@@ -5,7 +5,7 @@ import request from 'supertest';
 import { Controller, Module, UseErrorMapper } from '../../decorators';
 import { BadRequestError } from '../../errors';
 import { Cookie, Get, Header, Param, Post, QueryParam, RequestBody, Response } from '../../http';
-import { getTestConfig } from '../../nodejs/getTestConfig';
+import { getTestConfig } from '../getTestConfig';
 
 import { getTestConfigModule } from './getTestConfigModule';
 import { runTestApp } from './runTestApp';

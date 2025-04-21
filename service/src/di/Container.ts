@@ -63,7 +63,7 @@ export class Container {
   public async init(modules: Constructor<unknown>[]) {
     const injectables = new Map<unknown, unknown>();
     for (const module of modules) {
-      const Services = getModuleServices(module );
+      const Services = getModuleServices(module);
       const Controllers = getModuleControllers(module);
 
       for (const Service of Services) {
@@ -172,6 +172,10 @@ export class Container {
         if (isResolved(value)) {
           stack.pop();
           continue;
+        }
+
+        if (!value) {
+          console.warn(`Could not find dependency ${(key as Constructor).name.toString()}`);
         }
 
         switch (getServiceType(value)) {

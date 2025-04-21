@@ -1,6 +1,6 @@
 export class Reply<T> {
   constructor(
-    public roomId: string,
+    public type: string,
     public replyTo: string,
     public payload: T,
   ) {

@@ -5,8 +5,8 @@ import request from 'supertest';
 
 import { Application } from '../../../Application';
 import { AppModule } from '../../../AppModule';
-import { getTestConfig } from '../../../nodejs/getTestConfig';
 import { mapTiles } from '../../../tiles/tiles';
+import { getTestConfig } from '../../getTestConfig';
 import { getTestConfigModule } from '../getTestConfigModule';
 import { runTestApp } from '../runTestApp';
 
