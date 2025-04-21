@@ -32,6 +32,10 @@ export class Game {
   getId(): string {
     return this.id;
   }
+
+  settings(): GameSettings {
+    return this.gameSettings;
+  }
 }
 
 export const createGame = (
