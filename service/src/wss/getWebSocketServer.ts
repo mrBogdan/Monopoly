@@ -5,6 +5,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 
 import { Secure } from '../secure';
 
+import { messageHandler } from './messageHandler';
 import { MemoryUserSocketRepository, UserSocket } from './user-socket';
 import { WsCloseCode } from './WsCloseCode';
 

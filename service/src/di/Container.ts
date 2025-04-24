@@ -175,7 +175,7 @@ export class Container {
         }
 
         if (!value) {
-          console.warn(`Could not find dependency ${(key as Constructor).name.toString()}`);
+          console.warn(`Could not find dependency ${(key as Constructor).toString()}`);
         }
 
         switch (getServiceType(value)) {

@@ -22,6 +22,5 @@ export class Application {
 
   private async init() {
     await this.diContainer.init(this.modules);
-    this.diContainer.register(Container, this.diContainer);
   }
 }

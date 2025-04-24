@@ -1,6 +1,6 @@
 import { Controller } from '../decorators';
 import { Post, RequestBody } from '../http';
-import { RoomService } from '../wss/room/RoomService';
+import { RoomService } from '../wss';
 
 import { Game } from './Game';
 import { GameService } from './GameService';
@@ -18,7 +18,7 @@ export class GamePublicController {
       gameCreator: userId,
     });
 
-    this.roomService
+    await this.roomService.createRoom(game.getId(), [userId]);
 
     return game;
   }

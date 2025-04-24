@@ -4,10 +4,11 @@ import { Constructor, Container } from '../../di';
 import { HttpServerModule } from '../../http';
 import { runServer } from '../../runServer';
 import { Secure } from '../../secure';
+import { SharedModule } from '../../SharedModule';
 import { RoomModule, UserSocketModule, WebSocketServerModule } from '../../wss';
 import { getAnonymousModule } from '../getAnonymousModule';
 
-const SharedModules = [HttpServerModule, WebSocketServerModule, UserSocketModule, RoomModule];
+const SharedModules = [HttpServerModule, WebSocketServerModule, UserSocketModule, RoomModule, SharedModule];
 
 export const runTestApp = async (modules: Constructor[]): Promise<Application> => {
   const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService, Secure])]);

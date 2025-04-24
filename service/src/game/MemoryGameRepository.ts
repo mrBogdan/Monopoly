@@ -32,7 +32,7 @@ export class MemoryGameRepository implements GameRepository {
   }
 }
 
-export const memoryGameRepository = () => ({
+export const memoryGameRepository = {
   param: GAME_REPOSITORY,
   useClass: MemoryGameRepository,
-})
+};

@@ -1,17 +1,18 @@
 import { Clock } from '../clock';
+import { Inject, Injectable } from '../di';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 import { UserService } from '../user/UserService';
 
 import { createGame, Game } from './Game';
 import { GameCandidate } from './GameCandidate';
-import { GameRepository } from './GameRepository';
-import { MoveOutcome, MoveStrategyFactory } from './Move';
+import { GAME_REPOSITORY, GameRepository } from './GameRepository';
+import { MoveOutcome, MoveStrategyFactory } from './move';
 import { Player } from './Player';
 
-
+@Injectable()
 export class GameService {
   constructor(
-    private gameRepository: GameRepository,
+    @Inject(GAME_REPOSITORY) private gameRepository: GameRepository,
     private userService: UserService,
     private moveStrategyFactory: MoveStrategyFactory,
     private idGenerator: IdGenerator,

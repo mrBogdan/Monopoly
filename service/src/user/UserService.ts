@@ -1,4 +1,4 @@
-import { Inject } from '../di';
+import { Inject, Injectable } from '../di';
 import { Hasher } from '../hasher/Hasher';
 import { IdGenerator } from '../idGenerator/IdGenerator';
 
@@ -9,6 +9,7 @@ import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError
 import { USER_REPOSITORY, UserRepository } from './UserRepository';
 import { UserResponse } from './UserResponse';
 
+@Injectable()
 export class UserService {
   constructor(
     private userIdGenerator: IdGenerator,

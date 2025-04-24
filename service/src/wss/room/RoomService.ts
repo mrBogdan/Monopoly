@@ -11,8 +11,8 @@ export class RoomService {
     return this.roomRepository.getRoom(id);
   }
 
-  async createRoom(room: Room): Promise<Room> {
-    return this.roomRepository.createRoom(room);
+  async createRoom(id: string, users: string[]): Promise<Room> {
+    return this.roomRepository.createRoom(new Room(id, new Map(users.map((userId) => [userId, {}]))));
   }
 
   async getRooms(): Promise<Room[]> {

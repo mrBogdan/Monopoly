@@ -1,5 +1,7 @@
+import { Injectable } from '../di';
 import { RandMachine } from '../rand/RandMachine';
 
+@Injectable()
 export class Dice {
   constructor(private randMachine: RandMachine) {
   }
