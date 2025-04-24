@@ -5,7 +5,9 @@ import {UserSignInDto} from "./UserSignInDto";
 import {UserCredentialsNotFoundError} from "./UserCredentialsNotFoundError";
 import {JwtTokenService} from "../../jwtToken/jwtTokenService";
 import {SignInResult} from "./SignInResult";
+import {Injectable} from "../../di/Injectable";
 
+@Injectable()
 export class UserSignInService {
     constructor(
         private jwtTokenService: JwtTokenService,

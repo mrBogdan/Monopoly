@@ -2,11 +2,16 @@ import jwt from 'jsonwebtoken';
 import {TokenPayload} from "./tokenPayload";
 
 export class JwtTokenService {
-    readonly JWT_SECRET: string = process.env.JWT_SECRET || 'incorrect jwt secret';
+    readonly JWT_SECRET: string = (() => {
+        if (!process.env.JWT_SECRET) {
+            throw new Error('JWT_SECRET is not defined');
+        }
+        return process.env.JWT_SECRET;
+    })();
     readonly ACCESS_TOKEN_EXPIRY = '15m';
     readonly REFRESH_TOKEN_EXPIRY = '7d';
 
-    generateAccessToken = (payload: TokenPayload): string => {
+    generateAccessToken(payload: TokenPayload): string {
         return jwt.sign(payload, this.JWT_SECRET, { expiresIn: this.ACCESS_TOKEN_EXPIRY });
     }
 

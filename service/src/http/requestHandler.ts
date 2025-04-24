@@ -47,7 +47,7 @@ export class RequestHandler {
 
       const isProtectedRoute = isRouteProtected(instance, handler.action());
       if (isProtectedRoute) {
-        this.routeSecurity.secure(req);
+        this.routeSecurity.secure(req.headers['authorization']);
       }
 
       const body = isMethodWithBody(req.method?.toUpperCase() as Methods) ? await parseRequestBody(req) : undefined;

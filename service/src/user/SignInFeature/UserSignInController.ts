@@ -5,7 +5,6 @@ import {UserSignInDto} from './UserSignInDto';
 import {BadRequestError} from '../../errors/BadRequestError';
 import {UserSignInService} from "./UserSignInService";
 import {Response} from "../../http/Response";
-import {Security} from "../../decorators/Security";
 
 @Controller('/public/sign-in')
 export class UserSignInController {

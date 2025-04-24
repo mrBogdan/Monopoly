@@ -1,6 +1,4 @@
-import http from 'node:http';
 import {TokenExpiredError} from 'jsonwebtoken';
-
 import {ROUTE_SECURITY, RouteSecurity} from "./RouteSecurity";
 import { UnauthorizedError } from "./UnauthorizedError";
 import {JwtTokenService} from "../jwtToken/jwtTokenService"
@@ -11,14 +9,13 @@ export class JwtRouteSecurity implements RouteSecurity
 {
     constructor(private jwtTokenService: JwtTokenService) {
     }
-
-    async secure(req: http.IncomingMessage) {
-        const authHeader = req.headers['authorization'];
-        if (!authHeader || !authHeader.startsWith('Bearer')) {
+    
+    async secure(authorizationHeader?: string) {
+        if (!authorizationHeader || !authorizationHeader.startsWith('Bearer')) {
             throw new UnauthorizedError('Authorization header is required');
         }
 
-        const token = authHeader.split(' ')[1];
+        const token = authorizationHeader.split(' ')[1];
         if (!token) {
             throw new UnauthorizedError('Bearer token is required');
         }
