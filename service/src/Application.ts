@@ -2,25 +2,25 @@ import { Constructor, Container } from './di';
 
 export class Application {
   constructor(
-    private readonly diContainer: Container,
+    private readonly container: Container,
     private readonly modules: Constructor<unknown>[],
   ) {
   }
 
   async run(startup: (container: Container) => Promise<void>): Promise<void> {
     await this.init();
-    await startup(this.diContainer);
+    await startup(this.container);
   }
 
   get<T>(token: Constructor<T> | string | symbol): T {
-    return this.diContainer.resolve(token);
+    return this.container.resolve(token);
   }
 
   async gracefulShutdown(gracefulShutdown: (container: Container) => Promise<void>): Promise<void> {
-    await gracefulShutdown(this.diContainer);
+    await gracefulShutdown(this.container);
   }
 
   private async init() {
-    await this.diContainer.init(this.modules);
+    await this.container.init(this.modules);
   }
 }

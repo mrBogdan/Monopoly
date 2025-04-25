@@ -1,30 +1,35 @@
 import { Server } from 'node:http';
 
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { Client } from 'pg';
 import request from 'supertest';
+import wsRequest from 'superwstest';
 
-import { Application } from '../../../Application';
 import { AppModule } from '../../../AppModule';
-import { Container } from '../../../di';
 import { GameSettings } from '../../../game/GameSettings';
 import { GameType } from '../../../game/GameType';
-import { USER_ID } from '../../../http';
+import { MoveStrategyType } from '../../../game/move';
+import { AUTHORIZATION, USER_ID } from '../../../http';
+import { bearer, Secure } from '../../../secure';
 import { Room, RoomService } from '../../../wss';
-import { getTestConfig } from '../../getTestConfig';
-import { getTestConfigModule } from '../getTestConfigModule';
-import { runTestApp } from '../runTestApp';
+import { runTestApp, TestApp } from '../runTestApp';
+
+jest.setTimeout(15000);
 
 describe('GamePublicController', () => {
-  let app: Application;
+  let app: TestApp;
   let listeningServer: Server;
-  let container: StartedPostgreSqlContainer;
   let roomService: RoomService;
   let client: Client;
+  let token: string;
 
   const USER_ID_1 = 'user1';
   const USER_ID_2 = 'user2';
   const USER_ID_3 = 'user3';
+
+  const gameSettings: GameSettings = {
+    gameType: GameType.USUAL,
+    amountOfPlayers: 2,
+  };
 
   const truncateRooms = async () => {
     const rooms = await roomService.getRooms();
@@ -35,8 +40,7 @@ describe('GamePublicController', () => {
     await client.query('TRUNCATE TABLE users CASCADE');
   };
 
-
-  const verifyRoom = async (roomId: string, userId: string) => {
+  const verifyUserConnectedToRoom = async (roomId: string, userId: string) => {
     const room = await roomService.getRoom(roomId);
 
     expect(room.id).toBe(roomId);
@@ -74,35 +78,17 @@ describe('GamePublicController', () => {
   };
 
   beforeAll(async () => {
-    const postgresContainer = new PostgreSqlContainer();
-    container = await postgresContainer.start();
-    app = await runTestApp([...AppModule, getTestConfigModule(getTestConfig({
-      postgresConfig: {
-        host: container.getHost(),
-        port: container.getMappedPort(5432),
-        user: container.getUsername(),
-        password: container.getPassword(),
-        database: container.getDatabase(),
-      },
-      withMigration: true,
-    }))]);
+    app = await runTestApp(AppModule);
     listeningServer = app.get<Server>(Server);
     roomService = app.get<RoomService>(RoomService);
     client = app.get<Client>(Client);
+    const secure = app.get<Secure>(Secure);
+
+    token = secure.encode({id: USER_ID_1});
   });
 
   afterAll(async () => {
-    await Promise.all([
-      app.gracefulShutdown(async (container: Container) => {
-        const client: Client = container.resolve<Client>(Client);
-        const server: Server = container.resolve<Server>(Server);
-        await Promise.all([
-          client.end(),
-          server.close(),
-        ]);
-      }),
-      container.stop(),
-    ]);
+    await app.gracefulShutdown();
   });
 
   beforeEach(async () => {
@@ -114,13 +100,9 @@ describe('GamePublicController', () => {
 
   it('should create a game and room', async () => {
     await createUser();
-    const gameSettings: GameSettings = {
-      gameType: GameType.USUAL,
-      amountOfPlayers: 2,
-    };
 
     const room = await createGame(gameSettings);
-    await verifyRoom(room.id, USER_ID_1);
+    await verifyUserConnectedToRoom(room.id, USER_ID_1);
   });
 
   it('should join a game', async () => {
@@ -128,19 +110,50 @@ describe('GamePublicController', () => {
       createUser(USER_ID_1),
       createUser(USER_ID_2, 'email@gmail.com'),
     ]);
-    const gameSettings: GameSettings = {
-      gameType: GameType.USUAL,
-      amountOfPlayers: 2,
-    };
 
-    const room = await createGame(gameSettings) as Room;
-    await verifyRoom(room.id, USER_ID_1);
+    const room = await createGame(gameSettings);
+    await verifyUserConnectedToRoom(room.id, USER_ID_1);
 
     await joinRoom(room.id);
     await joinRoom(room.id, USER_ID_2);
-    await verifyRoom(room.id, USER_ID_2);
+    await verifyUserConnectedToRoom(room.id, USER_ID_2);
 
     const updatedRoom = await roomService.getRoom(room.id);
     expect(updatedRoom.users.get(USER_ID_3)).not.toBeDefined();
+  });
+
+  it('should move', async () => {
+    await createUser(USER_ID_1);
+    const room = await createGame(gameSettings);
+    await joinRoom(room.id);
+
+    await wsRequest(listeningServer)
+      .ws('/ws')
+      .set(AUTHORIZATION, bearer(token))
+      .sendJson({
+        type: 'game:move',
+        userId: USER_ID_1,
+        data: {
+          playerId: 1,
+          gameId: room.id,
+        },
+      })
+      .expectJson((actual) => {
+        expect(actual).toEqual({
+          type: 'move',
+          payload: {
+            playerId: 1,
+            moveOutcome: {
+              strategy: MoveStrategyType.TWO_DICE,
+              outcome: {
+                first: expect.any(Number),
+                second: expect.any(Number),
+              },
+            },
+          },
+        });
+      })
+      .close()
+      .expectClosed();
   });
 });

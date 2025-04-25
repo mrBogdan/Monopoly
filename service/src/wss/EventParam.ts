@@ -1,7 +1,7 @@
 import { UNKNOWN_TYPE } from '../decorators/constants';
 import { ClassInstance, ParamInfo } from '../http';
 
-const PARAMS_KEY = Symbol('ActionParams');
+const PARAMS_KEY = Symbol('EventParams');
 
 export function EventParam(param: string) {
   return function (target: object, key: string | symbol, index: number) {
@@ -15,6 +15,6 @@ export function EventParam(param: string) {
   }
 }
 
-export const getActionParams = (instance: ClassInstance, method: string): ParamInfo[] => {
+export const getEventParams = (instance: ClassInstance, method: string): ParamInfo[] => {
   return Reflect.getMetadata(PARAMS_KEY, instance, method);
 }

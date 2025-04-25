@@ -1,16 +1,56 @@
+import { Server } from 'node:http';
+
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { Client } from 'pg';
+
 import { Application } from '../../Application';
-import { ConfigService } from '../../config/ConfigService';
 import { Constructor, Container } from '../../di';
-import { HttpServerModule } from '../../http';
 import { runServer } from '../../runServer';
-import { Secure } from '../../secure';
-import { RoomModule, UserSocketModule, WebSocketServerModule } from '../../wss';
-import { getAnonymousModule } from '../getAnonymousModule';
+import { getTestConfig } from '../getTestConfig';
 
-const SharedModules = [HttpServerModule, WebSocketServerModule, UserSocketModule, RoomModule];
+import { getTestConfigModule } from './getTestConfigModule';
 
-export const runTestApp = async (modules: Constructor[]): Promise<Application> => {
-  const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService, Secure])]);
+export class TestApp extends Application {
+  constructor(container: Container, modules: Constructor[], private postgresContainer: StartedPostgreSqlContainer) {
+    super(container, [...modules, getTestConfigModule(getTestConfig({
+      postgresConfig: {
+        host: postgresContainer.getHost(),
+        port: postgresContainer.getMappedPort(5432),
+        user: postgresContainer.getUsername(),
+        password: postgresContainer.getPassword(),
+        database: postgresContainer.getDatabase(),
+      },
+      withMigration: true,
+    }))]);
+  }
+
+  public static async of(modules: Constructor[]): Promise<TestApp> {
+    const postgresContainer = new PostgreSqlContainer();
+    const startedContainer = await postgresContainer.start();
+
+    return new TestApp(
+      new Container(),
+      modules,
+      startedContainer,
+    );
+  }
+
+  async gracefulShutdown() {
+    await super.gracefulShutdown(async (container: Container) => {
+      const client: Client = container.resolve<Client>(Client);
+      const server: Server = container.resolve<Server>(Server);
+      await Promise.all([
+        client.end(),
+        server.close(),
+      ]);
+    });
+
+    await this.postgresContainer.stop();
+  }
+}
+
+export const runTestApp = async (modules: Constructor[]): Promise<TestApp> => {
+  const app = await TestApp.of(modules);
 
   await app.run(runServer);
 

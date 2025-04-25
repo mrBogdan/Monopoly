@@ -6,3 +6,4 @@ export const Headers = {
 };
 
 export const USER_ID = 'User-Id';
+export const AUTHORIZATION = 'Authorization';

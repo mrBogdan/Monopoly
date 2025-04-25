@@ -7,3 +7,4 @@ export * from './isFileExists';
 export * from './isEmpty';
 export * from './getConfig';
 export * from './getEnv';
+export * from './castToType';

@@ -2,13 +2,13 @@ import { Server } from 'node:http';
 
 import request from 'supertest';
 
+import { AppModule } from '../../AppModule';
 import { Controller, Module, UseErrorMapper } from '../../decorators';
 import { BadRequestError } from '../../errors';
-import { Cookie, Get, Header, Param, Post, QueryParam, RequestBody, Response } from '../../http';
-import { getTestConfig } from '../getTestConfig';
+import { Cookie, Get, Header, HttpServerModule, Param, Post, QueryParam, RequestBody, Response } from '../../http';
+import { RoomModule, UserSocketModule, WebSocketServerModule } from '../../wss';
 
-import { getTestConfigModule } from './getTestConfigModule';
-import { runTestApp } from './runTestApp';
+import { runTestApp, TestApp } from './runTestApp';
 
 
 const USER_1 = 'USER_1';
@@ -118,14 +118,15 @@ class TestModule {
 
 describe('Http server framework tests', () => {
   let listeningServer: Server;
+  let app: TestApp;
 
-  beforeEach(async () => {
-    const app = await runTestApp([TestModule, getTestConfigModule(getTestConfig())]);
+  beforeAll(async () => {
+    app = await runTestApp([TestModule, ...AppModule]);
     listeningServer = app.get<Server>(Server);
   });
 
-  afterEach(() => {
-    listeningServer.close();
+  afterAll(async () => {
+    await app.gracefulShutdown();
   });
 
   describe('Param', () => {

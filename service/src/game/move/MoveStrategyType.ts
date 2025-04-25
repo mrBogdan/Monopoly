@@ -1,3 +1,3 @@
 export enum MoveStrategyType {
-  TWO_DICE
+  TWO_DICE = 'two-dice',
 }

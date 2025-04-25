@@ -4,6 +4,7 @@ import { Injectable } from '../../di';
 
 import { UserSocket } from './UserSocket';
 
+// TODO: need to think about IP sticky user, to stick user to specific server to make scaling possible
 @Injectable()
 export class MemoryUserSocketRepository {
   private userSockets: Map<string, WebSocket> = new Map();

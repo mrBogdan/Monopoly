@@ -1,19 +1,23 @@
-import { Server } from 'node:http';
+import { Server, IncomingMessage } from 'node:http';
 import { parse } from 'node:url';
 
 import { WebSocketServer, WebSocket } from 'ws';
 
-import { Secure } from '../secure';
+import { Container } from '../di';
+import { getBearer, Secure } from '../secure';
 
 import { messageHandler } from './messageHandler';
 import { MemoryUserSocketRepository, UserSocket } from './user-socket';
 import { WsCloseCode } from './WsCloseCode';
 
 type UserInfo = {
-  userId: string;
+  id: string;
 }
 
-export const getWebSocketServer = (server: Server, secure: Secure, userSocketRepository: MemoryUserSocketRepository): WebSocketServer => {
+export const getWebSocketServer = (container: Container): WebSocketServer => {
+  const server = container.resolve<Server>(Server);
+  const userSocketRepository = container.resolve<MemoryUserSocketRepository>(MemoryUserSocketRepository);
+
   const wss = new WebSocketServer({noServer: true});
 
   server.on('upgrade', (request, socket, head) => {
@@ -29,29 +33,12 @@ export const getWebSocketServer = (server: Server, secure: Secure, userSocketRep
 
   wss.on('error', console.error);
 
-  wss.on('connection', (ws, request) => {
+  wss.on('connection', registerUserSocket(container));
+
+  wss.on('connection', (ws) => {
     ws.on('error', console.error);
 
-    const url = parse(request.url ?? '', true);
-    const token = url.query.token as string;
-
-    if (!token) {
-      ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
-      return;
-    }
-
-    let user: UserInfo;
-
-    try {
-      user = secure.verifyAndDecode(token) as UserInfo;
-    } catch {
-      ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
-      return;
-    }
-
-    const userSocket = new UserSocket(user.userId, ws);
-
-    userSocketRepository.addUserSocket(userSocket);
+    ws.on('message', messageHandler(ws, container));
 
     ws.on('close', () => {
       userSocketRepository.removeUserSocket(ws);
@@ -69,3 +56,26 @@ export const getWebSocketServer = (server: Server, secure: Secure, userSocketRep
 
   return wss;
 };
+
+const registerUserSocket = (container: Container) => (ws: WebSocket, request: IncomingMessage) => {
+  const secure = container.resolve<Secure>(Secure);
+  const userSocketRepository = container.resolve<MemoryUserSocketRepository>(MemoryUserSocketRepository);
+
+  const token = getBearer(request.headers['authorization']);
+
+  if (!token) {
+    ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
+    return;
+  }
+
+  let user: UserInfo;
+
+  try {
+    user = secure.verifyAndDecode(token) as UserInfo;
+  } catch {
+    ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));
+    return;
+  }
+
+  userSocketRepository.addUserSocket(new UserSocket(user.id, ws));
+}

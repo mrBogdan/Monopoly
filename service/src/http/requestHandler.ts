@@ -9,6 +9,7 @@ import {
   toJsonError,
   handleProtocolError,
 } from '../errors';
+import { castToType } from '../nodejs';
 
 import { getCookieParams } from './Cookie';
 import { getHeaderParams } from './Header';
@@ -156,19 +157,6 @@ const executeHandler = async (instance: ClassInstance, method: string, requestCo
     .setBody(response)
     .setStatusCode(200)
     .build();
-};
-
-const castToType = (value: unknown, type: string) => {
-  switch (type) {
-    case 'Number':
-      return Number(value);
-    case 'String':
-      return value;
-    case 'Boolean':
-      return value === 'true';
-    default:
-      return value;
-  }
 };
 
 const prepareResponseBody = (body: unknown, contentType: string) => {

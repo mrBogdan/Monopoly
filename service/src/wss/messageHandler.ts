@@ -9,9 +9,10 @@ import {
   handleProtocolError,
 } from '../errors';
 import { ClassInstance } from '../http';
+import { castToType } from '../nodejs';
 
 import { Broadcast } from './Broadcast';
-import { getActionParams } from './EventParam';
+import { getEventParams } from './EventParam';
 import { Reply } from './Reply';
 import { RoomService } from './room';
 import { MemoryUserSocketRepository } from './user-socket';
@@ -27,12 +28,11 @@ export const messageHandler = (ws: WebSocket, container: Container) => async (ms
 
     const hubHandler = router.findHub(action.type);
     const instance = container.resolve<ClassInstance>(hubHandler.hub);
-    const roomService = container.resolve<RoomService>(RoomService);
     const userSocketRepository = container.resolve<MemoryUserSocketRepository>(MemoryUserSocketRepository);
-
     const response = await executeHandler(instance, hubHandler.method, action);
 
     if (response instanceof Broadcast) {
+      const roomService = container.resolve<RoomService>(RoomService);
       const {roomId} = response;
       const room = await roomService.getRoom(roomId);
       const userSockets = userSocketRepository.getUserSockets(room.getUserIds());
@@ -73,17 +73,22 @@ export const messageHandler = (ws: WebSocket, container: Container) => async (ms
 const executeHandler = async (instance: ClassInstance, method: string, action: Action): Promise<WsResponse> => {
   const args: unknown[] = [];
 
-  const params = getActionParams(instance, method);
+  const params = getEventParams(instance, method);
 
   if (params) {
     for (const {index, param, type} of params) {
+      let value;
 
       if (param === 'userId') {
-        args[index] = action.userId;
-        continue;
+        value = action.userId;
+      } else {
+        value = action.data[param];
       }
 
-      const value = action.data[param];
+      if (!value) {
+        throw new BadRequestError(`Missing ${param} parameter`);
+      }
+
       args[index] = castToType(value, type);
     }
   }
@@ -113,17 +118,4 @@ const prepareResponse = (response: unknown): string => {
   }
 
   return JSON.stringify(response);
-};
-
-const castToType = (value: unknown, type: string) => {
-  switch (type) {
-    case 'Number':
-      return Number(value);
-    case 'String':
-      return value;
-    case 'Boolean':
-      return value === 'true';
-    default:
-      return value;
-  }
 };

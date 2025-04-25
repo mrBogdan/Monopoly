@@ -1,4 +1,4 @@
-import { Broadcast, Hub, Subscribe } from '../wss';
+import { Broadcast, EventParam, Hub, Subscribe } from '../wss';
 
 import { GameAction } from './GameAction';
 import { GameService } from './GameService';
@@ -15,7 +15,7 @@ export class GameHub {
   }
 
   @Subscribe(GameAction.MOVE)
-  async go(gameId: string, playerId: number): Promise<Broadcast<MovePayload>> {
+  async go(@EventParam('gameId') gameId: string, @EventParam('playerId') playerId: number): Promise<Broadcast<MovePayload>> {
     const moveOutcome = await this.gameService.move(gameId, playerId);
 
     return new Broadcast(GameAction.MOVE, gameId, {

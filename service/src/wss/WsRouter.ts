@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 
+import { Injectable } from '../di';
 import { NotFoundError } from '../errors';
 
 import { SUBSCRIBE_METADATA_KEY } from './constants';
 import { getHubs, HubHandler } from './Hub';
 
+@Injectable()
 export class WsRouter {
   private hubs: Map<string, object> = new Map();
 
