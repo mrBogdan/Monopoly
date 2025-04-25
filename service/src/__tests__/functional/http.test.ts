@@ -5,8 +5,7 @@ import request from 'supertest';
 import { AppModule } from '../../AppModule';
 import { Controller, Module, UseErrorMapper } from '../../decorators';
 import { BadRequestError } from '../../errors';
-import { Cookie, Get, Header, HttpServerModule, Param, Post, QueryParam, RequestBody, Response } from '../../http';
-import { RoomModule, UserSocketModule, WebSocketServerModule } from '../../wss';
+import { Cookie, Get, Header, Param, Post, QueryParam, RequestBody, Response } from '../../http';
 
 import { runTestApp, TestApp } from './runTestApp';
 

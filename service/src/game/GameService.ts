@@ -31,7 +31,7 @@ export class GameService {
     return this.gameRepository.getGameById(gameId);
   }
 
-  async move(gameId: string, playerId: number): Promise<MoveOutcome<unknown>> {
+  async move(gameId: string): Promise<MoveOutcome<unknown>> {
     const game = await this.findRequiredGame(gameId);
     const moveStrategy = this.moveStrategyFactory.createMoveStrategy(game);
     return moveStrategy.moveOutcome();

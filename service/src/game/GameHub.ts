@@ -16,7 +16,7 @@ export class GameHub {
 
   @Subscribe(GameAction.MOVE)
   async go(@EventParam('gameId') gameId: string, @EventParam('playerId') playerId: number): Promise<Broadcast<MovePayload>> {
-    const moveOutcome = await this.gameService.move(gameId, playerId);
+    const moveOutcome = await this.gameService.move(gameId);
 
     return new Broadcast(GameAction.MOVE, gameId, {
       playerId,
