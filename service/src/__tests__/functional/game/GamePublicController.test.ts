@@ -5,13 +5,11 @@ import { Client } from 'pg';
 import request from 'supertest';
 
 import { Application } from '../../../Application';
+import { AppModule } from '../../../AppModule';
 import { Container } from '../../../di';
-import { GameModule } from '../../../game/GameModule';
 import { GameSettings } from '../../../game/GameSettings';
 import { GameType } from '../../../game/GameType';
 import { USER_ID } from '../../../http';
-import { MigrationModule } from '../../../migrations/MigrationModule';
-import { User, USER_REPOSITORY, UserModule, UserRepository } from '../../../user';
 import { Room, RoomService } from '../../../wss';
 import { getTestConfig } from '../../getTestConfig';
 import { getTestConfigModule } from '../getTestConfigModule';
@@ -78,7 +76,7 @@ describe('GamePublicController', () => {
   beforeAll(async () => {
     const postgresContainer = new PostgreSqlContainer();
     container = await postgresContainer.start();
-    app = await runTestApp([GameModule, UserModule, MigrationModule, getTestConfigModule(getTestConfig({
+    app = await runTestApp([...AppModule, getTestConfigModule(getTestConfig({
       postgresConfig: {
         host: container.getHost(),
         port: container.getMappedPort(5432),
