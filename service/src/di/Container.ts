@@ -16,11 +16,6 @@ import { Stack } from './Stack';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Constructor<T = any> = new (...args: any[]) => T;
 
-// export interface Constructor<T = any> {
-//   new (...args: unknown[]): T;
-//   prototype: T;
-// }
-
 const isToken = (tokenOrInstance?: unknown): boolean => (!!tokenOrInstance && typeof tokenOrInstance === 'string');
 const isInstance = (tokenOrInstance?: unknown): boolean => (!!tokenOrInstance && typeof tokenOrInstance === 'object');
 
