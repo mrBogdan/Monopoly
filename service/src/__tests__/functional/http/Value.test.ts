@@ -1,5 +1,3 @@
-import { Server } from 'node:http';
-
 import { AppModule } from '../../../AppModule';
 import { Module } from '../../../decorators';
 import { Injectable, Value } from '../../../di';
