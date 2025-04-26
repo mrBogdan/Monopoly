@@ -1,5 +1,5 @@
-import { UNKNOWN_TYPE } from '../decorators/constants';
-import { ClassInstance, ParamInfo } from '../http';
+import { UNKNOWN_TYPE, ParamInfo } from '../decorators';
+import { ClassInstance } from '../http';
 
 const PARAMS_KEY = Symbol('EventParams');
 

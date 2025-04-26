@@ -1,16 +1,10 @@
 import 'reflect-metadata';
 
-import { PARAMS_KEY, UNKNOWN_TYPE } from '../decorators/constants';
-
-export type ParamInfo = {
-    index: number;
-    param: string;
-    type: string;
-}
+import { ParamInfo, PARAMS_KEY, UNKNOWN_TYPE } from '../decorators';
 
 export function Param(param: string) {
     return (target: object, key: string, index: number) => {
-        const existingParams = Reflect.getMetadata(PARAMS_KEY, target, key) || [];
+        const existingParams: ParamInfo[] = Reflect.getMetadata(PARAMS_KEY, target, key) || [];
 
         const paramTypes = Reflect.getMetadata('design:paramtypes', target, key);
         const type = paramTypes[index]?.name || UNKNOWN_TYPE;

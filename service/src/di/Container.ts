@@ -7,8 +7,8 @@ import {
   getModuleServices,
   getServiceType,
   ServiceType,
-} from '../decorators/Module';
-import { isEmpty } from '../nodejs/isEmpty';
+} from '../decorators';
+import { isEmpty } from '../nodejs';
 
 import { getInjectParams } from './Inject';
 import { Stack } from './Stack';

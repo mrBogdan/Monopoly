@@ -1,6 +1,4 @@
-import { COOKIES_KEY, UNKNOWN_TYPE } from '../decorators/constants';
-
-import { ParamInfo } from './Param';
+import { COOKIES_KEY, UNKNOWN_TYPE, ParamInfo } from '../decorators';
 
 export function Cookie(cookie: string) {
   return function (target: object, key: string, index: number) {
