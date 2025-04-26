@@ -23,7 +23,6 @@ export class ConfigService {
         if (typeof acc === 'object' && acc !== null && k in acc) {
           return (acc as unknown as Record<string, unknown>)[k];
         }
-        throw new Error(`Key ${key} not found in configuration`);
       }, this.config as unknown);
     } else {
       value = this.config[path as keyof ServiceConfiguration];
@@ -31,6 +30,10 @@ export class ConfigService {
 
     if (value === undefined && defaultValue !== undefined) {
       return defaultValue;
+    }
+
+    if (value === undefined) {
+      throw new Error(`Key ${key} not found in configuration`);
     }
 
     return value;

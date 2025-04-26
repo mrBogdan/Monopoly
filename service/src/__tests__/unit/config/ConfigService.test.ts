@@ -43,4 +43,13 @@ describe('ConfigService', () => {
     const result = configService.get('nested.key:defaultValue');
     expect(result).toEqual('defaultValue');
   });
+
+  it('should throw error for non-existing key', async () => {
+    const config = {};
+    const configService = new ConfigService(config as unknown as ServiceConfiguration);
+
+    expect(() => {
+      configService.get('nonExistingKey');
+    }).toThrow('Key nonExistingKey not found in configuration');
+  });
 });
