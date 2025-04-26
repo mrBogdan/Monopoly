@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { INJECT_PARAM } from './constants';
 
-type InjectParams = {
+export type InjectParams = {
   index: number;
   token: string | symbol;
 }

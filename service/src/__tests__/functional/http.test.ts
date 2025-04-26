@@ -4,17 +4,35 @@ import request from 'supertest';
 
 import { AppModule } from '../../AppModule';
 import { Controller, Module, UseErrorMapper } from '../../decorators';
+import { Injectable, Value } from '../../di';
 import { BadRequestError } from '../../errors';
 import { Cookie, Get, Header, Param, Post, QueryParam, RequestBody, Response } from '../../http';
 
 import { runTestApp, TestApp } from './runTestApp';
 
-
 const USER_1 = 'USER_1';
 
+@Injectable({valueSource: true})
+class ConfigService {
+  get(key: string): unknown {
+    if (key === 'password') {
+      return '5442';
+    }
+
+    return undefined;
+  }
+}
+
 class UserService {
+  constructor(@Value('password') private password: string) {
+  }
+
   getUserById(id: string) {
     return [USER_1].find(user => user === id);
+  }
+
+  getPassword() {
+    return this.password;
   }
 }
 
@@ -110,7 +128,7 @@ class UserController {
 
 @Module({
   controllers: [UserController],
-  services: [UserService],
+  services: [UserService, ConfigService],
 })
 class TestModule {
 }
@@ -244,4 +262,11 @@ describe('Http server framework tests', () => {
       expect(response.body).toEqual(Number(expected));
     })
   });
+
+  describe('Value', () => {
+    it('should inject value from constructor', async () => {
+      const userService = app.get<UserService>(UserService);
+      expect(userService.getPassword()).toEqual('5442');
+    });
+  })
 });
