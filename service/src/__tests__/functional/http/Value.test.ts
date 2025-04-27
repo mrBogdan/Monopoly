@@ -1,7 +1,5 @@
-import { AppModule } from '../../../AppModule';
 import { Module } from '../../../decorators';
-import { Injectable, Value } from '../../../di';
-import { runTestApp, TestApp } from '../runTestApp';
+import { Container, Injectable, Value } from '../../../di';
 
 @Injectable({valueSource: true})
 class ConfigService {
@@ -32,18 +30,18 @@ class TestModule {
 
 
 describe('Value', () => {
-  let app: TestApp;
+  const container = new Container();
 
   beforeAll(async () => {
-    app = await runTestApp([TestModule, ...AppModule]);
+    await container.init([TestModule]);
   });
 
   afterAll(async () => {
-    await app.gracefulShutdown();
+
   });
 
   it('should inject value from constructor', async () => {
-    const userService = app.get<UserService>(UserService);
+    const userService = container.resolve<UserService>(UserService);
     expect(userService.getPassword()).toEqual('5442');
   });
 })

@@ -4,8 +4,7 @@ import request from 'supertest';
 import wsRequest from 'superwstest';
 
 import { AppModule } from '../../AppModule';
-import { AUTHORIZATION } from '../../http';
-import { bearer, Secure } from '../../secure';
+import { Secure } from '../../secure';
 import { getTestConfig } from '../getTestConfig';
 
 import { getTestConfigModule } from './getTestConfigModule';
@@ -46,8 +45,7 @@ describe('Health', () => {
 
   it('should ping pong on ws', async () => {
     await wsRequest(listeningServer)
-      .ws('/ws')
-      .set(AUTHORIZATION, bearer(token))
+      .ws('/ws?token=' + token)
       .sendJson({type: 'ping'})
       .expectJson({type: 'ping', message: 'pong'})
       .close()
@@ -57,8 +55,7 @@ describe('Health', () => {
   it('should return 404 on ws type not found', async () => {
     const type = 'incorrect-type';
     await wsRequest(listeningServer)
-      .ws('/ws')
-      .set(AUTHORIZATION, bearer(token))
+      .ws('/ws?token=' + token)
       .sendJson({type})
       .expectJson({message: 'Not Found', status: 404, reason: `Hub "${type}" not found`})
       .close()
@@ -76,8 +73,7 @@ describe('Health', () => {
   it('should reject connection with invalid token', async () => {
     const invalidToken = token.replace('e', 'k');
     await wsRequest(listeningServer)
-      .ws('/ws')
-      .set(AUTHORIZATION, bearer(invalidToken))
+      .ws('/ws?token=' + invalidToken)
       .expectClosed(1008, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}))
       .close()
       .expectClosed();

@@ -3,7 +3,7 @@ import { Constructor, Container } from './di';
 export class Application {
   constructor(
     private readonly container: Container,
-    private readonly modules: Constructor<unknown>[],
+    private readonly modules: Constructor[],
   ) {
   }
 
@@ -12,7 +12,7 @@ export class Application {
     await startup(this.container);
   }
 
-  get<T>(token: Constructor<T> | string | symbol): T {
+  get<T>(token: Constructor | string | symbol): T {
     return this.container.resolve(token);
   }
 

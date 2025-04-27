@@ -1,5 +1,5 @@
 import { UNKNOWN_TYPE, ParamInfo } from '../decorators';
-import { ClassInstance } from '../http';
+import { ClassInstance } from '../di';
 
 const PARAMS_KEY = Symbol('EventParams');
 

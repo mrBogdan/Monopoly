@@ -8,8 +8,8 @@ import { AppModule } from '../../../AppModule';
 import { GameSettings } from '../../../game/GameSettings';
 import { GameType } from '../../../game/GameType';
 import { MoveStrategyType } from '../../../game/move';
-import { AUTHORIZATION, USER_ID } from '../../../http';
-import { bearer, Secure } from '../../../secure';
+import { USER_ID } from '../../../http';
+import { Secure } from '../../../secure';
 import { Room, RoomService } from '../../../wss';
 import { runTestApp, TestApp } from '../runTestApp';
 
@@ -128,8 +128,7 @@ describe('GamePublicController', () => {
     await joinRoom(room.id);
 
     await wsRequest(listeningServer)
-      .ws('/ws')
-      .set(AUTHORIZATION, bearer(token))
+      .ws('/ws?token=' + token)
       .sendJson({
         type: 'game:move',
         userId: USER_ID_1,

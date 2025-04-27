@@ -24,7 +24,7 @@ const isInstance = (tokenOrInstance?: unknown): boolean => (!!tokenOrInstance &&
 export class Container {
   private services: Map<unknown, unknown> = new Map();
 
-  register<T>(target: Constructor<T>, tokenOrInstance?: string | object): void {
+  register(target: Constructor, tokenOrInstance?: string | object): void {
     if (isToken(tokenOrInstance)) {
       if (!this.services.has(tokenOrInstance)) {
         this.services.set(tokenOrInstance, new target(...this.resolveDependencies(target)));
