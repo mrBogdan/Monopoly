@@ -221,6 +221,6 @@ describe('ContainerInit', () => {
       expect(repository).toBeInstanceOf(UserRepository);
       expect(await repository.getUser()).toBe('db');
     });
-  })
+  });
 
 });

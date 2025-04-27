@@ -200,7 +200,7 @@ export class Container {
         }
 
         if (!value) {
-          console.warn(`Could not find dependency ${(key as Constructor).toString()}`);
+          throw new Error(`${(key as Constructor).toString()} is not resolved`);
         }
 
         switch (getServiceType(value)) {
@@ -253,8 +253,13 @@ export class Container {
             }
 
             const notResolvedDependencies = dependencies.filter((dep: unknown) => {
-              if (isPrimitive(dep)) {
+              const isInjectedParam = injectParams?.some(({token}) => token === dep);
+              if (isPrimitive(dep) && !isInjectedParam) {
                 return false;
+              }
+
+              if (isInjectedParam && !injectables.get(dep)) {
+                return true;
               }
 
               return !isResolved(injectables.get(dep));
