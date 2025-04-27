@@ -21,23 +21,17 @@ class UserService {
   }
 }
 
-
 @Module({
   services: [UserService, ConfigService],
 })
 class TestModule {
 }
 
-
 describe('Value', () => {
   const container = new Container();
 
   beforeAll(async () => {
     await container.init([TestModule]);
-  });
-
-  afterAll(async () => {
-
   });
 
   it('should inject value from constructor', async () => {
