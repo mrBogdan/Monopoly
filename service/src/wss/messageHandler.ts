@@ -1,14 +1,13 @@
 import { WebSocket } from 'ws';
 
 import { Action } from '../action/Action';
-import { Container } from '../di';
+import { ClassInstance, Container } from '../di';
 import {
   BadRequestError,
   handleBusinessError,
   toJsonError,
   handleProtocolError,
 } from '../errors';
-import { ClassInstance } from '../http';
 import { castToType } from '../nodejs';
 
 import { Broadcast } from './Broadcast';
@@ -59,6 +58,7 @@ export const messageHandler = (ws: WebSocket, container: Container) => async (ms
 
     return;
   } catch (error) {
+    console.error(error);
     const protocolError = handleProtocolError(error);
 
     if (protocolError) {
@@ -82,7 +82,7 @@ const executeHandler = async (instance: ClassInstance, method: string, action: A
       if (param === 'userId') {
         value = action.userId;
       } else {
-        value = action.data[param];
+        value = action?.data[param];
       }
 
       if (!value) {

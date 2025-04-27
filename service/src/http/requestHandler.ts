@@ -1,8 +1,8 @@
 import http from 'node:http';
 import { parse } from 'node:url';
 
-import { getErrorMapper } from '../decorators/UseErrorMapper';
-import { Container } from '../di';
+import { getErrorMapper } from '../decorators';
+import { ClassInstance, Container } from '../di';
 import {
   BadRequestError,
   handleBusinessError,
@@ -28,8 +28,6 @@ type RequestContext = {
   query?: Record<string, string>;
   headers?: Record<string, string>;
 };
-
-export type ClassInstance = { [key: string]: CallableFunction };
 
 export const requestHandler = (container: Container) => async (req: http.IncomingMessage, res: http.ServerResponse) => {
   const router = container.resolve<Router>(Router);

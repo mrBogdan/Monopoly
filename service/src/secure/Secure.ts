@@ -1,15 +1,10 @@
 import jwt from 'jsonwebtoken';
 
-import { CONFIG } from '../config/ConfigService';
-import { ServiceConfiguration } from '../config/ServiceConfiguration';
-import { Inject, Injectable } from '../di';
+import { Injectable, Value } from '../di';
 
 @Injectable()
 export class Secure {
-  private readonly key: string;
-
-  constructor(@Inject(CONFIG) config: ServiceConfiguration) {
-    this.key = config['jwtSecret'] as string;
+  constructor(@Value('jwtSecret') private key: string) {
   }
 
   verifyAndDecode(token: string, options?: object): unknown {

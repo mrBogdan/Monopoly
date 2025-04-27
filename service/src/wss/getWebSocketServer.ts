@@ -61,7 +61,8 @@ const registerUserSocket = (container: Container) => (ws: WebSocket, request: In
   const secure = container.resolve<Secure>(Secure);
   const userSocketRepository = container.resolve<MemoryUserSocketRepository>(MemoryUserSocketRepository);
 
-  const token = getBearer(request.headers['authorization']);
+  const url = parse(request.url ?? '', true);
+  const token = getBearer(url.query?.token as string);
 
   if (!token) {
     ws.close(WsCloseCode.PolicyViolation, JSON.stringify({message: 'Unauthorized', status: 401, reason: 'Invalid token'}));

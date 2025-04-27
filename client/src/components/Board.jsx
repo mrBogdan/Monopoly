@@ -13,14 +13,28 @@ const Board = () => {
     const [popupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
-        const ws = new WebSocket('ws://127.0.0.1:8080/ws');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiIxMjMiLCJpYXQiOjE1MTYyMzkwMjJ9.mg9J98D_GA0pWNoLyKNAW5BDYKJ_CtFOv13APAvyfDI';
+        const ws = new WebSocket('ws://127.0.0.1:8080/ws?token=' + token);
 
         ws.addEventListener('open', () => {
             console.log('WebSocket Client Connected');
+        });
+
+        ws.addEventListener('close', () => {
+            console.log('WebSocket Client Disconnected');
         })
 
         ws.addEventListener('message', (event) => {
-            console.log(JSON.parse(event.data));
+            const parsedMessage = JSON.parse(event.data);
+            console.log({parsedMessage});
+
+            switch (parsedMessage.type) {
+                case 'game:move':
+                    console.log('Player moved:', parsedMessage);
+                    break;
+                default:
+                    console.log('Unknown message:', event.data);
+            }
         });
 
         setSocket(ws);
@@ -33,7 +47,20 @@ const Board = () => {
     const sendMessage = (message) => {
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify(message));
+        } else {
+            console.error('WebSocket is not open. Unable to send message:', message);
         }
+    }
+
+    const move = (playerId, gameId) => {
+        const message = {
+            type: 'game:move',
+            data: {
+                playerId,
+                gameId
+            }
+        };
+        sendMessage(message);
     }
 
   return (
@@ -128,6 +155,7 @@ const Board = () => {
       <PropertyTile id="t35" name="Pepsi" price="Pay $100" />
       <PropertyTile id="t36" name="Fanta" price="$400" />
         <button onClick={() => setPopupVisible(true)}>Send</button>
+        <button onClick={() => move(1, '123')}>Send</button>
         <Popup show={popupVisible} onClose={() => setPopupVisible(false)} onConfirm={() => setPopupVisible(false)}/>
     </div>
   );

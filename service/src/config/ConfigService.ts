@@ -1,9 +1,10 @@
-import { Inject } from '../di';
+import { Inject, Injectable } from '../di';
 
 import { ServiceConfiguration } from './ServiceConfiguration';
 
 export const CONFIG = Symbol('Config');
 
+@Injectable({valueSource: true})
 export class ConfigService {
   constructor(@Inject(CONFIG) private readonly config: ServiceConfiguration) {
   }
