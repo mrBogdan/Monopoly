@@ -6,7 +6,7 @@ import { Router } from '../../http/router/Router';
 import { ConfigService } from '../../config/ConfigService';
 import { getMessageHandler } from '../../wss/getMessageHandler';
 import { injectWebSocketServer } from '../../wss/injectWebSocketServer';
-import { RequestHandler } from '../../http/requestHandler';
+import { RequestHandler } from '../../http/RequestHandler';
 import { Application } from '../../Application';
 import { HttpServerModule } from '../../http/HttpServerModule';
 import { WebSocketServerModule } from '../../wss/WebSocketServerModule';

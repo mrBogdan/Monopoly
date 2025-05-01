@@ -5,6 +5,7 @@ import {UserSignInDto} from './UserSignInDto';
 import {BadRequestError} from '../../errors/BadRequestError';
 import {UserSignInService} from "./UserSignInService";
 import {Response} from "../../http/Response";
+import {Security} from "../../decorators/Security";
 
 @Controller('/public/sign-in')
 export class UserSignInController {
@@ -12,7 +13,7 @@ export class UserSignInController {
     }
 
     @Post()
-    async singIn(@RequestBody() userSignInDto: UserSignInDto): Promise<Response> {
+    async signIn(@RequestBody() userSignInDto: UserSignInDto): Promise<Response> {
         this.validateUserRegistrationDto(userSignInDto as unknown as Record<string, unknown>);
         const signInResult = await this.userService.signIn(userSignInDto);
 

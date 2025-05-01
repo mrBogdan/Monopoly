@@ -1,7 +1,7 @@
 import {TokenExpiredError} from 'jsonwebtoken';
 import {ROUTE_SECURITY, RouteSecurity} from "./RouteSecurity";
 import { UnauthorizedError } from "./UnauthorizedError";
-import {JwtTokenService} from "../jwtToken/jwtTokenService"
+import {JwtTokenService} from "../jwtToken/JwtTokenService"
 import {Injectable} from "../di/Injectable";
 
 @Injectable()
@@ -9,19 +9,19 @@ export class JwtRouteSecurity implements RouteSecurity
 {
     constructor(private jwtTokenService: JwtTokenService) {
     }
-    
-    async secure(authorizationHeader?: string) {
-        if (!authorizationHeader || !authorizationHeader.startsWith('Bearer')) {
+
+    async secure(token?: string) {
+        if (!token || !token.startsWith('Bearer')) {
             throw new UnauthorizedError('Authorization header is required');
         }
 
-        const token = authorizationHeader.split(' ')[1];
-        if (!token) {
+        const tokenHash = token.split(' ')[1];
+        if (!tokenHash) {
             throw new UnauthorizedError('Bearer token is required');
         }
 
         try {
-            this.jwtTokenService.verifyToken(token);
+            this.jwtTokenService.verifyToken(tokenHash);
         } catch (err) {
             if (err instanceof TokenExpiredError) {
                 throw new UnauthorizedError('Token expired');

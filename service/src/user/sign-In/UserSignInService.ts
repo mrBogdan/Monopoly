@@ -3,7 +3,7 @@ import {Hasher} from '../../hasher/Hasher';
 import {Inject} from '../../di/Inject';
 import {UserSignInDto} from "./UserSignInDto";
 import {UserCredentialsNotFoundError} from "./UserCredentialsNotFoundError";
-import {JwtTokenService} from "../../jwtToken/jwtTokenService";
+import {JwtTokenService} from "../../jwtToken/JwtTokenService";
 import {SignInResult} from "./SignInResult";
 import {Injectable} from "../../di/Injectable";
 

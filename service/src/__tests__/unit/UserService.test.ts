@@ -1,9 +1,9 @@
-import { UserSignUpService } from '../../user/SignUpFeature/UserSignUpService';
+import { UserSignUpService } from '../../user/sign-up/UserSignUpService';
 import { UserRepository } from '../../user/UserRepository';
 import { User } from '../../user/User';
 import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { Hasher } from '../../hasher/Hasher';
-import { UserSignUpDto } from '../../user/SignUpFeature/UserSignUpDto';
+import { UserSignUpDto } from '../../user/sign-up/UserSignUpDto';
 
 describe('UserService', () => {
   let userRepository: jest.Mocked<UserRepository>;

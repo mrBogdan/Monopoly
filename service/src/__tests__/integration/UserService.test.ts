@@ -1,8 +1,8 @@
-import { UserSignUpService } from '../../user/SignUpFeature/UserSignUpService';
+import { UserSignUpService } from '../../user/sign-up/UserSignUpService';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { Hasher } from '../../hasher/Hasher';
-import { UserSignUpDto } from '../../user/SignUpFeature/UserSignUpDto';
+import { UserSignUpDto } from '../../user/sign-up/UserSignUpDto';
 import { UserEmailAlreadyExistsError } from '../../user/UserEmailAlreadyExistsError';
 import { UserRepeatedPasswordWrongError } from '../../user/UserRepeatedPasswordWrongError';
 import { TestDatabase } from './TestDatabase';

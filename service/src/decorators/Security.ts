@@ -7,8 +7,7 @@ type RequestBodyParam = {
   type: string;
 }
 export function Security() {
-  // eslint-disable-next-line
-  return function (target: object, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: object, propertyKey: string) {
     Reflect.defineMetadata(SECURE_PARAM, true, target, propertyKey)
 
     return target;

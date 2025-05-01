@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { JwtTokenService } from '../../jwtToken/jwtTokenService';
-import { TokenPayload } from '../../jwtToken/tokenPayload';
+import { JwtTokenService } from '../../jwtToken/JwtTokenService';
+import { TokenPayload } from '../../jwtToken/TokenPayload';
 
 jest.mock('jsonwebtoken');
 

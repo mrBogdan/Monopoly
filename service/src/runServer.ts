@@ -4,7 +4,7 @@ import { WebSocketServer } from 'ws';
 import { Container } from './di/Container';
 import { Router } from './http/router/Router';
 import { ConfigService } from './config/ConfigService';
-import { RequestHandler } from './http/requestHandler';
+import { RequestHandler } from './http/RequestHandler';
 import { getMessageHandler } from './wss/getMessageHandler';
 import { injectWebSocketServer } from './wss/injectWebSocketServer';
 import { JwtRouteSecurity } from "./security/JwtRouteSecurity";
