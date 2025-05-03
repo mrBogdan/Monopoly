@@ -1,12 +1,13 @@
-import { UserSignUpService } from './UserSignUpService';
 import { Controller } from '../../decorators/Controller';
 import { Post } from '../../decorators/Post';
 import { RequestBody } from '../../decorators/RequestBody';
-import { UserSignUpDto } from './UserSignUpDto';
 import { UseErrorMapper } from '../../decorators/UseErrorMapper';
-import { UserEmailAlreadyExistsError } from '../UserEmailAlreadyExistsError';
 import { BadRequestError } from '../../errors/BadRequestError';
+import { UserEmailAlreadyExistsError } from '../UserEmailAlreadyExistsError';
 import { UserResponse } from '../UserResponse';
+
+import { UserSignUpDto } from './UserSignUpDto';
+import { UserSignUpService } from './UserSignUpService';
 
 @UseErrorMapper(new Map([
   [UserEmailAlreadyExistsError, BadRequestError],

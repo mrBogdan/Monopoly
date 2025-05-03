@@ -1,8 +1,10 @@
 import {TokenExpiredError} from 'jsonwebtoken';
-import {ROUTE_SECURITY, RouteSecurity} from "./RouteSecurity";
-import { UnauthorizedError } from "./UnauthorizedError";
-import {JwtTokenService} from "../jwtToken/JwtTokenService"
-import {Injectable} from "../di/Injectable";
+
+import {Injectable} from '../di/Injectable';
+import {JwtTokenService} from '../jwtToken/JwtTokenService'
+
+import {ROUTE_SECURITY, RouteSecurity} from './RouteSecurity';
+import { UnauthorizedError } from './UnauthorizedError';
 
 @Injectable()
 export class JwtRouteSecurity implements RouteSecurity

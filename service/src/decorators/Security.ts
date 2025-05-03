@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {SECURE_PARAM} from "./constants";
+import {SECURE_PARAM} from './constants';
 
 type RequestBodyParam = {
   index: number;

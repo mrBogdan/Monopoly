@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
 import { SECURE_PARAM } from '../../../decorators/constants';
-import { Security } from "../../../decorators/Security";
-import { Get } from "../../../decorators/Get";
+import { Get } from '../../../decorators/Get';
+import { Security } from '../../../decorators/Security';
 
 class Shape {
     @Get('/color')

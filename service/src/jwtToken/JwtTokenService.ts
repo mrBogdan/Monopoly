@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
-import {TokenPayload} from "./TokenPayload";
-import {ConfigService} from "../config/ConfigService";
-import {Injectable} from "../di/Injectable";
+
+import {ConfigService} from '../config/ConfigService';
+import {Injectable} from '../di/Injectable';
+
+import {TokenPayload} from './TokenPayload';
 
 @Injectable()
 export class JwtTokenService {

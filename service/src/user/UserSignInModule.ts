@@ -1,11 +1,14 @@
+import {ConfigService, getConfigValue} from '../config/ConfigService';
 import { Module } from '../decorators/Module';
-import { UserSignInController } from './sign-In/UserSignInController';
-import {UserSignInService} from "./sign-In/UserSignInService";
-import {JwtTokenService} from "../jwtToken/JwtTokenService";
 import {Hasher} from '../hasher/Hasher';
+import {JwtTokenService} from '../jwtToken/JwtTokenService';
+import {getConfig} from '../nodejs/getConfig';
+
 import { POSTGRES_USER_REPOSITORY } from './PostgresUserRepository';
-import {ConfigService, getConfigValue} from "../config/ConfigService";
-import {getConfig} from "../nodejs/getConfig";
+import { UserSignInController } from './sign-In/UserSignInController';
+import {UserSignInService} from './sign-In/UserSignInService';
+
+
 
 @Module({
   controllers: [UserSignInController],

@@ -1,11 +1,14 @@
-import {USER_REPOSITORY, UserRepository} from '../UserRepository';
-import {Hasher} from '../../hasher/Hasher';
 import {Inject} from '../../di/Inject';
-import {UserSignInDto} from "./UserSignInDto";
-import {UserCredentialsNotFoundError} from "./UserCredentialsNotFoundError";
-import {JwtTokenService} from "../../jwtToken/JwtTokenService";
-import {SignInResult} from "./SignInResult";
-import {Injectable} from "../../di/Injectable";
+import {Injectable} from '../../di/Injectable';
+import {Hasher} from '../../hasher/Hasher';
+import {JwtTokenService} from '../../jwtToken/JwtTokenService';
+import {USER_REPOSITORY, UserRepository} from '../UserRepository';
+
+import {SignInResult} from './SignInResult';
+import {UserCredentialsNotFoundError} from './UserCredentialsNotFoundError';
+import {UserSignInDto} from './UserSignInDto';
+
+
 
 @Injectable()
 export class UserSignInService {

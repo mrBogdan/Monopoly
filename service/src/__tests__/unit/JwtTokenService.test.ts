@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+
 import { JwtTokenService } from '../../jwtToken/JwtTokenService';
 import { TokenPayload } from '../../jwtToken/TokenPayload';
 
