@@ -5,7 +5,6 @@ import { WebSocketServer } from 'ws';
 import { ConfigService } from './config/ConfigService';
 import { RequestHandler } from './http/RequestHandler';
 import { Container } from './di/Container';
-import { requestHandler } from './http/requestHandler';
 import { Router } from './http/router/Router';
 import { getMessageHandler } from './wss/getMessageHandler';
 import { injectWebSocketServer } from './wss/injectWebSocketServer';

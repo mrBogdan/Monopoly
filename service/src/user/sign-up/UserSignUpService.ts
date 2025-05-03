@@ -1,21 +1,12 @@
-import { USER_REPOSITORY, UserRepository } from '../UserRepository';
+import { UserSignUpDto } from './UserSignUpDto';
+import { UserResponse } from '../UserResponse';
+import { Inject } from '../../di/Inject';
+import { Hasher } from '../../hasher/Hasher';
+import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { User } from '../User';
 import { UserEmailAlreadyExistsError } from '../UserEmailAlreadyExistsError';
 import { UserRepeatedPasswordWrongError } from '../UserRepeatedPasswordWrongError';
-import { Hasher } from '../../hasher/Hasher';
-import { IdGenerator } from '../../idGenerator/IdGenerator';
-import { UserSignUpDto } from './UserSignUpDto';
-import { Inject } from '../../di/Inject';
-import { UserResponse } from '../UserResponse';
-import { Inject } from '../di/Inject';
-import { Hasher } from '../hasher/Hasher';
-import { IdGenerator } from '../idGenerator/IdGenerator';
-import { User } from './User';
-import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
-import { UserRegistrationDto } from './UserRegistrationDto';
-import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError';
-import { USER_REPOSITORY, UserRepository } from './UserRepository';
-import { UserResponse } from './UserResponse';
+import { USER_REPOSITORY, UserRepository } from '../UserRepository';
 
 export class UserSignUpService {
   constructor(
