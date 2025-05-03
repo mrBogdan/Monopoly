@@ -1,5 +1,6 @@
-import { actionAdapters, actions } from './actionAdapters';
 import { NotFoundError } from '../errors/NotFoundError';
+
+import { actionAdapters, actions } from './actionAdapters';
 
 export const actionFactory = (type: string): CallableFunction => {
   if (!type.includes(':')) {

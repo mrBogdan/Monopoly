@@ -1,5 +1,5 @@
-import { Player } from './Player';
 import { GameType } from './GameType';
+import { Player } from './Player';
 
 export interface GameCandidate {
   gameType: GameType;

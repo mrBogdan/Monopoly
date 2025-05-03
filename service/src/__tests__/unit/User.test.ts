@@ -1,5 +1,5 @@
-import { User } from '../../user/User';
 import { InvalidEmailError } from '../../decorators/InvalidEmailError';
+import { User } from '../../user/User';
 
 describe('User', () => {
   it('should be valid email', () => {

@@ -1,7 +1,7 @@
 import { BadRequestError } from './BadRequestError';
-import { NotFoundError } from './NotFoundError';
 import { ForbiddenError } from './ForbiddenError';
 import { MethodNotAllowedError } from './MethodNotAllowedError';
+import { NotFoundError } from './NotFoundError';
 
 export const errors = [
   BadRequestError,

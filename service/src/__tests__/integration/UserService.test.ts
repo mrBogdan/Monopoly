@@ -1,12 +1,17 @@
 import { UserSignUpService } from '../../user/sign-up/UserSignUpService';
 import { PostgresUserRepository } from '../../user/PostgresUserRepository';
+import { Hasher } from '../../hasher/Hasher';
 import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { Hasher } from '../../hasher/Hasher';
 import { UserSignUpDto } from '../../user/sign-up/UserSignUpDto';
+import { PostgresUserRepository } from '../../user/PostgresUserRepository';
 import { UserEmailAlreadyExistsError } from '../../user/UserEmailAlreadyExistsError';
+import { UserRegistrationDto } from '../../user/UserRegistrationDto';
 import { UserRepeatedPasswordWrongError } from '../../user/UserRepeatedPasswordWrongError';
-import { TestDatabase } from './TestDatabase';
 import { UserResponse } from '../../user/UserResponse';
+import { UserService } from '../../user/UserService';
+
+import { TestDatabase } from './TestDatabase';
 
 jest.setTimeout(15000);
 

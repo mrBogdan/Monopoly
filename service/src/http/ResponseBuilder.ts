@@ -1,6 +1,7 @@
-import { Response } from './Response';
 import { capitalize } from '../nodejs/capitalize';
 import { isBoolean } from '../nodejs/isBoolean';
+
+import { Response } from './Response';
 
 interface CookieParam {
   sameSite?: 'Strict' | 'Lax' | 'None';

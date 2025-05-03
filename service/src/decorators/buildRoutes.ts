@@ -1,7 +1,8 @@
-import { getControllers } from './Controller';
-import { METHOD_KEY, PATH_KEY } from './constants';
-import { delimiter } from '../http/router/constants';
 import { Methods } from '../http/Methods';
+import { delimiter } from '../http/router/constants';
+
+import { METHOD_KEY, PATH_KEY } from './constants';
+import { getControllers } from './Controller';
 
 export const buildRoutes = (callback: (path: string, method: Methods, Class: unknown, action: string) => void) => {
   const controllers = getControllers();

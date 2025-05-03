@@ -1,6 +1,6 @@
+import { Monopoly } from '../../tile/Monopoly';
 import { createMonopolyReward } from '../../tile/MonopolyReward';
 import { TileType } from '../../tile/TileType';
-import { Monopoly } from '../../tile/Monopoly';
 import { UpgradableMonopolyTile } from '../../tile/UpgradableMonopolyTile';
 
 export const nokia: UpgradableMonopolyTile = {

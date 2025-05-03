@@ -1,6 +1,6 @@
+import { Application } from './Application';
 import { AppModule } from './AppModule';
 import { getGlobalContainer } from './di/globalContainer';
-import { Application } from './Application';
 import { isDevelopment, isProduction } from './nodejs/getEnv';
 import { runServer } from './runServer';
 

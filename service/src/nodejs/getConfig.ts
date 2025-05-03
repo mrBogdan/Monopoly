@@ -1,7 +1,8 @@
 import { ServiceConfiguration } from '../config/ServiceConfiguration';
+
 import { isDevelopment } from './getEnv';
-import { toNumber } from './toNumber';
 import { toBoolean } from './toBoolean';
+import { toNumber } from './toNumber';
 
 export const getConfig = (override: Partial<ServiceConfiguration> = {}): ServiceConfiguration => {
   if (isDevelopment()) {
