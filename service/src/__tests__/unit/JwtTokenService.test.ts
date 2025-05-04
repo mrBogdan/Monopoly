@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import { JwtTokenService } from '../../jwtToken/JwtTokenService';
 import { TokenPayload } from '../../jwtToken/TokenPayload';
+import { getTestConfig } from '../../nodejs/getTestConfig';
 
 jest.mock('jsonwebtoken');
 
@@ -14,7 +15,7 @@ describe('JwtTokenService', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         process.env.JWT_SECRET = mockSecret;
-        jwtTokenService = new JwtTokenService();
+        jwtTokenService = new JwtTokenService(getTestConfig());
     });
 
     afterAll(() => {
