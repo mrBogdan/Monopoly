@@ -4,8 +4,9 @@ import { WebSocketServer } from 'ws';
 
 import { ConfigService } from './config/ConfigService';
 import { Container } from './di/Container';
-import { requestHandler } from './http/requestHandler';
+import { RequestHandler } from './http/RequestHandler';
 import { Router } from './http/router/Router';
+import { JwtRouteSecurity } from './security/JwtRouteSecurity';
 import { getMessageHandler } from './wss/getMessageHandler';
 import { injectWebSocketServer } from './wss/injectWebSocketServer';
 
@@ -15,9 +16,13 @@ export const runServer = async (container: Container) => {
   const wss = container.resolve<WebSocketServer>(WebSocketServer);
   const router = container.resolve<Router>(Router);
   const config: ConfigService = container.resolve<ConfigService>(ConfigService);
+  const routeSecurity: JwtRouteSecurity = container.resolve<JwtRouteSecurity>(JwtRouteSecurity);
   injectWebSocketServer(server, wss);
 
-  server.on('request', requestHandler(router, container));
+  const requestHandler = new RequestHandler(router, container, routeSecurity);
+
+  server.on('request', (req, res) => requestHandler.handle(req, res));
+
   wss.on('connection', ws => {
     ws.on('message', getMessageHandler(ws));
   });

@@ -1,22 +1,22 @@
-import { Inject } from '../di/Inject';
-import { Hasher } from '../hasher/Hasher';
-import { IdGenerator } from '../idGenerator/IdGenerator';
+import { Inject } from '../../di/Inject';
+import { Hasher } from '../../hasher/Hasher';
+import { IdGenerator } from '../../idGenerator/IdGenerator';
+import { User } from '../User';
+import { UserEmailAlreadyExistsError } from '../UserEmailAlreadyExistsError';
+import { UserRepeatedPasswordWrongError } from '../UserRepeatedPasswordWrongError';
+import { USER_REPOSITORY, UserRepository } from '../UserRepository';
+import { UserResponse } from '../UserResponse';
 
-import { User } from './User';
-import { UserEmailAlreadyExistsError } from './UserEmailAlreadyExistsError';
-import { UserRegistrationDto } from './UserRegistrationDto';
-import { UserRepeatedPasswordWrongError } from './UserRepeatedPasswordWrongError';
-import { USER_REPOSITORY, UserRepository } from './UserRepository';
-import { UserResponse } from './UserResponse';
+import { UserSignUpDto } from './UserSignUpDto';
 
-export class UserService {
+export class UserSignUpService {
   constructor(
     private userIdGenerator: IdGenerator,
     @Inject(USER_REPOSITORY) private userRepository: UserRepository,
     private userPasswordHasher: Hasher,
   ) {}
 
-  async register(userRegistrationDataDto: UserRegistrationDto): Promise<UserResponse> {
+  async register(userRegistrationDataDto: UserSignUpDto): Promise<UserResponse> {
     const {name, email, password, repeatedPassword} = userRegistrationDataDto;
     if (await this.isEmailExists(email)) {
       throw new UserEmailAlreadyExistsError(email);

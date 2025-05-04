@@ -6,15 +6,17 @@ import { Application } from '../../Application';
 import { ConfigService } from '../../config/ConfigService';
 import { Constructor, Container } from '../../di/Container';
 import { HttpServerModule } from '../../http/HttpServerModule';
-import { requestHandler } from '../../http/requestHandler';
+import { RequestHandler } from '../../http/RequestHandler';
 import { Router } from '../../http/router/Router';
+import {JwtRouteSecurity} from '../../security/JwtRouteSecurity';
+import { SecurityModule } from '../../security/SecurityModule';
 import { getMessageHandler } from '../../wss/getMessageHandler';
 import { injectWebSocketServer } from '../../wss/injectWebSocketServer';
 import { WebSocketServerModule } from '../../wss/WebSocketServerModule';
 import { getAnonymousModule } from '../getAnonymousModule';
 
 
-const SharedModules = [HttpServerModule, WebSocketServerModule]
+const SharedModules = [HttpServerModule, WebSocketServerModule, SecurityModule]
 
 export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Application> => {
   const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService])]);
@@ -25,9 +27,11 @@ export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Appli
     const router = container.resolve<Router>(Router);
     const config: ConfigService = container.resolve<ConfigService>(ConfigService);
     const wss = container.resolve<WebSocketServer>(WebSocketServer);
+    const routeSecurity: JwtRouteSecurity = container.resolve<JwtRouteSecurity>(JwtRouteSecurity);
     injectWebSocketServer(server, wss);
 
-    server.on('request', requestHandler(router, container));
+    const requestHandler = new RequestHandler(router, container, routeSecurity);
+    server.on('request', (req, res) => requestHandler.handle(req, res));
 
     wss.on('connection', ws => {
       ws.on('message', getMessageHandler(ws));

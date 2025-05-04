@@ -1,6 +1,7 @@
 import { ServiceConfiguration } from '../config/ServiceConfiguration';
 
 export const getTestConfig = (override = {}): ServiceConfiguration => ({
+  jwtSecret: 'mytestjwtsecret',
   withMigration: false,
   httpPort: 0,
   postgresConfig: {
