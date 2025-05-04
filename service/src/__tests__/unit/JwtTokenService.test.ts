@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
 
+import { ConfigService } from '../../config/ConfigService';
 import { JwtTokenService } from '../../jwtToken/JwtTokenService';
 import { TokenPayload } from '../../jwtToken/TokenPayload';
+import { getConfig } from '../../nodejs/getConfig';
 import { getTestConfig } from '../../nodejs/getTestConfig';
 
 jest.mock('jsonwebtoken');
@@ -10,22 +12,18 @@ describe('JwtTokenService', () => {
     let jwtTokenService: JwtTokenService;
     const mockPayload: TokenPayload = { userId: '123' };
     const mockToken = 'mock.jwt.token';
-    const mockSecret = 'test-secret-123';
+    const mockSecret = 'mytestjwtsecret';
 
     beforeEach(() => {
         jest.clearAllMocks();
-        process.env.JWT_SECRET = mockSecret;
-        jwtTokenService = new JwtTokenService(getTestConfig());
-    });
-
-    afterAll(() => {
-        delete process.env.JWT_SECRET;
+        jwtTokenService = new JwtTokenService(new ConfigService(getTestConfig()));
     });
 
     describe('initialization', () => {
         it('should throw error if JWT_SECRET is not defined', () => {
             delete process.env.JWT_SECRET;
-            expect(() => new JwtTokenService()).toThrow('JWT_SECRET is not defined');
+            process.env.NODE_ENV = 'production';
+            expect(() => new JwtTokenService(new ConfigService(getConfig()))).toThrow('JWT secret is not defined');
         });
 
         it('should initialize with correct constants', () => {

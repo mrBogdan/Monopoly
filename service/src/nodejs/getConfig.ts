@@ -1,11 +1,11 @@
 import { ServiceConfiguration } from '../config/ServiceConfiguration';
 
-import { isDevelopment } from './getEnv';
+import { isDevelopment, isTest } from './getEnv';
 import { toBoolean } from './toBoolean';
 import { toNumber } from './toNumber';
 
 export const getConfig = (override: Partial<ServiceConfiguration> = {}): ServiceConfiguration => {
-  if (isDevelopment()) {
+  if (isDevelopment() || isTest()) {
     return {
       httpPort: 8080,
       withMigration: toBoolean(process.env.WITH_MIGRATION) || false,

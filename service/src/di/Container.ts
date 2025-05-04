@@ -169,6 +169,10 @@ export class Container {
           continue;
         }
 
+        if (!value) {
+          throw new Error(`${key} is not resolved`);
+        }
+
         switch (getServiceType(value)) {
           case ServiceType.FACTORY: {
             const factory = value as Factory;

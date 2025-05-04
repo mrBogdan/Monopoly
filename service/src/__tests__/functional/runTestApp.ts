@@ -9,13 +9,14 @@ import { HttpServerModule } from '../../http/HttpServerModule';
 import { RequestHandler } from '../../http/RequestHandler';
 import { Router } from '../../http/router/Router';
 import {JwtRouteSecurity} from '../../security/JwtRouteSecurity';
+import { SecurityModule } from '../../security/SecurityModule';
 import { getMessageHandler } from '../../wss/getMessageHandler';
 import { injectWebSocketServer } from '../../wss/injectWebSocketServer';
 import { WebSocketServerModule } from '../../wss/WebSocketServerModule';
 import { getAnonymousModule } from '../getAnonymousModule';
 
 
-const SharedModules = [HttpServerModule, WebSocketServerModule]
+const SharedModules = [HttpServerModule, WebSocketServerModule, SecurityModule]
 
 export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Application> => {
   const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService])]);
