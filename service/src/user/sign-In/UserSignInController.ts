@@ -3,9 +3,9 @@ import {Post} from '../../decorators/Post';
 import {RequestBody} from '../../decorators/RequestBody';
 import {BadRequestError} from '../../errors/BadRequestError';
 import {Response} from '../../http/Response';
+
 import {UserSignInDto} from './UserSignInDto';
 import {UserSignInService} from './UserSignInService';
-
 
 @Controller('/public/sign-in')
 export class UserSignInController {
