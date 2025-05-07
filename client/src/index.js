@@ -1,10 +1,11 @@
-const socket = new WebSocket('ws://localhost:8080');
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './styles/index.css';
+import App from './App';
 
-socket.addEventListener('open', (event) => {
-  console.log('Connected to WebSocket server');
-  socket.send(JSON.stringify({type: 'game:getTiles'}));
-});
-
-socket.addEventListener('message', (event) => {
-  console.log('Message from server:', event.data);
-});
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

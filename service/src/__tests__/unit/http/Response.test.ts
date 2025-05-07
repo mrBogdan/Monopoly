@@ -1,4 +1,4 @@
-import { Response } from '../../../http/Response';
+import { Response } from '../../../http';
 
 describe('Response', () => {
   it('should build a response with body, headers, and status code', () => {

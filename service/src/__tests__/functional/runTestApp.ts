@@ -1,45 +1,58 @@
 import { Server } from 'node:http';
 
-import { WebSocketServer } from 'ws';
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { Client } from 'pg';
 
 import { Application } from '../../Application';
-import { ConfigService } from '../../config/ConfigService';
-import { Constructor, Container } from '../../di/Container';
-import { HttpServerModule } from '../../http/HttpServerModule';
-import { RequestHandler } from '../../http/RequestHandler';
-import { Router } from '../../http/router/Router';
-import {JwtRouteSecurity} from '../../security/JwtRouteSecurity';
-import { SecurityModule } from '../../security/SecurityModule';
-import { getMessageHandler } from '../../wss/getMessageHandler';
-import { injectWebSocketServer } from '../../wss/injectWebSocketServer';
-import { WebSocketServerModule } from '../../wss/WebSocketServerModule';
-import { getAnonymousModule } from '../getAnonymousModule';
+import { Constructor, Container } from '../../di';
+import { runServer } from '../../runServer';
+import { getTestConfig } from '../getTestConfig';
 
+import { getTestConfigModule } from './getTestConfigModule';
 
-const SharedModules = [HttpServerModule, WebSocketServerModule, SecurityModule]
+export class TestApp extends Application {
+  constructor(container: Container, modules: Constructor[], private postgresContainer: StartedPostgreSqlContainer) {
+    super(container, [...modules, getTestConfigModule(getTestConfig({
+      postgresConfig: {
+        host: postgresContainer.getHost(),
+        port: postgresContainer.getMappedPort(5432),
+        user: postgresContainer.getUsername(),
+        password: postgresContainer.getPassword(),
+        database: postgresContainer.getDatabase(),
+      },
+      withMigration: true,
+    }))]);
+  }
 
-export const runTestApp = async (modules: Constructor<unknown>[]): Promise<Application> => {
-  const app = new Application(new Container(), [...modules, ...SharedModules, getAnonymousModule(undefined, [ConfigService])]);
+  public static async of(modules: Constructor[]): Promise<TestApp> {
+    const postgresContainer = new PostgreSqlContainer();
+    const startedContainer = await postgresContainer.start();
 
-  await app.init();
-  await app.run(async (container) => {
-    const server = container.resolve<Server>(Server);
-    const router = container.resolve<Router>(Router);
-    const config: ConfigService = container.resolve<ConfigService>(ConfigService);
-    const wss = container.resolve<WebSocketServer>(WebSocketServer);
-    const routeSecurity: JwtRouteSecurity = container.resolve<JwtRouteSecurity>(JwtRouteSecurity);
-    injectWebSocketServer(server, wss);
+    return new TestApp(
+      new Container(),
+      modules,
+      startedContainer,
+    );
+  }
 
-    const requestHandler = new RequestHandler(router, container, routeSecurity);
-    server.on('request', (req, res) => requestHandler.handle(req, res));
-
-    wss.on('connection', ws => {
-      ws.on('message', getMessageHandler(ws));
+  async gracefulShutdown() {
+    await super.gracefulShutdown(async (container: Container) => {
+      const client: Client = container.resolve<Client>(Client);
+      const server: Server = container.resolve<Server>(Server);
+      await Promise.all([
+        client.end(),
+        server.close(),
+      ]);
     });
 
-    server.listen(config.get('httpPort'), () => console.log(`Listening on ${config.get('httpPort')}`));
-  });
+    await this.postgresContainer.stop();
+  }
+}
 
+export const runTestApp = async (modules: Constructor[]): Promise<TestApp> => {
+  const app = await TestApp.of(modules);
+
+  await app.run(runServer);
 
   return app;
 };

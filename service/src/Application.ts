@@ -1,33 +1,26 @@
-import { Constructor, Container } from './di/Container';
+import { Constructor, Container } from './di';
 
 export class Application {
-  private isInitialized = false;
-
   constructor(
-    private readonly diContainer: Container,
-    private readonly modules: Constructor<unknown>[],
+    private readonly container: Container,
+    private readonly modules: Constructor[],
   ) {
   }
 
-  async init() {
-    await this.diContainer.init(this.modules);
-    this.diContainer.register(Container, this.diContainer);
-    this.isInitialized = true;
-  }
-
   async run(startup: (container: Container) => Promise<void>): Promise<void> {
-    if (!this.isInitialized) {
-      throw new Error('Application not initialized. Please run Application::init()');
-    }
-
-    await startup(this.diContainer);
+    await this.init();
+    await startup(this.container);
   }
 
-  get<T>(token: Constructor<T> | string | symbol): T {
-    return this.diContainer.resolve(token);
+  get<T>(token: Constructor | string | symbol): T {
+    return this.container.resolve(token);
   }
 
   async gracefulShutdown(gracefulShutdown: (container: Container) => Promise<void>): Promise<void> {
-    await gracefulShutdown(this.diContainer);
+    await gracefulShutdown(this.container);
+  }
+
+  private async init() {
+    await this.container.init(this.modules);
   }
 }

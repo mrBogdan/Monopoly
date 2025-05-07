@@ -1,24 +1,16 @@
 import { Server } from 'node:http';
 
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import { Client } from 'pg';
 import request from 'supertest';
 
-import { Application } from '../../../Application';
 import { AppModule } from '../../../AppModule';
-import { Container } from '../../../di/Container';
-import { getTestConfig } from '../../../nodejs/getTestConfig';
-import { USER_REPOSITORY, UserRepository } from '../../../user/UserRepository';
-import { getTestConfigModule } from '../getTestConfigModule';
-import { runTestApp } from '../runTestApp';
-
+import { USER_REPOSITORY, UserRepository } from '../../../user';
+import { runTestApp, TestApp } from '../runTestApp';
 
 jest.setTimeout(15000);
 
 describe('UserPublicController', () => {
   let listeningServer: Server;
-  let container: StartedPostgreSqlContainer;
-  let app: Application;
+  let app: TestApp;
   let userRepository: UserRepository;
 
   const verifyUser = async (id: string, email: string, name: string) => {
@@ -30,34 +22,13 @@ describe('UserPublicController', () => {
   };
 
   beforeAll(async () => {
-    const postgresContainer = new PostgreSqlContainer();
-    container = await postgresContainer.start();
-    app = await runTestApp([...AppModule, getTestConfigModule(getTestConfig({
-      postgresConfig: {
-        host: container.getHost(),
-        port: container.getMappedPort(5432),
-        user: container.getUsername(),
-        password: container.getPassword(),
-        database: container.getDatabase(),
-      },
-      withMigration: true,
-    }))]);
+    app = await runTestApp(AppModule);
     listeningServer = app.get<Server>(Server);
     userRepository = app.get<UserRepository>(USER_REPOSITORY);
   });
 
   afterAll(async () => {
-    await Promise.all([
-      app.gracefulShutdown(async (container: Container) => {
-        const client: Client = container.resolve<Client>(Client);
-        const server: Server = container.resolve<Server>(Server);
-        await Promise.all([
-          client.end(),
-          server.close(),
-        ])
-      }),
-      container.stop(),
-    ]);
+    await app.gracefulShutdown();
   });
 
   describe('singUp', () => {

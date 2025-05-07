@@ -1,6 +1,5 @@
 import { Action } from './Action';
 
-export interface GameAction<K> extends Action {
+export interface GameAction extends Action {
   gameId: string;
-  payload: K;
 }

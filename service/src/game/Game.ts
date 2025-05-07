@@ -1,18 +1,18 @@
-import { GameCandidate } from './GameCandidate';
+import { GameSettings } from './GameSettings';
 import { GameStatus } from './GameStatus';
-import { GameType } from './GameType';
 import { Player } from './Player';
 import { PlayerNotFoundError } from './PlayerNotFoundError';
 
 export class Game {
   constructor(
-    private type: GameType,
-    private roomOwner: string,
+    private id: string,
+    private gameSettings: GameSettings,
+    private gameCreator: string,
     private status: GameStatus,
     private players: Player[],
-    private id?: string,
-    private createdAt?: number
-    ) {
+    private createdAt: number,
+    private startedAt?: number,
+  ) {
   }
 
   findRequiredPlayerByUserId(userId: string): Player {
@@ -29,12 +29,22 @@ export class Game {
     return this.status === GameStatus.COMPLETED;
   }
 
-  static createGame(candidate: GameCandidate): Game {
-    return new Game(
-      candidate.gameType,
-      candidate.gameOwner,
-      GameStatus.ROOM,
-      candidate.players,
-    )
+  getId(): string {
+    return this.id;
+  }
+
+  settings(): GameSettings {
+    return this.gameSettings;
   }
 }
+
+export const createGame = (
+  id: string,
+  gameSettings: GameSettings,
+  roomOwner: string,
+  players: Player[],
+  createdAt: number,
+  startedAt?: number,
+): Game => {
+  return new Game(id, gameSettings, roomOwner, GameStatus.CREATED, players, createdAt, startedAt);
+};

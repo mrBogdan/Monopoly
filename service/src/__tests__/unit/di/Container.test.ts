@@ -1,4 +1,4 @@
-import { Container } from '../../../di/Container';
+import { Container } from '../../../di';
 
 class UserController {
   constructor() {

@@ -1,9 +1,6 @@
-import { GameType } from './GameType';
-import { Player } from './Player';
+import { GameSettings } from './GameSettings';
 
 export interface GameCandidate {
-  gameType: GameType;
-  amountOfPlayers: number;
-  gameOwner: string;
-  players: Player[];
+  gameSettings: GameSettings;
+  gameCreator: string;
 }

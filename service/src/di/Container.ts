@@ -7,11 +7,13 @@ import {
   getModuleServices,
   getServiceType,
   ServiceType,
-} from '../decorators/Module';
-import { isEmpty } from '../nodejs/isEmpty';
+} from '../decorators';
+import { castToType, isEmpty } from '../nodejs';
 
-import { getInjectParams } from './Inject';
+import { getInjectParams, InjectParams } from './Inject';
+import { Gettable, getValueSource } from './Injectable';
 import { Stack } from './Stack';
+import { getValueParams } from './Value';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Constructor<T = any> = new (...args: any[]) => T;
@@ -22,7 +24,7 @@ const isInstance = (tokenOrInstance?: unknown): boolean => (!!tokenOrInstance &&
 export class Container {
   private services: Map<unknown, unknown> = new Map();
 
-  register<T>(target: Constructor<T>, tokenOrInstance?: string | object): void {
+  register(target: Constructor, tokenOrInstance?: string | object): void {
     if (isToken(tokenOrInstance)) {
       if (!this.services.has(tokenOrInstance)) {
         this.services.set(tokenOrInstance, new target(...this.resolveDependencies(target)));
@@ -58,7 +60,7 @@ export class Container {
   public async init(modules: Constructor<unknown>[]) {
     const injectables = new Map<unknown, unknown>();
     for (const module of modules) {
-      const Services = getModuleServices(module );
+      const Services = getModuleServices(module);
       const Controllers = getModuleControllers(module);
 
       for (const Service of Services) {
@@ -75,9 +77,23 @@ export class Container {
             const injectParams = getInjectParams(Class);
 
             if (!isEmpty(injectParams)) {
-              if (isAllDependenciesResolved(injectParams.map(({token}) => token), injectables)) {
+              if (isAllDependenciesResolved(injectParams.map(({token}) => token), injectables, injectParams)) {
                 injectParams.forEach(({token, index}) => {
                   dependencies[index] = getResolvedInstance(injectables.get(token) as ResolvedInstance);
+                });
+              }
+            }
+
+            const valueParams = getValueParams(Class);
+
+            if (!isEmpty(valueParams)) {
+              const valueSource = getValueSource();
+              const valueSourceInjectable = injectables.get(valueSource);
+
+              if (isResolved(valueSourceInjectable)) {
+                const valueSourceInstance = resolved(valueSourceInjectable) as Gettable;
+                valueParams.forEach(({param, index}) => {
+                  dependencies[index] =  valueSourceInstance.get(param);
                 });
               }
             }
@@ -106,6 +122,20 @@ export class Container {
               if (isAllDependenciesResolved(injectParams.map(({token}) => token), injectables)) {
                 injectParams.forEach(({token, index}) => {
                   dependencies[index] = getResolvedInstance(injectables.get(token) as ResolvedInstance);
+                });
+              }
+            }
+
+            const valueParams = getValueParams(Class);
+
+            if (!isEmpty(valueParams)) {
+              const valueSource = getValueSource();
+              const valueSourceInjectable = injectables.get(valueSource);
+
+              if (isResolved(valueSourceInjectable)) {
+                const valueSourceInstance = getResolvedInstance(valueSourceInjectable as ResolvedInstance) as Gettable;
+                valueParams.forEach(({param, index}) => {
+                  dependencies[index] =  valueSourceInstance.get(param);
                 });
               }
             }
@@ -170,7 +200,7 @@ export class Container {
         }
 
         if (!value) {
-          throw new Error(`${key} is not resolved`);
+          throw new Error(`${(key as Constructor).toString()} is not resolved`);
         }
 
         switch (getServiceType(value)) {
@@ -208,10 +238,42 @@ export class Container {
               });
             }
 
-            const notResolvedDependencies = dependencies.filter((dep: unknown) => !isResolved(injectables.get(dep)));
+            const valueParams = getValueParams(Class);
+
+            if (!isEmpty(valueParams)) {
+              const valueSource = getValueSource();
+              const valueSourceInjectable = injectables.get(valueSource);
+
+              if (isResolved(valueSourceInjectable)) {
+                const valueSourceInstance = getResolvedInstance(valueSourceInjectable as ResolvedInstance) as Gettable;
+                valueParams.forEach(({param, index, type}) => {
+                  dependencies[index] = castToType(valueSourceInstance.get(param), type);
+                });
+              }
+            }
+
+            const notResolvedDependencies = dependencies.filter((dep: unknown) => {
+              const isInjectedParam = injectParams?.some(({token}) => token === dep);
+              if (isPrimitive(dep) && !isInjectedParam) {
+                return false;
+              }
+
+              if (isInjectedParam && !injectables.get(dep)) {
+                return true;
+              }
+
+              return !isResolved(injectables.get(dep));
+            });
 
             if (isEmpty(notResolvedDependencies)) {
-              const resolvedDependencies = dependencies.map((dep: unknown) => getResolvedInstance(injectables.get(dep) as ResolvedInstance));
+              const resolvedDependencies = dependencies.map((dep: unknown) => {
+                const isInjectedParam = injectParams?.some(({token}) => token === dep);
+                if (isPrimitive(dep) && !isInjectedParam) {
+                  return dep;
+                }
+
+                return getResolvedInstance(injectables.get(dep) as ResolvedInstance);
+              });
 
               const instance = new Class(...resolvedDependencies);
               injectables.set(key, resolved(instance));
@@ -242,16 +304,20 @@ type ResolvedInstance = {
   [INSTANCE_KEY]: unknown;
 }
 
-const resolved = (instance: unknown) => ({
+const resolved = (instance: unknown): unknown => ({
   [INSTANCE_KEY]: instance,
 });
 
 const getResolvedInstance = (instance: ResolvedInstance) => instance[INSTANCE_KEY];
 
-const isAllDependenciesResolved = (dependencies: unknown[], injectables: Map<unknown, unknown>) => {
+const isAllDependenciesResolved = (dependencies: unknown[], injectables: Map<unknown, unknown>, injectionParams?: InjectParams[]) => {
   for (const dependency of dependencies) {
-    const value = injectables.get(dependency);
-    if (!isResolved(value)) {
+    const isInjectedParam = injectionParams?.some(({token}) => token === dependency);
+    if (isPrimitive(dependency) && !isInjectedParam) {
+      return true;
+    }
+
+    if (!isResolved(injectables.get(dependency))) {
       return false;
     }
   }
@@ -259,6 +325,14 @@ const isAllDependenciesResolved = (dependencies: unknown[], injectables: Map<unk
 };
 
 const isResolved = (instance: unknown) => instance && Object.hasOwn(instance, INSTANCE_KEY);
+
+const isPrimitive = (value: unknown): boolean => {
+  return (value === null || (typeof value !== 'object' && typeof value !== 'function') && !isSymbol(value));
+}
+
+const isSymbol = (value: unknown): boolean => {
+  return typeof value === 'symbol';
+}
 
 const getDependenciesMetadata = (Class: Constructor<unknown>): unknown[] => {
   return Reflect.getMetadata('design:paramtypes', Class) || [];

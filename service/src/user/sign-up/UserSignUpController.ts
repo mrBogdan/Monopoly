@@ -1,8 +1,7 @@
-import { Controller } from '../../decorators/Controller';
-import { Post } from '../../decorators/Post';
-import { RequestBody } from '../../decorators/RequestBody';
-import { UseErrorMapper } from '../../decorators/UseErrorMapper';
-import { BadRequestError } from '../../errors/BadRequestError';
+
+import { Controller, UseErrorMapper } from '../../decorators';
+import { BadRequestError } from '../../errors';
+import { Post, RequestBody } from '../../http';
 import { UserEmailAlreadyExistsError } from '../UserEmailAlreadyExistsError';
 import { UserResponse } from '../UserResponse';
 

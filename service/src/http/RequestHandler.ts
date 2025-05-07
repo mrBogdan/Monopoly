@@ -1,23 +1,23 @@
 import http from 'node:http';
 import { parse } from 'node:url';
 
-import { getCookieParams } from '../decorators/Cookie';
-import { getHeaderParams } from '../decorators/Header';
-import { getParams } from '../decorators/Param';
-import { getQueryParams } from '../decorators/QueryParam';
-import { getRequestBodyParams } from '../decorators/RequestBody';
-import { isRouteProtected } from '../decorators/Security';
-import { getErrorMapper } from '../decorators/UseErrorMapper';
-import { Container } from '../di/Container';
-import { BadRequestError } from '../errors/BadRequestError';
-import { handleBusinessError } from '../errors/handleBusinessError';
-import { handleProtocolError } from '../errors/handleProtocolError';
-import { toJsonError } from '../errors/toJsonError';
-import {RouteSecurity} from '../security/RouteSecurity';
+import { getErrorMapper, isRouteProtected } from '../decorators';
+import { Container } from '../di';
+import { BadRequestError } from '../errors';
+import { handleBusinessError } from '../errors';
+import { handleProtocolError } from '../errors';
+import { toJsonError } from '../errors';
+import { castToType } from '../nodejs';
+import { RouteSecurity } from '../security/RouteSecurity';
 
+import { getCookieParams } from './Cookie';
+import { getHeaderParams } from './Header';
 import { Headers } from './headers';
 import { isMethodWithBody, Methods } from './Methods';
+import { getParams } from './Param';
 import { parseRequestBody } from './parseRequestBody';
+import { getQueryParams } from './QueryParam';
+import { getRequestBodyParams } from './RequestBody';
 import { Response } from './Response';
 import { Router } from './router/Router';
 
@@ -28,23 +28,22 @@ type RequestContext = {
   headers?: Record<string, string>;
 };
 
-type ClassInstance = {[key: string]: CallableFunction};
+type ClassInstance = { [key: string]: CallableFunction };
 
 export class RequestHandler {
   constructor(
-      private router: Router,
-      private diContainer: Container,
-      private routeSecurity: RouteSecurity,
+    private router: Router,
+    private diContainer: Container,
+    private routeSecurity: RouteSecurity,
   ) {
   }
 
   async handle(req: http.IncomingMessage, res: http.ServerResponse) {
-    let handler
     try {
       const url = parse(req.url ?? '', true);
       const route = this.router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
 
-      handler = route.handler();
+      const handler = route.handler();
       const instance = this.diContainer.resolve<ClassInstance>(handler.controller());
 
       const isProtectedRoute = isRouteProtected(instance, handler.action());
@@ -73,6 +72,10 @@ export class RequestHandler {
         return;
       }
 
+      const url = parse(req.url ?? '', true);
+      const route = this.router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
+
+      const handler = route.handler();
       const responseError = handleBusinessError(error, getErrorMapper(handler?.controller()));
 
       res.writeHead(responseError.status, Headers.ContentType.json);
@@ -80,7 +83,7 @@ export class RequestHandler {
     }
   }
 
-  async executeHandler(instance: ClassInstance, method: string, requestContext: RequestContext): Promise<Response> {
+  private async executeHandler(instance: ClassInstance, method: string, requestContext: RequestContext): Promise<Response> {
     const params = getParams(instance, method);
     const queryParams = getQueryParams(instance, method);
     const requestBodyParams = getRequestBodyParams(instance, method);
@@ -97,7 +100,7 @@ export class RequestHandler {
           throw new BadRequestError(`Missing parameter: ${param.param}`);
         }
 
-        args[param.index] = this.castToType(paramValue, param.type);
+        args[param.index] = castToType(paramValue, param.type);
       }
     }
 
@@ -109,7 +112,7 @@ export class RequestHandler {
           throw new BadRequestError(`Missing query parameter: ${param.param}`);
         }
 
-        args[param.index] = this.castToType(queryParam, param.type);
+        args[param.index] = castToType(queryParam, param.type);
       }
     }
 
@@ -126,7 +129,7 @@ export class RequestHandler {
             throw new BadRequestError(`Missing body parameter: ${param.param}`);
           }
 
-          args[param.index] = this.castToType(bodyValue, param.type);
+          args[param.index] = castToType(bodyValue, param.type);
         } else {
           args[param.index] = requestContext.body;
         }
@@ -141,7 +144,7 @@ export class RequestHandler {
           throw new BadRequestError(`Missing header: ${headerParam.param}`);
         }
 
-        args[headerParam.index] = this.castToType(headerValue, headerParam.type);
+        args[headerParam.index] = castToType(headerValue, headerParam.type);
       }
     }
 
@@ -153,7 +156,7 @@ export class RequestHandler {
           throw new BadRequestError(`Missing cookie: ${cookieParam.param}`);
         }
 
-        args[cookieParam.index] = this.castToType(cookieValue, cookieParam.type);
+        args[cookieParam.index] = castToType(cookieValue, cookieParam.type);
       }
     }
 
@@ -164,25 +167,12 @@ export class RequestHandler {
     }
 
     return Response.builder()
-        .setBody(response)
-        .setStatusCode(200)
-        .build();
+      .setBody(response)
+      .setStatusCode(200)
+      .build();
   };
 
-  castToType(value: unknown, type: string) {
-    switch (type) {
-      case 'Number':
-        return Number(value);
-      case 'String':
-        return value;
-      case 'Boolean':
-        return value === 'true';
-      default:
-        return value;
-    }
-  };
-
-  prepareResponseBody(body: unknown, contentType: string) {
+  private prepareResponseBody(body: unknown, contentType: string) {
     switch (contentType.toLowerCase()) {
       case 'application/json':
         return JSON.stringify(body);

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { INJECT_PARAM } from './constants';
 
-type InjectParams = {
+export type InjectParams = {
   index: number;
   token: string | symbol;
 }
@@ -12,7 +12,7 @@ export function Inject(token: string | symbol): ParameterDecorator {
       throw new Error('Inject decorator can only be used for constructor parameters');
     }
 
-    const existingInjectParams = Reflect.getMetadata(INJECT_PARAM, target) || [];
+    const existingInjectParams: InjectParams[] = Reflect.getMetadata(INJECT_PARAM, target) || [];
     existingInjectParams.push({index, token});
     Reflect.defineMetadata(INJECT_PARAM, existingInjectParams, target);
   };

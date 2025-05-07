@@ -1,6 +1,6 @@
 export enum GameStatus {
-  'ROOM' = 'ROOM',
+  CREATED = 'CREATED',
   IN_PROGRESS = 'IN_PROGRESS',
-  'COMPLETED' = 'COMPLETED',
+  COMPLETED = 'COMPLETED',
 
 }

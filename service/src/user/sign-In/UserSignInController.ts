@@ -1,8 +1,6 @@
-import {Controller} from '../../decorators/Controller';
-import {Post} from '../../decorators/Post';
-import {RequestBody} from '../../decorators/RequestBody';
-import {BadRequestError} from '../../errors/BadRequestError';
-import {Response} from '../../http/Response';
+import { Controller } from '../../decorators';
+import { BadRequestError } from '../../errors';
+import { Post, RequestBody, Response } from '../../http';
 
 import {UserSignInDto} from './UserSignInDto';
 import {UserSignInService} from './UserSignInService';

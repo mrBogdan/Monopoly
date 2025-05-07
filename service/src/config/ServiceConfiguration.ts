@@ -1,6 +1,6 @@
 export interface ServiceConfiguration {
     httpPort: number;
-    jwtSecret: string;
+    withMigration: boolean;
     postgresConfig: {
         port: number;
         host: string;
@@ -8,5 +8,5 @@ export interface ServiceConfiguration {
         password: string;
         database: string;
     },
-    withMigration: boolean;
+    jwtSecret: string;
 }

@@ -1,4 +1,5 @@
-import { Inject } from '../../di/Inject';
+
+import { Inject, Injectable } from '../../di';
 import { Hasher } from '../../hasher/Hasher';
 import { IdGenerator } from '../../idGenerator/IdGenerator';
 import { User } from '../User';
@@ -9,12 +10,17 @@ import { UserResponse } from '../UserResponse';
 
 import { UserSignUpDto } from './UserSignUpDto';
 
+@Injectable()
 export class UserSignUpService {
   constructor(
     private userIdGenerator: IdGenerator,
     @Inject(USER_REPOSITORY) private userRepository: UserRepository,
     private userPasswordHasher: Hasher,
   ) {}
+
+  async getUser(id: string): Promise<User> {
+    return this.userRepository.getById(id);
+  }
 
   async register(userRegistrationDataDto: UserSignUpDto): Promise<UserResponse> {
     const {name, email, password, repeatedPassword} = userRegistrationDataDto;

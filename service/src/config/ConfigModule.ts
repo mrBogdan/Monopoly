@@ -1,5 +1,5 @@
-import { Module } from '../decorators/Module';
-import { getConfig } from '../nodejs/getConfig';
+import { Module } from '../decorators';
+import { getConfig } from '../nodejs';
 
 import { ConfigService, getConfigValue } from './ConfigService';
 

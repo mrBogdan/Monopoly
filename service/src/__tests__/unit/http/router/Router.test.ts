@@ -1,5 +1,5 @@
 import { Controller } from '../../../../decorators/Controller';
-import { Get } from '../../../../decorators/Get';
+import { Get } from '../../../../http/Get';
 import { Methods } from '../../../../http/Methods';
 import { Handler } from '../../../../http/router/Handler';
 import { RouteHandler } from '../../../../http/router/RouteHandler';
