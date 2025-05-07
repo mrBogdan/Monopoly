@@ -1,7 +1,7 @@
 import { Clock } from '../clock';
 import { Inject, Injectable } from '../di';
 import { IdGenerator } from '../idGenerator/IdGenerator';
-import { UserService } from '../user/UserService';
+import { UserService } from '../user';
 
 import { createGame, Game } from './Game';
 import { GameCandidate } from './GameCandidate';

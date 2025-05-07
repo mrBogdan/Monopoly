@@ -16,7 +16,7 @@ export const getConfig = (override: Partial<ServiceConfiguration> = {}): Service
         host: process.env.POSTGRES_HOST || 'postgres',
         port: toNumber(process.env.POSTGRES_PORT) || 5432,
       },
-      jwtSecret: 'development',
+      jwtSecret: 'mydevelopmentjwtsecret',
       ...override,
     }
   }

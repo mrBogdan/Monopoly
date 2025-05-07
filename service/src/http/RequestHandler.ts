@@ -1,23 +1,23 @@
 import http from 'node:http';
 import { parse } from 'node:url';
 
-
-import { getErrorMapper, isRouteProtected } from '../decorators';
-import { Container } from '../di';
-import { BadRequestError } from '../errors';
-import { handleBusinessError } from '../errors';
-import { handleProtocolError } from '../errors';
-import { toJsonError } from '../errors';
+import { getCookieParams } from '../decorators/Cookie';
+import { getHeaderParams } from '../decorators/Header';
+import { getParams } from '../decorators/Param';
+import { getQueryParams } from '../decorators/QueryParam';
+import { getRequestBodyParams } from '../decorators/RequestBody';
+import { isRouteProtected } from '../decorators/Security';
+import { getErrorMapper } from '../decorators/UseErrorMapper';
+import { Container } from '../di/Container';
+import { BadRequestError } from '../errors/BadRequestError';
+import { handleBusinessError } from '../errors/handleBusinessError';
+import { handleProtocolError } from '../errors/handleProtocolError';
+import { toJsonError } from '../errors/toJsonError';
 import {RouteSecurity} from '../security/RouteSecurity';
 
-import { getCookieParams } from './Cookie';
-import { getHeaderParams } from './Header';
 import { Headers } from './headers';
 import { isMethodWithBody, Methods } from './Methods';
-import { getParams } from './Param';
 import { parseRequestBody } from './parseRequestBody';
-import { getQueryParams } from './QueryParam';
-import { getRequestBodyParams } from './RequestBody';
 import { Response } from './Response';
 import { Router } from './router/Router';
 
@@ -39,11 +39,12 @@ export class RequestHandler {
   }
 
   async handle(req: http.IncomingMessage, res: http.ServerResponse) {
+    let handler
     try {
       const url = parse(req.url ?? '', true);
       const route = this.router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
 
-      const handler = route.handler();
+      handler = route.handler();
       const instance = this.diContainer.resolve<ClassInstance>(handler.controller());
 
       const isProtectedRoute = isRouteProtected(instance, handler.action());
@@ -72,10 +73,6 @@ export class RequestHandler {
         return;
       }
 
-      const url = parse(req.url ?? '', true);
-      const route = this.router.findRoute(url.pathname ?? '', req.method?.toUpperCase() as Methods);
-
-      const handler = route.handler();
       const responseError = handleBusinessError(error, getErrorMapper(handler?.controller()));
 
       res.writeHead(responseError.status, Headers.ContentType.json);

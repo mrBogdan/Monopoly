@@ -1,6 +1,6 @@
 export * from './Methods';
 export * from './router/Router';
-export * from './requestHandler';
+export * from './RequestHandler';
 export * from './Methods';
 export * from './Get';
 export * from './Post';
